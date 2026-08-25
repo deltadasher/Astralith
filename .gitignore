@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Editors and local tooling
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Runtime state, caches, and captures
+.cache/
+.state/
+captures/
+recordings/
+settings.json
+*.part
+*.pid
+*.astralith-backup-*
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Platform noise
+.DS_Store
+Thumbs.db

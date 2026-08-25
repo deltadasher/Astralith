@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_path="$(readlink -f -- "${BASH_SOURCE[0]}")"
+script_dir="$(cd -- "$(dirname -- "$script_path")" && pwd)"
+project_root="$(cd -- "$script_dir/.." && pwd)"
+command_name="${1:-help}"
+
+usage() {
+    cat <<'EOF'
+Usage: astralithctl COMMAND [ARGUMENTS]
+
+Lifecycle:
+  run                     Run Astralith in the foreground
+  start                   Start one detached Astralith instance
+  stop                    Stop Astralith
+  restart                 Stop and start Astralith
+  status                  Show matching Quickshell instances
+
+Surfaces:
+  open TAB                Open an Ephemeris surface
+  toggle TAB              Toggle an Ephemeris surface
+  close                   Close Ephemeris
+  quick [timer|telemetry] Toggle the quick-action rail
+  lock                    Engage the secure Umbra session veil
+  preview-lock            Preview Umbra without locking the session
+  capture ACTION          Run region-copy, region-save, full-copy, or full-save
+  notify SUMMARY [BODY]   Show an Astralith-local notification
+
+Development:
+  check                   Run the local validation suite
+  doctor                  Check required and optional machine integrations
+  update                  Pull, validate, and restart a clean Git checkout
+  version                 Print the Astralith development version
+  path                    Print the active Astralith source path
+EOF
+}
+
+require_argument() {
+    if [[ -z "${2:-}" ]]; then
+        printf '%s requires an argument.\n' "$1" >&2
+        usage >&2
+        exit 2
+    fi
+}
+
+case "$command_name" in
+    run)
+        exec qs -p "$project_root"
+        ;;
+    start)
+        exec qs -d -n -p "$project_root"
+        ;;
+    stop)
+        exec qs -p "$project_root" kill
+        ;;
+    restart)
+        qs -p "$project_root" kill >/dev/null 2>&1 || true
+        exec qs -d -p "$project_root"
+        ;;
+    status)
+        exec qs -p "$project_root" list
+        ;;
+    open|toggle)
+        require_argument "$command_name" "${2:-}"
+        exec qs -p "$project_root" ipc call ephemeris "$command_name" "$2"
+        ;;
+    close)
+        exec qs -p "$project_root" ipc call ephemeris close
+        ;;
+    quick)
+        tab="${2:-timer}"
+        if [[ "$tab" != "timer" && "$tab" != "telemetry" ]]; then
+            printf 'Unknown quick-action surface: %s\n' "$tab" >&2
+            exit 2
+        fi
+        exec qs -p "$project_root" ipc call quickactions toggle "$tab"
+        ;;
+    lock)
+        exec qs -d -n -p "$project_root/modules/umbra/standalone"
+        ;;
+    preview-lock)
+        exec qs -p "$project_root" ipc call umbra preview
+        ;;
+    capture)
+        require_argument "$command_name" "${2:-}"
+        case "$2" in
+            region-copy|region-save|full-copy|full-save)
+                exec "$script_dir/snipping-tool" "--$2"
+                ;;
+            *)
+                printf 'Unknown capture action: %s\n' "$2" >&2
+                exit 2
+                ;;
+        esac
+        ;;
+    notify)
+        require_argument "$command_name" "${2:-}"
+        exec "$script_dir/astralith-notify" "$2" "${3:-}"
+        ;;
+    check)
+        exec "$script_dir/check"
+        ;;
+    doctor)
+        exec "$script_dir/doctor"
+        ;;
+    update)
+        exec "$script_dir/update-user"
+        ;;
+    version)
+        cat "$project_root/VERSION"
+        ;;
+    path)
+        printf '%s\n' "$project_root"
+        ;;
+    help|-h|--help)
+        usage
+        ;;
+    *)
+        printf 'Unknown Astralith command: %s\n' "$command_name" >&2
+        usage >&2
+        exit 2
+        ;;
+esac

@@ -1,0 +1,4 @@
+singleton Theme 1.0 Theme.qml
+singleton Settings 1.0 Settings.qml
+singleton ShellState 1.0 ShellState.qml
+singleton AdaptivePalette 1.0 AdaptivePalette.qml

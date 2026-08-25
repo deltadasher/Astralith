@@ -1,0 +1,58 @@
+import QtQuick
+import ".."
+import "../services"
+
+Rectangle {
+    id: root
+
+    signal activated()
+    readonly property bool unread: Notifications.unreadCount > 0
+
+    implicitWidth: Settings.compact ? 28 : 32
+    implicitHeight: Settings.compact ? 28 : 32
+    radius: 9
+    color: unread ? Theme.barAccentVeil
+        : pointer.containsMouse ? Theme.barNeutralHover : "transparent"
+    border.width: 0
+    scale: pointer.containsMouse ? 1.05 : 1
+    clip: true
+
+    Text {
+        anchors.centerIn: parent
+        text: root.unread ? "◉" : "◌"
+        color: root.unread ? Theme.accent : Theme.moon
+        font.family: Theme.fontMono
+        font.pixelSize: 15
+    }
+
+    Rectangle {
+        visible: root.unread
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 3
+        width: 13
+        height: 13
+        radius: 7
+        color: Theme.accent
+
+        Text {
+            anchors.centerIn: parent
+            text: Math.min(9, Notifications.unreadCount)
+            color: Theme.void_
+            font.family: Theme.fontMono
+            font.pixelSize: 7
+            font.weight: Font.Black
+        }
+    }
+
+    MouseArea {
+        id: pointer
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        onClicked: root.activated()
+    }
+
+    Behavior on color { ColorAnimation { duration: Theme.motionFast } }
+    Behavior on scale { NumberAnimation { duration: Settings.motion ? 170 : 0; easing.type: Easing.OutBack } }
+}

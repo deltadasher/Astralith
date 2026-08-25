@@ -52,7 +52,7 @@ PanelWindow {
         anchors.fill: parent
         radius: Theme.radiusLarge
         color: Theme.glass
-        border.width: 1
+        border.width: 0
         border.color: Theme.barHairlineHover
         opacity: root.presentation
         scale: 0.9 + root.presentation * 0.1
@@ -87,7 +87,7 @@ PanelWindow {
                 Layout.preferredHeight: 40
                 radius: 13
                 color: Qt.rgba(root.instrumentTone.r, root.instrumentTone.g, root.instrumentTone.b, 0.12)
-                border.width: 1
+                border.width: 0
                 border.color: Qt.rgba(root.instrumentTone.r, root.instrumentTone.g, root.instrumentTone.b, 0.38)
                 Text {
                     anchors.centerIn: parent
@@ -111,7 +111,7 @@ PanelWindow {
                         text: Osd.label
                         color: Theme.moon
                         font.family: Theme.fontMono
-                        font.pixelSize: 8
+                        font.pixelSize: 10
                         font.weight: Font.Bold
                         font.letterSpacing: 0.9
                     }

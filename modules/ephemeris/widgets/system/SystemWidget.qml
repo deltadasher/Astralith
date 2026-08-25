@@ -20,7 +20,7 @@ Item {
         Layout.preferredHeight: 184
         radius: Theme.radiusLarge
         color: Theme.mantle
-        border.width: 1
+        border.width: 0
         border.color: Qt.rgba(accentColor.r, accentColor.g, accentColor.b, 0.42)
         clip: true
 
@@ -43,7 +43,7 @@ Item {
             spacing: 8
             RowLayout {
                 Layout.fillWidth: true
-                Text { text: gauge.code; color: gauge.accentColor; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 1 }
+                Text { text: gauge.code; color: gauge.accentColor; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 1 }
                 Item { Layout.fillWidth: true }
                 Rectangle {
                     Layout.preferredWidth: 7; Layout.preferredHeight: 7; radius: 4
@@ -51,7 +51,7 @@ Item {
                 }
             }
             Text { text: gauge.valueText; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 29; font.weight: Font.Bold }
-            Text { text: gauge.label.toUpperCase(); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.letterSpacing: 0.8 }
+            Text { text: gauge.label.toUpperCase(); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.letterSpacing: 0.8 }
             Item { Layout.fillHeight: true }
             Rectangle {
                 Layout.fillWidth: true; Layout.preferredHeight: 7; radius: 4
@@ -62,7 +62,7 @@ Item {
                     Behavior on width { NumberAnimation { duration: 650; easing.type: Easing.OutQuint } }
                 }
             }
-            Text { text: gauge.detail; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 7; elide: Text.ElideRight; Layout.fillWidth: true }
+            Text { text: gauge.detail; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 10; elide: Text.ElideRight; Layout.fillWidth: true }
         }
     }
 
@@ -72,10 +72,13 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            ColumnLayout {
-                Layout.fillWidth: true; spacing: 2
-                Text { text: "OBSERVATORY TELEMETRY"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 20; font.weight: Font.DemiBold }
-                Text { text: SysStats.hostname.toUpperCase() + " // " + SysStats.kernel; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.letterSpacing: 0.9 }
+            Text {
+                Layout.fillWidth: true
+                text: "SYSTEM"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 23
+                font.weight: Font.DemiBold
             }
             RowLayout {
                 spacing: 14
@@ -88,7 +91,7 @@ Item {
                     ColumnLayout {
                         required property var modelData
                         spacing: 1
-                        Text { text: modelData.code; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.letterSpacing: 0.8 }
+                        Text { text: modelData.code; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.letterSpacing: 0.8 }
                         Text { text: modelData.value; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                     }
                 }
@@ -112,10 +115,10 @@ Item {
             spacing: 10
             Rectangle {
                 Layout.fillWidth: true; Layout.fillHeight: true
-                radius: Theme.radiusLarge; color: Theme.mantle; border.width: 1; border.color: Theme.line
+                radius: Theme.radiusLarge; color: Theme.mantle; border.width: 0; border.color: Theme.line
                 ColumnLayout {
                     anchors.fill: parent; anchors.margins: 15; spacing: 10
-                    Text { text: "LINK VELOCITY"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 1 }
+                    Text { text: "LINK VELOCITY"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 1 }
                     Repeater {
                         model: [
                             { "glyph": "↓", "label": "RECEIVE", "value": SysStats.networkDownLabel, "color": Theme.cyan },
@@ -123,13 +126,13 @@ Item {
                         ]
                         Rectangle {
                             required property var modelData
-                            Layout.fillWidth: true; Layout.fillHeight: true; radius: Theme.radiusMedium; color: Theme.elevated; border.width: 1; border.color: Theme.line
+                            Layout.fillWidth: true; Layout.fillHeight: true; radius: Theme.radiusMedium; color: Theme.elevated; border.width: 0; border.color: Theme.line
                             RowLayout {
                                 anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 14
                                 Text { text: modelData.glyph; color: modelData.color; font.family: Theme.fontDisplay; font.pixelSize: 23; font.weight: Font.Bold }
                                 ColumnLayout {
                                     Layout.fillWidth: true; spacing: 1
-                                    Text { text: modelData.label; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.letterSpacing: 0.8 }
+                                    Text { text: modelData.label; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.letterSpacing: 0.8 }
                                     Text { text: modelData.value; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 16; font.weight: Font.DemiBold }
                                 }
                             }
@@ -140,10 +143,10 @@ Item {
 
             Rectangle {
                 Layout.preferredWidth: 430; Layout.fillHeight: true
-                radius: Theme.radiusLarge; color: Theme.mantle; border.width: 1; border.color: Theme.line
+                radius: Theme.radiusLarge; color: Theme.mantle; border.width: 0; border.color: Theme.line
                 ColumnLayout {
                     anchors.fill: parent; anchors.margins: 15; spacing: 7
-                    Text { text: "LARGEST ORBITS"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 1 }
+                    Text { text: "LARGEST ORBITS"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 1 }
                     Repeater {
                         model: SysStats.folders
                         Rectangle {
@@ -151,8 +154,8 @@ Item {
                             Layout.fillWidth: true; Layout.fillHeight: true; radius: 9; color: Theme.elevated
                             RowLayout {
                                 anchors.fill: parent; anchors.leftMargin: 10; anchors.rightMargin: 10
-                                Text { Layout.fillWidth: true; text: modelData.name.toUpperCase(); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 8; elide: Text.ElideRight }
-                                Text { text: SysStats.formatBytes(modelData.bytes); color: Theme.accent; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+                                Text { Layout.fillWidth: true; text: modelData.name.toUpperCase(); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10; elide: Text.ElideRight }
+                                Text { text: SysStats.formatBytes(modelData.bytes); color: Theme.accent; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                             }
                         }
                     }
@@ -161,7 +164,7 @@ Item {
                         Layout.fillWidth: true; Layout.fillHeight: true
                         text: "SCANNING LOCAL ORBITS…"
                         horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
-                        color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8
+                        color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10
                     }
                 }
             }

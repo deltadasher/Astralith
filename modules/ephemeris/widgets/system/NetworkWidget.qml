@@ -232,7 +232,7 @@ Item {
                                 height: width
                                 radius: width / 2
                                 color: "transparent"
-                                border.width: 1
+                                border.width: 0
                                 border.color: Qt.rgba(Theme.cyan.r, Theme.cyan.g,
                                     Theme.cyan.b, 0.16 + index * 0.055)
                             }
@@ -518,7 +518,7 @@ Item {
                 : root.activeTab === "bluetooth" && !DeviceState.bluetoothEnabled ? "BLUETOOTH ARRAY IS OFFLINE"
                 : "NO DEVICES DETECTED"
             horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
-            color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9; font.letterSpacing: 0.8
+            color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 11; font.letterSpacing: 0.8
         }
 
         RowLayout {

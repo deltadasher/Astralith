@@ -19,43 +19,30 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            ColumnLayout {
+            Text {
                 Layout.fillWidth: true
-                spacing: 2
-                Text {
-                    text: "PARALLAX NAVIGATOR"
-                    color: Theme.moon
-                    font.family: Theme.fontDisplay
-                    font.pixelSize: 20
-                    font.weight: Font.DemiBold
-                }
-                Text {
-                    text: Niri.available
-                        ? Niri.workspaces.length + " WORKSPACES // " + Niri.windows.length + " WINDOWS // " + (Niri.focusedOutput || "ACTIVE OUTPUT")
-                        : "NIRI EVENT STREAM UNAVAILABLE"
-                    color: Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 8
-                    font.letterSpacing: 0.9
-                }
+                text: "WORKSPACES"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 22
+                font.weight: Font.DemiBold
             }
 
             Rectangle {
-                implicitWidth: overviewText.implicitWidth + 22
-                implicitHeight: 34
-                radius: 11
-                color: overviewPointer.containsMouse ? Theme.accentVeil : Theme.mantle
-                border.width: 1
+                implicitWidth: 38
+                implicitHeight: 38
+                radius: width / 2
+                color: overviewPointer.containsMouse ? Theme.accent : Theme.controlRest
+                border.width: 0
                 border.color: overviewPointer.containsMouse ? Theme.accentLine : Theme.line
                 Text {
                     id: overviewText
                     anchors.centerIn: parent
-                    text: "NIRI OVERVIEW"
-                    color: overviewPointer.containsMouse ? Theme.accent : Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 8
+                    text: "◎"
+                    color: overviewPointer.containsMouse ? Theme.void_ : Theme.muted
+                    font.family: Theme.fontDisplay
+                    font.pixelSize: 18
                     font.weight: Font.Bold
-                    font.letterSpacing: 0.8
                 }
                 MouseArea {
                     id: overviewPointer
@@ -91,9 +78,8 @@ Item {
                     anchors.margins: 5
                     radius: Theme.radiusLarge
                     color: workspaceDelegate.modelData.is_focused
-                        ? Theme.accentVeil : workspacePointer.containsMouse ? Theme.elevated : Theme.mantle
-                    border.width: workspaceDelegate.modelData.is_focused ? 2 : 1
-                    border.color: workspaceDelegate.modelData.is_focused ? Theme.accent : Theme.line
+                        ? Theme.controlActive : workspacePointer.containsMouse ? Theme.controlHover : Theme.controlRest
+                    border.width: 0
                     clip: true
 
                     MouseArea {
@@ -145,7 +131,7 @@ Item {
                                     text: (workspaceDelegate.modelData.output || "OUTPUT") + " // " + workspaceDelegate.workspaceWindows.length + " WINDOWS"
                                     color: Theme.muted
                                     font.family: Theme.fontMono
-                                    font.pixelSize: 7
+                                    font.pixelSize: 10
                                 }
                             }
                             Rectangle {
@@ -176,7 +162,7 @@ Item {
                                 radius: 9
                                 color: modelData.is_focused ? Theme.accentVeil
                                     : windowPointer.containsMouse ? Theme.elevated : Qt.rgba(Theme.void_.r, Theme.void_.g, Theme.void_.b, 0.26)
-                                border.width: 1
+                                border.width: 0
                                 border.color: modelData.is_focused ? Theme.accentLine : Theme.line
                                 RowLayout {
                                     anchors.fill: parent
@@ -194,14 +180,14 @@ Item {
                                         text: modelData.title || modelData.app_id || "Untitled window"
                                         color: modelData.is_focused ? Theme.moon : Theme.muted
                                         font.family: Theme.fontText
-                                        font.pixelSize: 9
+                                        font.pixelSize: 11
                                         elide: Text.ElideRight
                                     }
                                     Text {
                                         text: (modelData.app_id || "APP").toUpperCase()
                                         color: Theme.lineBright
                                         font.family: Theme.fontMono
-                                        font.pixelSize: 6
+                                        font.pixelSize: 10
                                     }
                                 }
                                 MouseArea {
@@ -226,7 +212,7 @@ Item {
                             verticalAlignment: Text.AlignVCenter
                             color: Theme.muted
                             font.family: Theme.fontMono
-                            font.pixelSize: 8
+                            font.pixelSize: 10
                             lineHeight: 1.5
                         }
                         Text {
@@ -236,7 +222,7 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                             color: Theme.accent
                             font.family: Theme.fontMono
-                            font.pixelSize: 7
+                            font.pixelSize: 10
                             font.weight: Font.Bold
                         }
                     }

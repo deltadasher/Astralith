@@ -20,3 +20,7 @@
 - Made Niri autostart and every Astralith hotkey invoke the explicit
   `~/.local/bin/astralithctl` installation instead of assuming the display
   manager imported that directory into `PATH`.
+- Rebuilt Umbra as the original Eclipse Cartography instrument: a displaced
+  event horizon, gravitational streamlines, constellation password trajectory,
+  fractured clock, and orbital network, battery, and media telemetry replace
+  the conventional centered authentication card.

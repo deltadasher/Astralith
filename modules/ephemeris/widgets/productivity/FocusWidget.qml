@@ -18,9 +18,8 @@ Item {
         implicitHeight: 38
         radius: 12
         color: primary ? root.phaseColor
-            : buttonPointer.containsMouse ? Theme.elevated : Theme.mantle
-        border.width: primary ? 0 : 1
-        border.color: Theme.barHairlineHover
+            : buttonPointer.containsMouse ? Theme.controlHover : Theme.controlRest
+        border.width: 0
         opacity: enabledControl ? 1 : 0.38
         scale: buttonPointer.pressed ? 0.96 : buttonPointer.containsMouse ? 1.025 : 1
         Text {
@@ -29,7 +28,7 @@ Item {
             text: parent.label
             color: parent.primary ? Theme.void_ : Theme.moon
             font.family: Theme.fontMono
-            font.pixelSize: 9
+            font.pixelSize: 11
             font.weight: Font.Bold
             font.letterSpacing: 0.6
         }
@@ -52,16 +51,16 @@ Item {
         Layout.fillWidth: true
         Layout.preferredHeight: 78
         radius: Theme.radiusMedium
-        color: Theme.mantle
-        border.width: 1
+        color: Theme.controlRest
+        border.width: 0
         border.color: Theme.barHairlineHover
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 12
             spacing: 2
-            Text { text: parent.parent.code; color: parent.parent.tone; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 1 }
+            Text { text: parent.parent.code; color: parent.parent.tone; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 1 }
             Text { text: parent.parent.value; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 21; font.weight: Font.Black }
-            Text { text: parent.parent.detail; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.letterSpacing: 0.7 }
+            Text { text: parent.parent.detail; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.letterSpacing: 0.7 }
         }
     }
 
@@ -71,32 +70,27 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            ColumnLayout {
+            Text {
                 Layout.fillWidth: true
-                spacing: 1
-                Text { text: "FOCUS ORBIT"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 21; font.weight: Font.Black; font.letterSpacing: 0.5 }
-                Text {
-                    text: "PERSISTENT POMODORO // AUTOMATIC DRIFT CYCLES // SEVEN DAY TELEMETRY"
-                    color: root.phaseColor
-                    font.family: Theme.fontMono
-                    font.pixelSize: 8
-                    font.weight: Font.Bold
-                    font.letterSpacing: 0.8
-                }
+                text: "FOCUS"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 23
+                font.weight: Font.Black
             }
             Rectangle {
                 Layout.preferredWidth: phaseStatus.implicitWidth + 24
                 Layout.preferredHeight: 34
                 radius: 11
                 color: Qt.rgba(root.phaseColor.r, root.phaseColor.g, root.phaseColor.b, 0.11)
-                border.width: 1
+                border.width: 0
                 border.color: Qt.rgba(root.phaseColor.r, root.phaseColor.g, root.phaseColor.b, 0.40)
                 Row {
                     id: phaseStatus
                     anchors.centerIn: parent
                     spacing: 7
                     Rectangle { width: 7; height: 7; radius: 4; color: Focus.running ? Theme.success : root.phaseColor; anchors.verticalCenter: parent.verticalCenter }
-                    Text { text: Focus.phaseCode + " // " + (Focus.running ? "ACTIVE" : "STANDBY"); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+                    Text { text: Focus.phaseLabel; color: Theme.moon; font.family: Theme.fontText; font.pixelSize: 12; font.weight: Font.Bold }
                 }
             }
         }
@@ -111,7 +105,7 @@ Item {
                 Layout.fillHeight: true
                 radius: Theme.radiusLarge
                 color: Theme.mantle
-                border.width: 1
+                border.width: 0
                 border.color: Focus.running ? Qt.rgba(root.phaseColor.r, root.phaseColor.g, root.phaseColor.b, 0.46) : Theme.barHairlineHover
                 clip: true
 
@@ -179,7 +173,7 @@ Item {
                         text: Focus.phaseLabel
                         color: root.phaseColor
                         font.family: Theme.fontMono
-                        font.pixelSize: 9
+                        font.pixelSize: 11
                         font.weight: Font.Bold
                         font.letterSpacing: 1.3
                     }
@@ -190,7 +184,7 @@ Item {
                             + " / " + Focus.longBreakEvery
                         color: Theme.muted
                         font.family: Theme.fontMono
-                        font.pixelSize: 7
+                        font.pixelSize: 10
                         font.letterSpacing: 0.8
                     }
                 }
@@ -218,12 +212,12 @@ Item {
                             readonly property bool active: Focus.phase === modelData.id
                             color: active ? Qt.rgba(root.phaseColor.r, root.phaseColor.g, root.phaseColor.b, 0.14)
                                 : phasePointer.containsMouse ? Theme.elevated : Theme.mantle
-                            border.width: 1
+                            border.width: 0
                             border.color: active ? Qt.rgba(root.phaseColor.r, root.phaseColor.g, root.phaseColor.b, 0.50) : Theme.barHairlineHover
                             Column {
                                 anchors.centerIn: parent
                                 spacing: 1
-                                Text { anchors.horizontalCenter: parent.horizontalCenter; text: parent.parent.modelData.label; color: parent.parent.active ? root.phaseColor : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+                                Text { anchors.horizontalCenter: parent.horizontalCenter; text: parent.parent.modelData.label; color: parent.parent.active ? root.phaseColor : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                                 Text { anchors.horizontalCenter: parent.horizontalCenter; text: parent.parent.modelData.time + " MIN"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 11; font.weight: Font.Bold }
                             }
                             MouseArea { id: phasePointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Focus.selectPhase(parent.modelData.id) }
@@ -234,7 +228,7 @@ Item {
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: 6
-                    Text { text: "FOCUS LENGTH"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.letterSpacing: 0.8 }
+                    Text { text: "FOCUS LENGTH"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.letterSpacing: 0.8 }
                     Item { Layout.fillWidth: true }
                     Repeater {
                         model: [25, 45, 60, 90]
@@ -245,9 +239,9 @@ Item {
                             radius: 9
                             readonly property bool active: Focus.workMinutes === modelData
                             color: active ? Theme.accentVeil : presetPointer.containsMouse ? Theme.elevated : Theme.barNeutral
-                            border.width: 1
+                            border.width: 0
                             border.color: active ? Theme.accentLine : Theme.barHairlineHover
-                            Text { anchors.centerIn: parent; text: parent.modelData; color: parent.active ? Theme.accent : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+                            Text { anchors.centerIn: parent; text: parent.modelData; color: parent.active ? Theme.accent : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                             MouseArea { id: presetPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Focus.selectPreset(parent.modelData) }
                         }
                     }
@@ -258,15 +252,15 @@ Item {
                     Layout.preferredHeight: 54
                     radius: 13
                     color: autoPointer.containsMouse ? Theme.elevated : Theme.mantle
-                    border.width: 1
+                    border.width: 0
                     border.color: Focus.autoAdvance ? Theme.accentLine : Theme.barHairlineHover
                     RowLayout {
                         anchors.fill: parent
                         anchors.leftMargin: 13
                         anchors.rightMargin: 12
                         ColumnLayout { Layout.fillWidth: true; spacing: 1
-                            Text { text: "AUTOMATIC FLIGHT CYCLE"; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
-                            Text { text: "FOCUS → SHORT DRIFT // LONG DRIFT EVERY " + Focus.longBreakEvery; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.letterSpacing: 0.5 }
+                            Text { text: "AUTOMATIC FLIGHT CYCLE"; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
+                            Text { text: "FOCUS → SHORT DRIFT // LONG DRIFT EVERY " + Focus.longBreakEvery; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.letterSpacing: 0.5 }
                         }
                         Rectangle {
                             Layout.preferredWidth: 36; Layout.preferredHeight: 20; radius: 10
@@ -296,7 +290,7 @@ Item {
                     Layout.minimumHeight: 88
                     radius: Theme.radiusMedium
                     color: Theme.mantle
-                    border.width: 1
+                    border.width: 0
                     border.color: Theme.barHairlineHover
                     Text {
                         anchors.centerIn: parent
@@ -305,7 +299,7 @@ Item {
                         color: Theme.muted
                         opacity: 0.52
                         font.family: Theme.fontMono
-                        font.pixelSize: 8
+                        font.pixelSize: 10
                         font.weight: Font.Bold
                         font.letterSpacing: 0.8
                         horizontalAlignment: Text.AlignHCenter
@@ -340,7 +334,7 @@ Item {
                                         Behavior on height { NumberAnimation { duration: 480; easing.type: Easing.OutCubic } }
                                     }
                                 }
-                                Text { anchors.horizontalCenter: parent.horizontalCenter; text: parent.modelData.label; color: parent.modelData.key === Focus.todayKey ? root.phaseColor : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.weight: Font.Bold }
+                                Text { anchors.horizontalCenter: parent.horizontalCenter; text: parent.modelData.label; color: parent.modelData.key === Focus.todayKey ? root.phaseColor : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                             }
                         }
                     }

@@ -123,7 +123,7 @@ Item {
             text: root.title
             color: Spectrum.available ? root.secondaryColor : Theme.moon
             font.family: Theme.fontMono
-            font.pixelSize: 9
+            font.pixelSize: 11
             font.weight: Font.Bold
             font.letterSpacing: 1.1
         }
@@ -132,7 +132,7 @@ Item {
             text: root.detail
             color: Theme.muted
             font.family: Theme.fontMono
-            font.pixelSize: 7
+            font.pixelSize: 10
             font.letterSpacing: 0.8
         }
     }

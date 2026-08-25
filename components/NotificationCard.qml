@@ -36,9 +36,9 @@ Rectangle {
 
     implicitHeight: Math.max(86, content.implicitHeight + 24)
     radius: Theme.radiusLarge
-    color: Theme.mantle
-    border.width: 1
-    border.color: critical ? Theme.danger : hover.hovered ? Theme.accentLine : Theme.line
+    color: critical ? Theme.controlDanger
+        : hover.hovered ? Theme.controlHover : Theme.mantle
+    border.width: 0
     clip: true
 
     Rectangle {
@@ -122,7 +122,7 @@ Rectangle {
                     text: root.appName.toUpperCase()
                     color: root.critical ? Theme.danger : Theme.accent
                     font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    font.pixelSize: 11
                     font.weight: Font.Bold
                     font.letterSpacing: 0.9
                     elide: Text.ElideRight
@@ -131,7 +131,7 @@ Rectangle {
                     text: root.time
                     color: Theme.lineBright
                     font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    font.pixelSize: 11
                 }
             }
             Text {
@@ -150,7 +150,7 @@ Rectangle {
                 textFormat: Text.PlainText
                 color: Theme.muted
                 font.family: Theme.fontText
-                font.pixelSize: 9
+                font.pixelSize: 11
                 maximumLineCount: root.popup ? 2 : 3
                 wrapMode: Text.WordWrap
                 elide: Text.ElideRight
@@ -169,16 +169,15 @@ Rectangle {
                         implicitWidth: actionLabel.implicitWidth + 18
                         implicitHeight: 25
                         radius: 8
-                        color: actionPointer.containsMouse ? Theme.accentVeil : Theme.elevated
-                        border.width: 1
-                        border.color: actionPointer.containsMouse ? Theme.accentLine : Theme.line
+                        color: actionPointer.containsMouse ? Theme.accent : Theme.controlRest
+                        border.width: 0
                         Text {
                             id: actionLabel
                             anchors.centerIn: parent
                             text: (modelData.text || modelData.identifier || "OPEN").toUpperCase()
-                            color: actionPointer.containsMouse ? Theme.accent : Theme.moon
+                            color: actionPointer.containsMouse ? Theme.void_ : Theme.moon
                             font.family: Theme.fontMono
-                            font.pixelSize: 7
+                            font.pixelSize: 11
                             font.weight: Font.Bold
                             font.letterSpacing: 0.7
                         }
@@ -301,5 +300,5 @@ Rectangle {
             revealedBody = body.length;
     }
 
-    Behavior on border.color { ColorAnimation { duration: Theme.motionFast } }
+    Behavior on color { ColorAnimation { duration: Theme.motionFast } }
 }

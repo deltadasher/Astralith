@@ -92,7 +92,7 @@ Item {
                         implicitHeight: 32
                         radius: 10
                         color: monthPointer.containsMouse ? Theme.accentVeil : Theme.mantle
-                        border.width: 1
+                        border.width: 0
                         border.color: monthPointer.containsMouse ? Theme.accentLine : Theme.line
                         Text {
                             anchors.centerIn: parent
@@ -131,7 +131,7 @@ Item {
                         text: modelData
                         color: Theme.lineBright
                         font.family: Theme.fontMono
-                        font.pixelSize: 7
+                        font.pixelSize: 10
                         font.weight: Font.Bold
                         font.letterSpacing: 1
                     }
@@ -155,7 +155,7 @@ Item {
                         radius: 11
                         color: modelData.today ? Theme.accent
                             : dayPointer.containsMouse ? Theme.accentVeil : Theme.mantle
-                        border.width: 1
+                        border.width: 0
                         border.color: modelData.today ? Theme.accent
                             : dayPointer.containsMouse ? Theme.accentLine : Theme.line
                         opacity: modelData.inMonth ? 1 : 0.42
@@ -218,7 +218,7 @@ Item {
                     implicitHeight: 34
                     radius: 10
                     color: refreshPointer.containsMouse ? Theme.accentVeil : Theme.mantle
-                    border.width: 1
+                    border.width: 0
                     border.color: Weather.loading ? Theme.accent : Theme.line
                     Text {
                         anchors.centerIn: parent
@@ -242,7 +242,7 @@ Item {
                 Layout.preferredHeight: Weather.available ? 126 : 112
                 radius: Theme.radiusMedium
                 color: Theme.accentVeil
-                border.width: 1
+                border.width: 0
                 border.color: Theme.accentLine
 
                 ColumnLayout {
@@ -281,9 +281,9 @@ Item {
                         }
                         ColumnLayout {
                             spacing: 1
-                            Text { text: "FEELS " + root.temperature(Weather.current.feels); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9 }
-                            Text { text: "HUM " + (Weather.current.humidity || 0) + "%"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9 }
-                            Text { text: "WIND " + (Weather.current.wind || 0) + " " + Weather.windUnit; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9 }
+                            Text { text: "FEELS " + root.temperature(Weather.current.feels); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 11 }
+                            Text { text: "HUM " + (Weather.current.humidity || 0) + "%"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 11 }
+                            Text { text: "WIND " + (Weather.current.wind || 0) + " " + Weather.windUnit; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 11 }
                         }
                     }
 
@@ -294,27 +294,17 @@ Item {
                         ColumnLayout {
                             anchors.centerIn: parent
                             spacing: 5
-                            Text { Layout.alignment: Qt.AlignHCenter; text: Settings.weatherEnabled ? "SKY LINK UNAVAILABLE" : "SKY LINK DISABLED"; color: Theme.warning; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
-                            Text { Layout.alignment: Qt.AlignHCenter; text: Weather.status; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; elide: Text.ElideRight; Layout.maximumWidth: 285 }
+                            Text { Layout.alignment: Qt.AlignHCenter; text: Settings.weatherEnabled ? "SKY LINK UNAVAILABLE" : "SKY LINK DISABLED"; color: Theme.warning; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
+                            Text { Layout.alignment: Qt.AlignHCenter; text: Weather.status; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; elide: Text.ElideRight; Layout.maximumWidth: 285 }
                         }
                     }
 
                     RowLayout {
                         Layout.fillWidth: true
                         visible: Weather.available
-                        Text { Layout.fillWidth: true; text: (Weather.location + (Weather.country ? " · " + Weather.country : "")).toUpperCase(); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; elide: Text.ElideRight }
-                        Text { text: "SYNC " + (Weather.updated || "--:--"); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8 }
+                        Text { Layout.fillWidth: true; text: (Weather.location + (Weather.country ? " · " + Weather.country : "")).toUpperCase(); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; elide: Text.ElideRight }
                     }
                 }
-            }
-
-            Text {
-                visible: Weather.available
-                text: "FIVE DAY ORBIT"
-                color: Theme.muted
-                font.family: Theme.fontMono
-                font.pixelSize: 9
-                font.letterSpacing: 0.9
             }
 
             ColumnLayout {
@@ -330,7 +320,7 @@ Item {
                         Layout.preferredHeight: 43
                         radius: 10
                         color: Theme.mantle
-                        border.width: 1
+                        border.width: 0
                         border.color: Theme.line
                         RowLayout {
                             anchors.fill: parent
@@ -339,8 +329,8 @@ Item {
                             spacing: 8
                             Text { Layout.preferredWidth: 38; text: dailyCell.modelData.day; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                             Text { text: dailyCell.modelData.icon; color: Theme.accent; font.family: Theme.fontDisplay; font.pixelSize: 16 }
-                            Text { Layout.fillWidth: true; text: dailyCell.modelData.condition.toUpperCase(); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9; elide: Text.ElideRight }
-                            Text { text: dailyCell.modelData.precipitation + "%"; color: Theme.cyan; font.family: Theme.fontMono; font.pixelSize: 9 }
+                            Text { Layout.fillWidth: true; text: dailyCell.modelData.condition.toUpperCase(); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 11; elide: Text.ElideRight }
+                            Text { text: dailyCell.modelData.precipitation + "%"; color: Theme.cyan; font.family: Theme.fontMono; font.pixelSize: 11 }
                             Text { text: root.temperature(dailyCell.modelData.max) + " / " + root.temperature(dailyCell.modelData.min); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                         }
                     }

@@ -45,9 +45,7 @@ Item {
         anchors.fill: parent
         radius: width / 2
         color: Theme.void_
-        border.width: 1
-        border.color: root.muted ? Theme.danger
-            : Qt.rgba(root.accentColor.r, root.accentColor.g, root.accentColor.b, 0.62)
+        border.width: 0
         clip: true
 
         Canvas {
@@ -125,7 +123,7 @@ Item {
                 color: root.displayedValue > 100 ? Theme.warning
                     : root.fillRatio >= 0.58 ? Theme.void_ : Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 7
+                font.pixelSize: 10
                 font.weight: Font.Bold
                 font.letterSpacing: 1
             }

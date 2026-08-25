@@ -6,9 +6,9 @@ Rectangle {
     id: root
     implicitHeight: 54
     radius: Theme.radiusMedium
-    color: pointer.containsMouse ? Theme.elevated : Theme.mantle
-    border.width: 1
-    border.color: root.checked ? Theme.accentLine : Theme.line
+    color: root.checked ? Theme.controlActive
+        : pointer.containsMouse ? Theme.controlHover : Theme.controlRest
+    border.width: 0
 
     property string label: "Setting"
     property string detail: ""
@@ -46,8 +46,7 @@ Rectangle {
             Layout.preferredHeight: 18
             radius: 9
             color: root.checked ? Theme.accent : Theme.elevated
-            border.width: 1
-            border.color: root.checked ? Theme.accent : Theme.lineBright
+            border.width: 0
 
             Rectangle {
                 y: 3
@@ -75,5 +74,4 @@ Rectangle {
     }
 
     Behavior on color { ColorAnimation { duration: Theme.motionFast } }
-    Behavior on border.color { ColorAnimation { duration: Theme.motionFast } }
 }

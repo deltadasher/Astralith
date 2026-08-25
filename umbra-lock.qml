@@ -3,9 +3,9 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import "../../.."
-import "../../../services"
-import ".."
+import "."
+import "services"
+import "modules/umbra"
 
 ShellRoot {
     id: root
@@ -38,8 +38,7 @@ ShellRoot {
     WlSessionLock {
         id: sessionLock
 
-        // This literal remains true across Quickshell hot reloads. Authentication
-        // is the only code path that assigns false before the process exits.
+        // Authentication is the only successful path that releases this lock.
         locked: true
 
         onSecureStateChanged: Umbra.secure = secure

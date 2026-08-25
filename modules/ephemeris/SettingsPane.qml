@@ -40,30 +40,13 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 2
-                Text {
-                    text: "OBSERVATORY SETTINGS"
-                    color: Theme.moon
-                    font.family: Theme.fontDisplay
-                    font.pixelSize: 20
-                    font.weight: Font.DemiBold
-                }
-                Text {
-                    text: "LIVE CONFIGURATION MATRIX // SESSION SCOPE"
-                    color: Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 9
-                    font.letterSpacing: 1
-                }
-            }
             Text {
-                text: "CHANGES APPLY IMMEDIATELY"
-                color: Theme.success
-                font.family: Theme.fontMono
-                font.pixelSize: 9
-                font.letterSpacing: 0.8
+                Layout.fillWidth: true
+                text: "SETTINGS"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 23
+                font.weight: Font.DemiBold
             }
         }
 
@@ -88,28 +71,18 @@ Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 38
                     radius: Theme.radiusSmall
-                    color: active ? Theme.accentVeil
-                        : sectionPointer.containsMouse ? Theme.elevated : Theme.mantle
-                    border.width: 1
+                    color: active ? Theme.controlActive
+                        : sectionPointer.containsMouse ? Theme.controlHover : Theme.controlRest
+                    border.width: 0
                     border.color: active ? Theme.accentLine : Theme.line
 
-                    RowLayout {
+                    Text {
                         anchors.centerIn: parent
-                        spacing: 7
-                        Text {
-                            text: sectionButton.modelData.code
-                            color: sectionButton.active ? Theme.accent : Theme.lineBright
-                            font.family: Theme.fontMono
-                            font.pixelSize: 9
-                            font.letterSpacing: 0.8
-                        }
-                        Text {
-                            text: sectionButton.modelData.label
-                            color: sectionButton.active ? Theme.moon : Theme.muted
-                            font.family: Theme.fontText
-                            font.pixelSize: 11
-                            font.weight: sectionButton.active ? Font.DemiBold : Font.Normal
-                        }
+                        text: sectionButton.modelData.label
+                        color: sectionButton.active ? Theme.moon : Theme.muted
+                        font.family: Theme.fontText
+                        font.pixelSize: 12
+                        font.weight: sectionButton.active ? Font.DemiBold : Font.Normal
                     }
 
                     MouseArea {
@@ -165,7 +138,7 @@ Item {
                 text: "SPECTRAL PALETTE"
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 9
+                font.pixelSize: 11
                 font.letterSpacing: 1.1
             }
 
@@ -184,8 +157,8 @@ Item {
                         Layout.preferredHeight: 44
                         radius: Theme.radiusSmall
                         color: Theme.accents[modelData]
-                        border.width: Theme.accentName === modelData ? 3 : 1
-                        border.color: Theme.accentName === modelData ? Theme.moon : Theme.line
+                        border.width: 0
+                        opacity: Theme.accentName === modelData ? 1 : 0.54
                         scale: accentPointer.containsMouse ? 1.03 : 1
 
                         Text {
@@ -193,7 +166,7 @@ Item {
                             text: accentChoice.modelData.toUpperCase()
                             color: Theme.void_
                             font.family: Theme.fontMono
-                            font.pixelSize: 9
+                            font.pixelSize: 11
                             font.weight: Font.Bold
                         }
                         MouseArea {
@@ -209,6 +182,7 @@ Item {
                                 easing.type: Easing.OutBack
                             }
                         }
+                        Behavior on opacity { NumberAnimation { duration: Theme.motionFast } }
                     }
                 }
             }
@@ -226,7 +200,7 @@ Item {
                 Layout.preferredHeight: 42
                 radius: Theme.radiusSmall
                 color: Theme.mantle
-                border.width: 1
+                border.width: 0
                 border.color: Settings.adaptivePalette ? Theme.accentLine : Theme.line
                 RowLayout {
                     anchors.fill: parent
@@ -237,14 +211,14 @@ Item {
                         text: Settings.adaptivePalette ? "WALLPAPER-DERIVED SPECTRUM" : "ASTRALITH LAVENDER SPECTRUM"
                         color: Theme.moon
                         font.family: Theme.fontMono
-                        font.pixelSize: 9
+                        font.pixelSize: 11
                         font.weight: Font.Bold
                     }
                     Text {
                         text: AdaptivePalette.status
                         color: Settings.adaptivePalette && AdaptivePalette.ready ? Theme.success : Theme.muted
                         font.family: Theme.fontMono
-                        font.pixelSize: 9
+                        font.pixelSize: 11
                     }
                 }
             }
@@ -253,7 +227,7 @@ Item {
                 text: "TYPOGRAPHY ARRAY"
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 9
+                font.pixelSize: 11
                 font.letterSpacing: 1.1
             }
 
@@ -393,7 +367,7 @@ Item {
                 text: "APERTURE WIDGET MATRIX"
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 9
+                font.pixelSize: 11
                 font.letterSpacing: 1.1
             }
 
@@ -621,7 +595,7 @@ Item {
                 text: "EPHEMERIS CATALOG BEHAVIOR"
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 9
+                font.pixelSize: 11
                 font.letterSpacing: 1.1
             }
 
@@ -678,7 +652,7 @@ Item {
                 Layout.preferredHeight: 76
                 radius: Theme.radiusMedium
                 color: Theme.accentVeil
-                border.width: 1
+                border.width: 0
                 border.color: Theme.accentLine
                 ColumnLayout {
                     anchors.fill: parent
@@ -688,7 +662,7 @@ Item {
                         text: "CATALOG INDEX"
                         color: Theme.accent
                         font.family: Theme.fontMono
-                        font.pixelSize: 9
+                        font.pixelSize: 11
                         font.letterSpacing: 1
                     }
                     Text {
@@ -727,7 +701,7 @@ Item {
                         text: "EXT-SESSION-LOCK-V1  //  PAM IDENTITY HANDSHAKE"
                         color: Theme.muted
                         font.family: Theme.fontMono
-                        font.pixelSize: 9
+                        font.pixelSize: 11
                         font.letterSpacing: 1
                     }
                 }
@@ -736,7 +710,7 @@ Item {
                     Layout.preferredHeight: 32
                     radius: height / 2
                     color: Theme.accentVeil
-                    border.width: 1
+                    border.width: 0
                     border.color: Theme.accentLine
                     Text {
                         id: umbraStatus
@@ -744,7 +718,7 @@ Item {
                         text: Umbra.stateCode
                         color: Umbra.failed ? Theme.danger : Theme.success
                         font.family: Theme.fontMono
-                        font.pixelSize: 8
+                        font.pixelSize: 10
                         font.letterSpacing: 0.9
                     }
                 }
@@ -812,7 +786,7 @@ Item {
                 Layout.preferredHeight: 82
                 radius: Theme.radiusMedium
                 color: Qt.rgba(Theme.cyan.r, Theme.cyan.g, Theme.cyan.b, 0.07)
-                border.width: 1
+                border.width: 0
                 border.color: Qt.rgba(Theme.cyan.r, Theme.cyan.g, Theme.cyan.b, 0.28)
                 RowLayout {
                     anchors.fill: parent
@@ -825,7 +799,7 @@ Item {
                             text: "SAFE VISUAL TEST"
                             color: Theme.cyan
                             font.family: Theme.fontMono
-                            font.pixelSize: 9
+                            font.pixelSize: 11
                             font.weight: Font.Bold
                             font.letterSpacing: 1
                         }
@@ -843,14 +817,14 @@ Item {
                         Layout.preferredHeight: 40
                         radius: Theme.radiusSmall
                         color: previewPointer.containsMouse ? Theme.accent : Theme.accentVeil
-                        border.width: 1
+                        border.width: 0
                         border.color: Theme.accentLine
                         Text {
                             anchors.centerIn: parent
                             text: "PREVIEW UMBRA"
                             color: previewPointer.containsMouse ? Theme.void_ : Theme.accent
                             font.family: Theme.fontMono
-                            font.pixelSize: 9
+                            font.pixelSize: 11
                             font.weight: Font.Bold
                         }
                         MouseArea {
@@ -873,7 +847,7 @@ Item {
                 Layout.preferredHeight: 64
                 radius: Theme.radiusMedium
                 color: Theme.mantle
-                border.width: 1
+                border.width: 0
                 border.color: Theme.line
                 RowLayout {
                     anchors.fill: parent
@@ -884,7 +858,7 @@ Item {
                         text: "REAL LOCK // ONLY PAM SUCCESS RELEASES THE SESSION"
                         color: Theme.muted
                         font.family: Theme.fontMono
-                        font.pixelSize: 9
+                        font.pixelSize: 11
                         font.letterSpacing: 0.8
                     }
                     Rectangle {
@@ -892,14 +866,14 @@ Item {
                         Layout.preferredHeight: 36
                         radius: Theme.radiusSmall
                         color: lockPointer.containsMouse ? Theme.rose : Theme.elevated
-                        border.width: 1
+                        border.width: 0
                         border.color: Qt.rgba(Theme.rose.r, Theme.rose.g, Theme.rose.b, 0.42)
                         Text {
                             anchors.centerIn: parent
                             text: "LOCK SESSION"
                             color: lockPointer.containsMouse ? Theme.void_ : Theme.rose
                             font.family: Theme.fontMono
-                            font.pixelSize: 9
+                            font.pixelSize: 11
                             font.weight: Font.Bold
                         }
                         MouseArea {
@@ -930,7 +904,7 @@ Item {
                 text: "DEFAULT APPLICATIONS"
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 9
+                font.pixelSize: 11
                 font.letterSpacing: 1.1
             }
 
@@ -960,7 +934,7 @@ Item {
                 text: "CELESTIAL WEATHER LINK"
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 9
+                font.pixelSize: 11
                 font.letterSpacing: 1.1
                 Layout.topMargin: 4
             }
@@ -1002,7 +976,7 @@ Item {
                 text: "SERVICE DIAGNOSTICS"
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 9
+                font.pixelSize: 11
                 font.letterSpacing: 1.1
                 Layout.topMargin: 4
             }
@@ -1031,7 +1005,7 @@ Item {
                         Layout.preferredHeight: 58
                         radius: Theme.radiusMedium
                         color: Theme.mantle
-                        border.width: 1
+                        border.width: 0
                         border.color: Theme.line
 
                         RowLayout {
@@ -1049,7 +1023,7 @@ Item {
                                     text: diagnostic.modelData.code
                                     color: diagnostic.modelData.ok ? Theme.accent : Theme.warning
                                     font.family: Theme.fontMono
-                                    font.pixelSize: 8
+                                    font.pixelSize: 10
                                     font.weight: Font.Bold
                                 }
                             }
@@ -1064,7 +1038,7 @@ Item {
                                 text: diagnostic.modelData.value
                                 color: diagnostic.modelData.ok ? Theme.success : Theme.warning
                                 font.family: Theme.fontMono
-                                font.pixelSize: 9
+                                font.pixelSize: 11
                                 elide: Text.ElideRight
                                 Layout.maximumWidth: 120
                             }
@@ -1086,7 +1060,7 @@ Item {
                 text: "BUILT-IN EXTENSION DECK"
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 9
+                font.pixelSize: 11
                 font.letterSpacing: 1.1
             }
 
@@ -1115,7 +1089,7 @@ Item {
                         Layout.preferredHeight: 84
                         radius: Theme.radiusMedium
                         color: extensionPointer.containsMouse ? Theme.elevated : Theme.mantle
-                        border.width: 1
+                        border.width: 0
                         border.color: extensionCard.modelData.enabled ? Theme.accentLine : Theme.line
 
                         RowLayout {
@@ -1133,7 +1107,7 @@ Item {
                                     text: extensionCard.modelData.code
                                     color: extensionCard.modelData.enabled ? Theme.accent : Theme.muted
                                     font.family: Theme.fontMono
-                                    font.pixelSize: 9
+                                    font.pixelSize: 11
                                     font.weight: Font.Bold
                                 }
                             }
@@ -1154,7 +1128,7 @@ Item {
                                     text: extensionCard.modelData.detail
                                     color: Theme.muted
                                     font.family: Theme.fontText
-                                    font.pixelSize: 9
+                                    font.pixelSize: 11
                                     elide: Text.ElideRight
                                 }
                             }
@@ -1163,7 +1137,7 @@ Item {
                                 text: extensionCard.modelData.available ? extensionCard.modelData.status : "OFFLINE"
                                 color: extensionCard.modelData.available ? Theme.success : Theme.warning
                                 font.family: Theme.fontMono
-                                font.pixelSize: 8
+                                font.pixelSize: 10
                             }
                         }
 

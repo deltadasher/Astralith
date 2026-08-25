@@ -57,7 +57,7 @@ Item {
         height: 9
         radius: 5
         color: Theme.line
-        border.width: root.activeFocus ? 1 : 0
+        border.width: 0
         border.color: root.accentColor
         clip: false
 
@@ -106,7 +106,7 @@ Item {
             height: width
             radius: width / 2
             color: root.muted ? Theme.muted : Theme.moon
-            border.width: 3
+            border.width: 0
             border.color: root.muted ? Theme.lineBright : root.accentColor
             scale: root.interacting ? 1.12 : 1
 
@@ -136,7 +136,7 @@ Item {
         height: 22
         radius: 8
         color: Theme.void_
-        border.width: 1
+        border.width: 0
         border.color: root.previewValue > 100 ? Theme.warning : root.accentColor
         z: 4
         Text {
@@ -145,7 +145,7 @@ Item {
             text: Math.round(root.previewValue) + "%"
             color: root.previewValue > 100 ? Theme.warning : Theme.moon
             font.family: Theme.fontMono
-            font.pixelSize: 7
+            font.pixelSize: 10
             font.weight: Font.Bold
         }
     }

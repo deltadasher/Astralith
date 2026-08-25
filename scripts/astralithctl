@@ -91,10 +91,13 @@ case "$command_name" in
         exec qs -p "$project_root" ipc call quickactions toggle "$tab"
         ;;
     lock)
-        exec qs -d -n -p "$project_root/modules/umbra/standalone"
+        exec qs -d -n -p "$project_root/umbra-lock.qml"
         ;;
     preview-lock)
         exec qs -p "$project_root" ipc call umbra preview
+        ;;
+    reveal-lock)
+        exec qs -p "$project_root" ipc call umbra reveal
         ;;
     capture)
         require_argument "$command_name" "${2:-}"

@@ -39,11 +39,19 @@ dedicated lock profile.
   shell and the non-locking preview are separate from the secure lock process.
 - Wallpaper diffusion falls back to the bundled Umbra sky when the current wall
   is a video or unavailable.
-- The authentication rail fills continuously as the passphrase is entered and
-  changes state during verification or rejection.
+- Umbra's Eclipse Cartography surface is intentionally asymmetric: time is a
+  vertical fracture, the session state lives at the edge, and a displaced event
+  horizon owns the right side of the output.
+- The password is represented as a constellation trajectory rather than a text
+  box. Each entered character energizes one node; authentication sends a probe
+  down the curve, and rejection collapses the field into the danger spectrum.
+- Network, battery, and media are rendered as orbiting bodies rather than pills
+  or dashboard cards. Strong color is reserved for live state and interaction.
 - Cached weather, battery, network, and safe MPRIS controls remain available
   without exposing desktop windows.
 - Motion, wallpaper diffusion, media, and weather are independently configurable.
+- Animated canvases are dormant while both the lock and preview are inactive,
+  so the ordinary unlocked session does not pay for Umbra's motion system.
 
 ## Recovery note
 

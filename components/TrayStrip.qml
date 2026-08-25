@@ -50,7 +50,7 @@ RowLayout {
                 }
                 color: Theme.moon
                 font.family: Theme.fontMono
-                font.pixelSize: 8
+                font.pixelSize: 10
                 font.weight: Font.Bold
             }
 

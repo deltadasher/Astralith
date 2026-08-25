@@ -31,7 +31,7 @@ Item {
         color: !enabled ? Theme.mantle : primary
             ? (buttonPointer.containsMouse ? Theme.accent : Theme.accentVeil)
             : buttonPointer.containsMouse ? Theme.elevated : Theme.mantle
-        border.width: 1
+        border.width: 0
         border.color: primary ? Theme.accentLine : Theme.line
         opacity: enabled ? 1 : 0.4
         Text {
@@ -41,7 +41,7 @@ Item {
             color: button.primary && buttonPointer.containsMouse ? Theme.void_
                 : button.primary ? Theme.accent : Theme.muted
             font.family: Theme.fontMono
-            font.pixelSize: 9
+            font.pixelSize: 11
             font.weight: Font.Bold
             font.letterSpacing: 0.5
         }
@@ -62,11 +62,13 @@ Item {
         RowLayout {
             Layout.fillWidth: true
             spacing: 10
-            ColumnLayout {
+            Text {
                 Layout.fillWidth: true
-                spacing: 1
-                Text { text: "CHRONOS ARRAY"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 18; font.weight: Font.Black; font.letterSpacing: 0.5 }
-                Text { text: "COUNTDOWN // STOPWATCH // FOCUS ORBIT"; color: Theme.accent; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 0.9 }
+                text: "CHRONOS"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 21
+                font.weight: Font.Black
             }
             Rectangle {
                 Layout.preferredWidth: 8; Layout.preferredHeight: 8; radius: 4
@@ -85,7 +87,7 @@ Item {
             Layout.preferredHeight: 38
             radius: 12
             color: Theme.mantle
-            border.width: 1
+            border.width: 0
             border.color: Theme.line
             RowLayout {
                 anchors.fill: parent
@@ -107,7 +109,7 @@ Item {
                             text: tab.modelData
                             color: root.activeTab === tab.index ? Theme.void_ : Theme.muted
                             font.family: Theme.fontMono
-                            font.pixelSize: 8
+                            font.pixelSize: 10
                             font.weight: Font.Bold
                         }
                         MouseArea { id: tabPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.activeTab = tab.index }
@@ -162,7 +164,7 @@ Item {
                             anchors.centerIn: parent
                             spacing: 1
                             Text { anchors.horizontalCenter: parent.horizontalCenter; text: Timekeeper.timerDisplay; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: root.railMode ? 39 : 48; font.weight: Font.Black; font.letterSpacing: 1 }
-                            Text { anchors.horizontalCenter: parent.horizontalCenter; text: Timekeeper.timerRunning ? "ORBIT IN MOTION" : Timekeeper.timerProgress > 0 ? "ORBIT PAUSED" : "COUNTDOWN READY"; color: Timekeeper.timerRunning ? Theme.success : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 1 }
+                            Text { anchors.horizontalCenter: parent.horizontalCenter; text: Timekeeper.timerRunning ? "ORBIT IN MOTION" : Timekeeper.timerProgress > 0 ? "ORBIT PAUSED" : "COUNTDOWN READY"; color: Timekeeper.timerRunning ? Theme.success : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 1 }
                         }
                     }
                     RowLayout {
@@ -195,13 +197,13 @@ Item {
                             anchors.centerIn: parent
                             spacing: 5
                             Text { anchors.horizontalCenter: parent.horizontalCenter; text: Timekeeper.stopwatchDisplay; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: root.railMode ? 36 : 48; font.weight: Font.Black; font.letterSpacing: 1 }
-                            Text { anchors.horizontalCenter: parent.horizontalCenter; text: Timekeeper.stopwatchRunning ? "MEASURING LOCAL TIME" : Timekeeper.stopwatchDisplayMs > 0 ? "CHRONOGRAPH PAUSED" : "CHRONOGRAPH READY"; color: Timekeeper.stopwatchRunning ? Theme.cyan : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 1 }
+                            Text { anchors.horizontalCenter: parent.horizontalCenter; text: Timekeeper.stopwatchRunning ? "MEASURING LOCAL TIME" : Timekeeper.stopwatchDisplayMs > 0 ? "CHRONOGRAPH PAUSED" : "CHRONOGRAPH READY"; color: Timekeeper.stopwatchRunning ? Theme.cyan : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 1 }
                         }
                     }
                     Rectangle {
                         Layout.fillWidth: true
                         Layout.preferredHeight: Math.min(120, Math.max(58, Timekeeper.laps.length * 27 + 12))
-                        radius: Theme.radiusMedium; color: Theme.mantle; border.width: 1; border.color: Theme.line; clip: true
+                        radius: Theme.radiusMedium; color: Theme.mantle; border.width: 0; border.color: Theme.line; clip: true
                         ListView {
                             anchors.fill: parent; anchors.margins: 6; spacing: 3
                             model: Timekeeper.laps.slice().reverse()
@@ -209,13 +211,13 @@ Item {
                                 required property var modelData
                                 width: ListView.view.width; height: 24; radius: 7; color: Theme.elevated
                                 RowLayout { anchors.fill: parent; anchors.leftMargin: 9; anchors.rightMargin: 9
-                                    Text { text: "LAP " + modelData.number.toString().padStart(2, "0"); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8 }
+                                    Text { text: "LAP " + modelData.number.toString().padStart(2, "0"); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10 }
                                     Item { Layout.fillWidth: true }
-                                    Text { text: "+" + Timekeeper.formatTime(modelData.split, true); color: Theme.cyan; font.family: Theme.fontMono; font.pixelSize: 8 }
-                                    Text { text: Timekeeper.formatTime(modelData.total, true); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
+                                    Text { text: "+" + Timekeeper.formatTime(modelData.split, true); color: Theme.cyan; font.family: Theme.fontMono; font.pixelSize: 10 }
+                                    Text { text: Timekeeper.formatTime(modelData.total, true); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
                                 }
                             }
-                            Text { anchors.centerIn: parent; visible: Timekeeper.laps.length === 0; text: "NO LAPS RECORDED"; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 8 }
+                            Text { anchors.centerIn: parent; visible: Timekeeper.laps.length === 0; text: "NO LAPS RECORDED"; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 10 }
                         }
                     }
                     RowLayout { Layout.alignment: Qt.AlignHCenter; spacing: 8
@@ -241,7 +243,7 @@ Item {
                                 text: Focus.phaseLabel + " // " + (Focus.running ? "IN PROGRESS" : "STANDBY")
                                 color: Focus.running ? Theme.success : Theme.accent
                                 font.family: Theme.fontMono
-                                font.pixelSize: 8
+                                font.pixelSize: 10
                                 font.weight: Font.Bold
                                 font.letterSpacing: 1
                             }
@@ -250,7 +252,7 @@ Item {
                                 text: "COMPACT CONTROL // EXPAND FOR CYCLES + STATISTICS"
                                 color: Theme.muted
                                 font.family: Theme.fontMono
-                                font.pixelSize: 7
+                                font.pixelSize: 10
                                 font.letterSpacing: 0.7
                             }
                         }
@@ -274,7 +276,7 @@ Item {
                             }
                         }
                     }
-                    Text { Layout.alignment: Qt.AlignHCenter; text: Focus.completedSessions + " COMPLETED ORBITS"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.letterSpacing: 1 }
+                    Text { Layout.alignment: Qt.AlignHCenter; text: Focus.completedSessions + " COMPLETED ORBITS"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.letterSpacing: 1 }
                 }
             }
         }

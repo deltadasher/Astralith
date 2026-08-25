@@ -68,7 +68,7 @@ Rectangle {
             text: root.code
             color: pointer.containsMouse ? root.tone : Theme.lineBright
             font.family: Theme.fontMono
-            font.pixelSize: 9
+            font.pixelSize: 11
             font.weight: Font.Bold
             font.letterSpacing: 0.8
             opacity: pointer.containsMouse ? 1 : 0.58

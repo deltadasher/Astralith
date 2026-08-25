@@ -283,10 +283,8 @@ Item {
                     anchors.fill: parent
                     radius: 28 * root.sf
                     color: satellite.highlighted ? Theme.accent
-                        : hourPointer.containsMouse ? Theme.elevated : Theme.mantle
-                    border.color: satellite.highlighted ? "transparent"
-                        : hourPointer.containsMouse ? Theme.accent : Theme.line
-                    border.width: 1
+                        : hourPointer.containsMouse ? Theme.controlHover : Theme.controlRest
+                    border.width: 0
 
                     ColumnLayout {
                         anchors.centerIn: parent
@@ -296,7 +294,7 @@ Item {
                             text: satellite.modelData.time
                             font.family: Theme.fontMono
                             font.weight: Font.Bold
-                            font.pixelSize: 9 * root.sf
+                            font.pixelSize: 11 * root.sf
                             color: satellite.highlighted ? Theme.void_ : Theme.muted
                         }
                         Text {

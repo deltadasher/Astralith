@@ -24,38 +24,28 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            ColumnLayout {
+            Text {
                 Layout.fillWidth: true
-                spacing: 2
-                Text {
-                    text: "TRANSIT CLIPBOARD"
-                    color: Theme.moon
-                    font.family: Theme.fontDisplay
-                    font.pixelSize: 20
-                    font.weight: Font.DemiBold
-                }
-                Text {
-                    text: Clipboard.entries.length + " OBJECTS // TEXT + IMAGE HISTORY"
-                    color: Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 8
-                    font.letterSpacing: 1
-                }
+                text: "CLIPBOARD"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 22
+                font.weight: Font.DemiBold
             }
             Rectangle {
-                implicitWidth: clearLabel.implicitWidth + 20
-                implicitHeight: 30
-                radius: Theme.radiusSmall
-                color: clearPointer.containsMouse ? Theme.elevated : Theme.mantle
-                border.width: 1
+                implicitWidth: 36
+                implicitHeight: 36
+                radius: width / 2
+                color: clearPointer.containsMouse ? Theme.danger : Theme.controlRest
+                border.width: 0
                 border.color: Theme.line
                 Text {
                     id: clearLabel
                     anchors.centerIn: parent
-                    text: "CLEAR HISTORY"
-                    color: Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    text: "×"
+                    color: clearPointer.containsMouse ? Theme.void_ : Theme.muted
+                    font.family: Theme.fontDisplay
+                    font.pixelSize: 18
                 }
                 MouseArea {
                     id: clearPointer
@@ -72,7 +62,7 @@ Item {
             Layout.preferredHeight: 44
             radius: Theme.radiusMedium
             color: Theme.mantle
-            border.width: 1
+            border.width: 0
             border.color: searchInput.activeFocus ? Theme.accentLine : Theme.line
             TextInput {
                 id: searchInput
@@ -116,7 +106,7 @@ Item {
                 height: clipGrid.cellHeight - 8
                 radius: Theme.radiusMedium
                 color: clipPointer.containsMouse ? Theme.elevated : Theme.mantle
-                border.width: 1
+                border.width: 0
                 border.color: clipPointer.containsMouse ? Theme.accentLine : Theme.line
                 clip: true
                 scale: clipPointer.containsMouse ? 0.985 : 1
@@ -135,13 +125,6 @@ Item {
                     visible: clipCard.modelData.type === "text"
                     spacing: 6
                     Text {
-                        text: "TXT // " + clipCard.modelData.id
-                        color: Theme.accent
-                        font.family: Theme.fontMono
-                        font.pixelSize: 7
-                        font.weight: Font.Bold
-                    }
-                    Text {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         text: clipCard.modelData.content
@@ -154,24 +137,6 @@ Item {
                     }
                 }
 
-                Rectangle {
-                    visible: clipCard.modelData.type === "image"
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
-                    anchors.margins: 8
-                    width: imageLabel.implicitWidth + 14
-                    height: 22
-                    radius: 11
-                    color: Theme.veil
-                    Text {
-                        id: imageLabel
-                        anchors.centerIn: parent
-                        text: "IMAGE // " + clipCard.modelData.id
-                        color: Theme.moon
-                        font.family: Theme.fontMono
-                        font.pixelSize: 7
-                    }
-                }
 
                 MouseArea {
                     id: clipPointer

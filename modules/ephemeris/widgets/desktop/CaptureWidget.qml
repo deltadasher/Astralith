@@ -31,7 +31,7 @@ Item {
             text: parent.detail
             color: Theme.muted
             font.family: Theme.fontMono
-            font.pixelSize: 8
+            font.pixelSize: 10
             font.letterSpacing: 1
         }
     }
@@ -50,7 +50,7 @@ Item {
         radius: Theme.radiusMedium
         color: !available ? Qt.rgba(Theme.mantle.r, Theme.mantle.g, Theme.mantle.b, 0.45)
             : tilePointer.containsMouse ? Theme.accentVeil : Theme.mantle
-        border.width: 1
+        border.width: 0
         border.color: !available ? Theme.barHairline
             : tilePointer.containsMouse ? Theme.accentLine : Theme.line
         opacity: available ? 1 : 0.52
@@ -83,7 +83,7 @@ Item {
                     text: tile.code
                     color: tile.available ? Theme.accent : Theme.lineBright
                     font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    font.pixelSize: 10
                     font.weight: Font.Bold
                     font.letterSpacing: 0.9
                 }
@@ -101,7 +101,7 @@ Item {
                     text: tile.available ? tile.detail : "BACKEND UNAVAILABLE"
                     color: Theme.muted
                     font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    font.pixelSize: 10
                     elide: Text.ElideRight
                 }
             }
@@ -129,24 +129,13 @@ Item {
             Layout.fillWidth: true
             spacing: 12
 
-            ColumnLayout {
+            Text {
                 Layout.fillWidth: true
-                spacing: 1
-                Text {
-                    text: "OPTICS BAY"
-                    color: Theme.moon
-                    font.family: Theme.fontDisplay
-                    font.pixelSize: 21
-                    font.weight: Font.Black
-                    font.letterSpacing: 0.5
-                }
-                Text {
-                    text: "SCREENSHOTS // EDITOR // 60 FPS PORTAL CAPTURE"
-                    color: Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 8
-                    font.letterSpacing: 1.05
-                }
+                text: "OPTICS"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 23
+                font.weight: Font.Black
             }
 
             Rectangle {
@@ -178,7 +167,7 @@ Item {
                             : Environment.screenshotStatus
                         color: Environment.recording ? Theme.danger : Theme.moon
                         font.family: Theme.fontMono
-                        font.pixelSize: 8
+                        font.pixelSize: 10
                         font.weight: Font.Bold
                     }
                 }
@@ -256,8 +245,8 @@ Item {
                         anchors.leftMargin: 14
                         anchors.rightMargin: 14
                         Text { text: "󰉋"; color: Theme.accent; font.family: Theme.fontIcon; font.pixelSize: 19 }
-                        Text { Layout.fillWidth: true; text: "OPEN SCREENSHOT ARCHIVE"; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
-                        Text { text: "~/Pictures/Screenshots"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8 }
+                        Text { Layout.fillWidth: true; text: "OPEN SCREENSHOT ARCHIVE"; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
+                        Text { text: "~/Pictures/Screenshots"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10 }
                     }
                     MouseArea { id: captureFolderPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Environment.openCaptureFolder() }
                 }
@@ -268,7 +257,7 @@ Item {
                 Layout.fillHeight: true
                 radius: Theme.radiusLarge
                 color: Theme.mantle
-                border.width: 1
+                border.width: 0
                 border.color: Environment.recording ? Qt.rgba(Theme.danger.r, Theme.danger.g, Theme.danger.b, 0.52) : Theme.line
 
                 ColumnLayout {
@@ -282,7 +271,7 @@ Item {
                             Layout.fillWidth: true
                             spacing: 1
                             Text { text: "CAPTURE STREAM"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 16; font.weight: Font.Black }
-                            Text { text: "GPU SCREEN RECORDER"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.letterSpacing: 0.9 }
+                            Text { text: "GPU SCREEN RECORDER"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.letterSpacing: 0.9 }
                         }
                         Rectangle {
                             Layout.preferredWidth: 11
@@ -325,7 +314,7 @@ Item {
                                     ? "60 FPS · H.264 · DESKTOP AUDIO" : "INSTALL GPU-SCREEN-RECORDER"
                                 color: Theme.muted
                                 font.family: Theme.fontMono
-                                font.pixelSize: 7
+                                font.pixelSize: 10
                             }
                         }
                     }
@@ -342,7 +331,7 @@ Item {
                             text: Environment.recording ? "STOP AND FINALIZE" : "START PORTAL RECORDING"
                             color: Environment.recording ? Theme.void_ : recordPointer.containsMouse ? Theme.void_ : Theme.moon
                             font.family: Theme.fontMono
-                            font.pixelSize: 9
+                            font.pixelSize: 11
                             font.weight: Font.Black
                         }
                         MouseArea {
@@ -368,7 +357,7 @@ Item {
                         wrapMode: Text.WordWrap
                         color: Theme.muted
                         font.family: Theme.fontText
-                        font.pixelSize: 9
+                        font.pixelSize: 11
                         lineHeight: 1.25
                     }
 
@@ -379,7 +368,7 @@ Item {
                         Layout.preferredHeight: 42
                         radius: 11
                         color: recordingFolderPointer.containsMouse ? Theme.barNeutralHover : Theme.barNeutral
-                        Text { anchors.centerIn: parent; text: "OPEN RECORDING ARCHIVE"; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+                        Text { anchors.centerIn: parent; text: "OPEN RECORDING ARCHIVE"; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                         MouseArea { id: recordingFolderPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Environment.openRecordingFolder() }
                     }
                 }

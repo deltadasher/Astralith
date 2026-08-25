@@ -8,10 +8,9 @@ Rectangle {
     id: root
     height: 58
     radius: Theme.radiusMedium
-    color: root.selected ? Theme.accentVeil
-        : pointer.containsMouse ? Theme.elevated : "transparent"
-    border.width: 1
-    border.color: root.selected ? Theme.accentLine : "transparent"
+    color: root.selected ? Theme.controlActive
+        : pointer.containsMouse ? Theme.controlHover : "transparent"
+    border.width: 0
 
     required property var modelData
     required property int index
@@ -29,9 +28,8 @@ Rectangle {
             Layout.preferredWidth: 38
             Layout.preferredHeight: 38
             radius: 10
-            color: Theme.elevated
-            border.width: 1
-            border.color: root.selected ? Theme.accentLine : Theme.line
+            color: root.selected ? Theme.accent : Theme.elevated
+            border.width: 0
 
             IconImage {
                 anchors.centerIn: parent
@@ -58,17 +56,17 @@ Rectangle {
                 text: root.modelData.genericName || root.modelData.comment || root.modelData.id
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 8
+                font.pixelSize: 10
                 elide: Text.ElideRight
             }
         }
 
         Text {
             visible: root.selected
-            text: "LAUNCH  ↵"
+            text: "↵"
             color: Theme.accent
             font.family: Theme.fontMono
-            font.pixelSize: 8
+            font.pixelSize: 14
             font.letterSpacing: 1
         }
     }
@@ -83,5 +81,4 @@ Rectangle {
     }
 
     Behavior on color { ColorAnimation { duration: Theme.motionFast } }
-    Behavior on border.color { ColorAnimation { duration: Theme.motionFast } }
 }

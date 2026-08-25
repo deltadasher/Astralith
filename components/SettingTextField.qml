@@ -7,9 +7,8 @@ Rectangle {
 
     implicitHeight: status.length > 0 ? 72 : 58
     radius: Theme.radiusMedium
-    color: Theme.mantle
-    border.width: 1
-    border.color: editor.activeFocus ? Theme.accentLine : Theme.line
+    color: editor.activeFocus ? Theme.fieldFocus : Theme.controlRest
+    border.width: 0
 
     property string label: "Command"
     property string detail: ""
@@ -52,9 +51,8 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 32
                 radius: Theme.radiusSmall
-                color: Theme.elevated
-                border.width: 1
-                border.color: editor.activeFocus ? Theme.accentLine : Theme.line
+                color: editor.activeFocus ? Theme.controlActive : Theme.fieldRest
+                border.width: 0
 
                 TextInput {
                     id: editor
@@ -80,7 +78,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignRight
                 color: root.statusOk ? Theme.success : Theme.warning
                 font.family: Theme.fontMono
-                font.pixelSize: 8
+                font.pixelSize: 10
                 font.letterSpacing: 0.5
                 elide: Text.ElideLeft
             }

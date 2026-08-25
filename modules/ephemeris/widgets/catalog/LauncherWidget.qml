@@ -66,30 +66,13 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 2
-                Text {
-                    text: "APPLICATION CATALOG"
-                    color: Theme.moon
-                    font.family: Theme.fontDisplay
-                    font.pixelSize: 20
-                    font.weight: Font.DemiBold
-                }
-                Text {
-                    text: root.filteredApps.length + " RESULTS // " + root.allApps.length + " INDEXED"
-                    color: Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 8
-                    font.letterSpacing: 1
-                }
-            }
             Text {
-                visible: Settings.showLauncherHints
-                text: "↑↓ NAVIGATE   ↵ LAUNCH"
-                color: Theme.lineBright
-                font.family: Theme.fontMono
-                font.pixelSize: 8
+                Layout.fillWidth: true
+                text: "APPLICATIONS"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 22
+                font.weight: Font.DemiBold
             }
         }
 
@@ -98,7 +81,7 @@ Item {
             Layout.preferredHeight: 46
             radius: Theme.radiusMedium
             color: Theme.mantle
-            border.width: 1
+            border.width: 0
             border.color: searchInput.activeFocus ? Theme.accentLine : Theme.line
 
             TextInput {
@@ -157,11 +140,10 @@ Item {
             Text {
                 anchors.centerIn: parent
                 visible: appList.count === 0
-                text: "NO CELESTIAL OBJECTS MATCH"
+                text: "No matches"
                 color: Theme.muted
                 font.family: Theme.fontMono
                 font.pixelSize: 10
-                font.letterSpacing: 1.2
             }
         }
     }

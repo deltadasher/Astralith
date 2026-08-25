@@ -206,7 +206,7 @@ PanelWindow {
                 anchors.fill: parent
                 visible: !root.nativeRenderer && !root.immersiveWidget
                 fillColor: Theme.glass
-                lineColor: Theme.barHairlineHover
+                lineColor: "transparent"
                 tone: root.moduleTone
                 cut: Settings.atmosphereStyle === "cinematic" ? 28 : 20
                 energy: root.widgetPresentation
@@ -214,7 +214,7 @@ PanelWindow {
 
             EphemerisAtmosphere {
                 anchors.fill: parent
-                anchors.topMargin: root.immersiveWidget ? 0 : 46
+                anchors.topMargin: 0
                 visible: !root.immersiveWidget
                 module: ShellState.ephemerisTab
                 presentation: root.widgetPresentation
@@ -252,53 +252,37 @@ PanelWindow {
             }
 
             Rectangle {
-                visible: !root.immersiveWidget
-                anchors.left: parent.left
+                z: 20
                 anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.leftMargin: 10
-                anchors.rightMargin: 10
-                height: 46
-                color: Qt.rgba(Theme.mantle.r, Theme.mantle.g, Theme.mantle.b, 0.38)
-
-                Rectangle {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    height: 1
-                    color: Theme.line
-                }
-
+                anchors.rightMargin: 12
+                anchors.topMargin: 12
+                width: 38
+                height: 38
+                radius: width / 2
+                color: closePointer.containsMouse ? Theme.danger : Theme.controlRest
                 Text {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: root.widgetLayout.title
-                    color: Theme.moon
+                    anchors.centerIn: parent
+                    text: "×"
+                    color: closePointer.containsMouse ? Theme.void_ : Theme.muted
                     font.family: Theme.fontDisplay
-                    font.pixelSize: 14
-                    font.weight: Font.DemiBold
+                    font.pixelSize: 19
+                    font.weight: Font.Bold
                 }
-
-                Rectangle {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 32
-                    height: 32
-                    radius: 8
-                    color: closePointer.containsMouse ? Qt.rgba(Theme.danger.r, Theme.danger.g, Theme.danger.b, 0.14) : "transparent"
-                    border.width: 1
-                    border.color: closePointer.containsMouse ? Theme.danger : "transparent"
-                    Text { anchors.centerIn: parent; text: "×"; color: closePointer.containsMouse ? Theme.danger : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 15 }
-                    MouseArea { id: closePointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.close() }
+                MouseArea {
+                    id: closePointer
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.close()
                 }
+                Behavior on color { ColorAnimation { duration: Theme.motionFast } }
             }
 
             Item {
                 id: keyCatcher
                 anchors.fill: parent
-                anchors.topMargin: root.immersiveWidget ? 0 : 46
+                anchors.topMargin: 0
                 focus: true
                 Keys.onPressed: function(event) {
                     if (event.key === Qt.Key_Escape) {
@@ -310,7 +294,7 @@ PanelWindow {
                 Loader {
                     id: widgetLoader
                     anchors.fill: parent
-                    anchors.margins: root.immersiveWidget ? 8 : 18
+                    anchors.margins: root.immersiveWidget ? 8 : 20
                     opacity: root.widgetPresentation
                     transform: Translate { y: (1 - root.widgetPresentation) * 14 }
                     sourceComponent: ShellState.ephemerisTab === "tools" ? toolsComponent

@@ -35,7 +35,7 @@ Item {
         Layout.preferredHeight: root.railMode ? 82 : 98
         radius: Theme.radiusMedium
         color: Theme.mantle
-        border.width: 1
+        border.width: 0
         border.color: Qt.rgba(tone.r, tone.g, tone.b, 0.38)
         clip: true
         Rectangle { width: 78; height: 78; radius: 39; x: metric.width - 45; y: -37; color: metric.tone; opacity: 0.07 }
@@ -43,12 +43,12 @@ Item {
             anchors.fill: parent; anchors.margins: 11; spacing: 3
             RowLayout {
                 Layout.fillWidth: true
-                Text { text: metric.code; color: metric.tone; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 1 }
+                Text { text: metric.code; color: metric.tone; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 1 }
                 Item { Layout.fillWidth: true }
                 Rectangle { width: 6; height: 6; radius: 3; color: metric.amount > 0.9 ? Theme.danger : metric.amount > 0.72 ? Theme.warning : Theme.success }
             }
             Text { text: metric.value; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: root.railMode ? 20 : 25; font.weight: Font.Black }
-            Text { Layout.fillWidth: true; text: metric.detail; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; elide: Text.ElideRight }
+            Text { Layout.fillWidth: true; text: metric.detail; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; elide: Text.ElideRight }
             Item { Layout.fillHeight: true }
             Rectangle { Layout.fillWidth: true; Layout.preferredHeight: 5; radius: 3; color: Theme.line; clip: true
                 Rectangle { width: parent.width * Math.max(0, Math.min(1, metric.amount)); height: parent.height; radius: 3; color: metric.tone; Behavior on width { NumberAnimation { duration: 600; easing.type: Easing.OutQuint } } }
@@ -71,11 +71,11 @@ Item {
             ColumnLayout {
                 Layout.fillWidth: true; spacing: 1
                 Text { text: "LOCAL CONSTELLATION"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 18; font.weight: Font.Black; font.letterSpacing: 0.5 }
-                Text { text: SysStats.hostname.toUpperCase() + " // " + SysStats.uptimeLabel + " UPTIME"; color: Theme.accent; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 0.8 }
+                Text { text: SysStats.hostname.toUpperCase() + " // " + SysStats.uptimeLabel + " UPTIME"; color: Theme.accent; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 0.8 }
             }
             ColumnLayout { spacing: 0
-                Text { Layout.alignment: Qt.AlignRight; text: "LOAD " + SysStats.loadAverage.toFixed(2); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8 }
-                Text { Layout.alignment: Qt.AlignRight; text: SysStats.processCount + " PROCESSES"; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 8 }
+                Text { Layout.alignment: Qt.AlignRight; text: "LOAD " + SysStats.loadAverage.toFixed(2); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10 }
+                Text { Layout.alignment: Qt.AlignRight; text: SysStats.processCount + " PROCESSES"; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 10 }
             }
         }
 
@@ -96,7 +96,7 @@ Item {
             Layout.minimumHeight: 105
             radius: Theme.radiusMedium
             color: Theme.mantle
-            border.width: 1
+            border.width: 0
             border.color: Theme.line
             clip: true
 
@@ -148,7 +148,7 @@ Item {
                         required property var modelData
                         spacing: 4
                         Rectangle { anchors.verticalCenter: parent.verticalCenter; width: 7; height: 7; radius: 4; color: parent.modelData.tone }
-                        Text { text: parent.modelData.label; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.weight: Font.Bold }
+                        Text { text: parent.modelData.label; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                     }
                 }
             }
@@ -156,10 +156,10 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            Text { text: "↓ " + SysStats.networkDownLabel; color: Theme.cyan; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
-            Text { text: "↑ " + SysStats.networkUpLabel; color: Theme.rose; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
+            Text { text: "↓ " + SysStats.networkDownLabel; color: Theme.cyan; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
+            Text { text: "↑ " + SysStats.networkUpLabel; color: Theme.rose; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
             Item { Layout.fillWidth: true }
-            Text { text: SysStats.kernel; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 8; elide: Text.ElideMiddle; Layout.maximumWidth: 180 }
+            Text { text: SysStats.kernel; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 10; elide: Text.ElideMiddle; Layout.maximumWidth: 180 }
         }
     }
 }

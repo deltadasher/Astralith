@@ -17,14 +17,6 @@ Item {
             font.pixelSize: 20
             font.weight: Font.DemiBold
         }
-        Text {
-            text: "NIRI-NATIVE ACTIONS // BACKEND-AWARE"
-            color: Theme.muted
-            font.family: Theme.fontMono
-            font.pixelSize: 8
-            font.letterSpacing: 1
-        }
-
         GridLayout {
             Layout.fillWidth: true
             columns: 2

@@ -4,12 +4,10 @@ import "../.."
 
 Rectangle {
     id: root
-    implicitHeight: 108
+    implicitHeight: 96
     radius: Theme.radiusMedium
-    color: pointer.containsMouse && root.available ? Theme.elevated : Theme.mantle
-    border.width: 1
-    border.color: pointer.containsMouse && root.available
-        ? Theme.accentLine : Theme.line
+    color: pointer.containsMouse && root.available ? Theme.controlHover : Theme.controlRest
+    border.width: 0
     opacity: root.available ? 1 : 0.52
 
     property string code: "SYS/00"
@@ -22,34 +20,25 @@ Rectangle {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 14
-        spacing: 6
+        spacing: 5
 
         RowLayout {
             Layout.fillWidth: true
             Text {
                 Layout.fillWidth: true
-                text: root.code
-                color: Theme.accent
-                font.family: Theme.fontMono
-                font.pixelSize: 8
-                font.letterSpacing: 1.1
+                text: root.title
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 15
+                font.weight: Font.DemiBold
             }
-            Text {
-                text: root.status
+            Rectangle {
+                width: 8
+                height: 8
+                radius: 4
                 color: root.available ? Theme.success : Theme.warning
-                font.family: Theme.fontMono
-                font.pixelSize: 8
-                font.letterSpacing: 0.8
+                opacity: root.status === "READY" || root.status === "ONLINE" ? 0.7 : 1
             }
-        }
-
-        Text {
-            Layout.fillWidth: true
-            text: root.title
-            color: Theme.moon
-            font.family: Theme.fontDisplay
-            font.pixelSize: 15
-            font.weight: Font.DemiBold
         }
 
         Text {
@@ -57,7 +46,7 @@ Rectangle {
             text: root.detail
             color: Theme.muted
             font.family: Theme.fontText
-            font.pixelSize: 10
+            font.pixelSize: 12
             elide: Text.ElideRight
         }
     }
@@ -72,5 +61,4 @@ Rectangle {
     }
 
     Behavior on color { ColorAnimation { duration: Theme.motionFast } }
-    Behavior on border.color { ColorAnimation { duration: Theme.motionFast } }
 }

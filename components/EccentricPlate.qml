@@ -5,11 +5,11 @@ Canvas {
     id: root
 
     property color fillColor: Theme.glass
-    property color lineColor: Theme.barHairlineHover
+    property color lineColor: "transparent"
     property color tone: Theme.accent
     property real cut: 18
     property real energy: 0
-    property real lineWidth: 1
+    property real lineWidth: 0
 
     antialiasing: true
 
@@ -49,9 +49,11 @@ Canvas {
         platePath(ctx, root.lineWidth * 0.5);
         ctx.fillStyle = root.fillColor.toString();
         ctx.fill();
-        ctx.lineWidth = root.lineWidth;
-        ctx.strokeStyle = root.lineColor.toString();
-        ctx.lineJoin = "round";
-        ctx.stroke();
+        if (root.lineWidth > 0) {
+            ctx.lineWidth = root.lineWidth;
+            ctx.strokeStyle = root.lineColor.toString();
+            ctx.lineJoin = "round";
+            ctx.stroke();
+        }
     }
 }

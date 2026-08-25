@@ -20,23 +20,13 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            ColumnLayout {
+            Text {
                 Layout.fillWidth: true
-                spacing: 2
-                Text {
-                    text: "TRANSIT SIGNALS"
-                    color: Theme.moon
-                    font.family: Theme.fontDisplay
-                    font.pixelSize: 20
-                    font.weight: Font.DemiBold
-                }
-                Text {
-                    text: Notifications.history.count + " SIGNALS RETAINED"
-                    color: Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 8
-                    font.letterSpacing: 1
-                }
+                text: "NOTIFICATIONS"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 22
+                font.weight: Font.DemiBold
             }
 
             Rectangle {
@@ -44,7 +34,7 @@ Item {
                 implicitHeight: 32
                 radius: 16
                 color: Settings.doNotDisturb ? Theme.accentVeil : Theme.mantle
-                border.width: 1
+                border.width: 0
                 border.color: Settings.doNotDisturb ? Theme.accentLine : Theme.line
                 RowLayout {
                     id: dndRow
@@ -60,7 +50,7 @@ Item {
                         text: Settings.doNotDisturb ? "DND ACTIVE" : "SIGNALS LIVE"
                         color: Settings.doNotDisturb ? Theme.warning : Theme.moon
                         font.family: Theme.fontMono
-                        font.pixelSize: 7
+                        font.pixelSize: 10
                         font.weight: Font.Bold
                     }
                 }
@@ -72,19 +62,19 @@ Item {
             }
 
             Rectangle {
-                implicitWidth: clearText.implicitWidth + 18
-                implicitHeight: 32
-                radius: Theme.radiusSmall
-                color: clearPointer.containsMouse ? Theme.elevated : Theme.mantle
-                border.width: 1
+                implicitWidth: 36
+                implicitHeight: 36
+                radius: width / 2
+                color: clearPointer.containsMouse ? Theme.danger : Theme.controlRest
+                border.width: 0
                 border.color: Theme.line
                 Text {
                     id: clearText
                     anchors.centerIn: parent
-                    text: "CLEAR"
-                    color: Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    text: "×"
+                    color: clearPointer.containsMouse ? Theme.void_ : Theme.muted
+                    font.family: Theme.fontDisplay
+                    font.pixelSize: 18
                 }
                 MouseArea {
                     id: clearPointer

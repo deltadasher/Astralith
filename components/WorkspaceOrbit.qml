@@ -136,7 +136,7 @@ Item {
         text: Niri.available ? "ACQUIRING ORBIT" : "NO NIRI LINK"
         color: Theme.muted
         font.family: Theme.fontMono
-        font.pixelSize: 8
+        font.pixelSize: 10
         font.letterSpacing: 1.2
     }
 }

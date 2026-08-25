@@ -129,7 +129,7 @@ PanelWindow {
         scale: 0.985 + root.presentation * 0.015
         radius: Theme.radiusLarge
         color: Theme.glass
-        border.width: 1
+        border.width: 0
         border.color: Theme.barHairlineHover
         clip: true
 
@@ -173,13 +173,6 @@ PanelWindow {
             height: parent.height
             color: Qt.rgba(Theme.mantle.r, Theme.mantle.g, Theme.mantle.b, 0.88)
 
-            Rectangle {
-                anchors.top: parent.top; anchors.bottom: parent.bottom
-                anchors.right: root.leftEdge ? parent.right : undefined
-                anchors.left: root.leftEdge ? undefined : parent.left
-                width: 1; color: Theme.line
-            }
-
             ColumnLayout {
                 anchors.fill: parent
                 anchors.topMargin: 10
@@ -190,23 +183,12 @@ PanelWindow {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: 34; Layout.preferredHeight: 34; radius: 11
                     color: Qt.rgba(root.instrumentTone.r, root.instrumentTone.g, root.instrumentTone.b, 0.12)
-                    border.width: 1
+                    border.width: 0
                     border.color: Qt.rgba(root.instrumentTone.r, root.instrumentTone.g, root.instrumentTone.b, 0.38)
                     Text { anchors.centerIn: parent; text: "✦"; color: root.instrumentTone; font.family: Theme.fontDisplay; font.pixelSize: 15; font.weight: Font.Bold }
                 }
 
-                Text {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: "E\nS\nS\nE\nN\nT\nI\nA\nL"
-                    horizontalAlignment: Text.AlignHCenter
-                    color: Theme.lineBright
-                    font.family: Theme.fontMono
-                    font.pixelSize: 7
-                    font.weight: Font.Bold
-                    lineHeight: 0.82
-                }
-
-                Item { Layout.preferredHeight: 5 }
+                Item { Layout.preferredHeight: 12 }
 
                 Repeater {
                     model: [
@@ -220,7 +202,7 @@ PanelWindow {
                         Layout.alignment: Qt.AlignHCenter
                         Layout.preferredWidth: 36; Layout.preferredHeight: 46; radius: 11
                         color: active ? root.instrumentTone : actionPointer.containsMouse ? Theme.elevated : "transparent"
-                        border.width: 1
+                        border.width: 0
                         border.color: active ? root.instrumentTone : actionPointer.containsMouse ? Theme.lineBright : "transparent"
                         Column { anchors.centerIn: parent; spacing: 1
                             Text { anchors.horizontalCenter: parent.horizontalCenter; text: actionButton.modelData.glyph; color: actionButton.active ? Theme.void_ : Theme.moon; font.family: Theme.fontIcon; font.pixelSize: 15; font.weight: Font.Bold }
@@ -239,7 +221,7 @@ PanelWindow {
                     horizontalAlignment: Text.AlignHCenter
                     color: Theme.success
                     font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    font.pixelSize: 10
                     font.weight: Font.Bold
                 }
 
@@ -248,7 +230,7 @@ PanelWindow {
                     Layout.preferredWidth: 34; Layout.preferredHeight: 34; radius: 11
                     color: closePointer.containsMouse
                         ? Qt.rgba(Theme.danger.r, Theme.danger.g, Theme.danger.b, 0.13) : "transparent"
-                    border.width: 1
+                    border.width: 0
                     border.color: closePointer.containsMouse ? Theme.danger : Theme.line
                     Text { anchors.centerIn: parent; text: "×"; color: closePointer.containsMouse ? Theme.danger : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 15 }
                     MouseArea { id: closePointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: ShellState.hideQuickActions() }

@@ -9,9 +9,8 @@ Rectangle {
 
     implicitHeight: 58
     radius: Theme.radiusMedium
-    color: Theme.mantle
-    border.width: 1
-    border.color: Theme.line
+    color: Theme.controlRest
+    border.width: 0
 
     property string label: "Choice"
     property string detail: ""
@@ -57,9 +56,8 @@ Rectangle {
                     implicitHeight: 30
                     radius: Theme.radiusSmall
                     color: active ? Theme.accent : optionPointer.containsMouse
-                        ? Theme.elevated : "transparent"
-                    border.width: 1
-                    border.color: active ? Theme.accent : Theme.line
+                        ? Theme.controlHover : "transparent"
+                    border.width: 0
 
                     Text {
                         id: optionLabel
@@ -67,7 +65,7 @@ Rectangle {
                         text: option.modelData.label
                         color: option.active ? Theme.void_ : Theme.muted
                         font.family: Theme.fontMono
-                        font.pixelSize: 9
+                        font.pixelSize: 10
                         font.weight: option.active ? Font.Bold : Font.Normal
                     }
 

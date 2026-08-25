@@ -250,7 +250,7 @@ Item {
                         width: parent.width
                         text: Environment.wallpaperBusy ? "SHIFTING HORIZON…" : "CLICK TO LAND"
                         color: Environment.wallpaperBusy ? Theme.warning : Theme.accent
-                        font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold; font.letterSpacing: 1
+                        font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold; font.letterSpacing: 1
                         horizontalAlignment: Text.AlignHCenter
                     }
                 }
@@ -379,7 +379,7 @@ Item {
                             required property int index
                             readonly property bool active: modelData === "ALL" ? Settings.wallpaperOutputs === "all" : Environment.outputsSelected(modelData)
                             width: 38; height: 38; radius: 19; color: active ? Theme.accent : Theme.elevated
-                            Text { anchors.centerIn: parent; text: outputDot.modelData === "ALL" ? "∞" : (outputDot.index + 1); color: outputDot.active ? Theme.void_ : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
+                            Text { anchors.centerIn: parent; text: outputDot.modelData === "ALL" ? "∞" : (outputDot.index + 1); color: outputDot.active ? Theme.void_ : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
                             MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: outputDot.modelData === "ALL" ? Environment.selectAllOutputs() : Environment.toggleOutput(outputDot.modelData) }
                         }
                     }

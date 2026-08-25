@@ -32,6 +32,16 @@ QtObject {
     readonly property color accentVeil: Qt.rgba(accent.r, accent.g, accent.b, 0.13)
     readonly property color accentLine: Qt.rgba(accent.r, accent.g, accent.b, 0.52)
 
+    // Boundary-free interaction language. Resting controls disappear into the
+    // surface; hover and selection are communicated by filled light, never a
+    // one-pixel rectangle around every object.
+    readonly property color controlRest: Qt.rgba(moon.r, moon.g, moon.b, 0.035)
+    readonly property color controlHover: Qt.rgba(moon.r, moon.g, moon.b, 0.095)
+    readonly property color controlActive: Qt.rgba(accent.r, accent.g, accent.b, 0.24)
+    readonly property color controlDanger: Qt.rgba(danger.r, danger.g, danger.b, 0.20)
+    readonly property color fieldRest: Qt.rgba(void_.r, void_.g, void_.b, 0.32)
+    readonly property color fieldFocus: Qt.rgba(accent.r, accent.g, accent.b, 0.15)
+
     // Aperture deliberately uses a quieter palette than the larger Ephemeris
     // surfaces.  Neutral glass carries the silhouette; chroma communicates
     // state instead of outlining every control.

@@ -26,7 +26,7 @@ RowLayout {
         text: root.appId.toUpperCase()
         color: Theme.muted
         font.family: Theme.fontMono
-        font.pixelSize: 8
+        font.pixelSize: 10
         font.letterSpacing: 1.1
         elide: Text.ElideRight
         Layout.maximumWidth: 120
@@ -36,7 +36,7 @@ RowLayout {
         text: "//"
         color: Theme.lineBright
         font.family: Theme.fontMono
-        font.pixelSize: 9
+        font.pixelSize: 11
     }
 
     Text {

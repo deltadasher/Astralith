@@ -12,6 +12,7 @@ QtObject {
     property bool previewActive: false
     property bool secure: false
     property bool authenticating: false
+    property bool unlocking: false
     property bool failed: false
     property bool pamAvailable: true
     property string password: ""
@@ -35,11 +36,13 @@ QtObject {
     signal unlocked()
 
     function resetState() {
+        releaseDelay.stop();
         if (pam.active)
             pam.abort();
         password = "";
         failed = false;
         authenticating = false;
+        unlocking = false;
         pamMessage = "";
         statusText = "IDENTITY CONFIRMATION REQUIRED";
         eventSerial++;
@@ -87,12 +90,10 @@ QtObject {
 
     function submit() {
         if (previewActive) {
-            statusText = "SIMULATED HANDSHAKE COMPLETE";
-            password = "";
-            eventSerial++;
+            beginUnlock();
             return;
         }
-        if (!active || authenticating || password.length === 0)
+        if (!active || authenticating || unlocking || password.length === 0)
             return;
 
         failed = false;
@@ -109,15 +110,35 @@ QtObject {
         }
     }
 
-    function completeUnlock() {
+    function beginUnlock() {
         password = "";
         failed = false;
         authenticating = false;
         statusText = "WELCOME BACK, " + userName.toUpperCase();
+        unlocking = true;
         eventSerial++;
+        if (!previewActive)
+            Quickshell.execDetached([controlPath, "reveal-lock"]);
+        releaseDelay.restart();
+    }
+
+    function completeUnlock() {
+        const wasPreview = previewActive;
+        unlocking = false;
+        if (wasPreview) {
+            previewActive = false;
+            statusText = "UMBRA STANDING BY";
+            return;
+        }
         active = false;
         secure = false;
         unlocked();
+    }
+
+    property Timer releaseDelay: Timer {
+        interval: Settings.motion && Settings.umbraMotion ? 1460 : 40
+        repeat: false
+        onTriggered: root.completeUnlock()
     }
 
     property PamContext pam: PamContext {
@@ -133,7 +154,7 @@ QtObject {
         onCompleted: function(result) {
             root.authenticating = false;
             if (result === PamResult.Success) {
-                root.completeUnlock();
+                root.beginUnlock();
                 return;
             }
 

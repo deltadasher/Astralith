@@ -47,7 +47,7 @@ Item {
         implicitHeight: primary ? 58 : 46
         radius: primary ? 19 : 15
         color: primary ? Theme.accent : transportPointer.containsMouse ? Theme.accentVeil : Theme.elevated
-        border.width: 1
+        border.width: 0
         border.color: primary ? Theme.accent : transportPointer.containsMouse ? Theme.accentLine : Theme.line
         scale: transportPointer.containsMouse ? 1.07 : 1
         Column {
@@ -67,7 +67,7 @@ Item {
                 text: parent.parent.label
                 color: parent.parent.primary ? Theme.void_ : Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 8
+                font.pixelSize: 10
                 font.weight: Font.Bold
             }
         }
@@ -86,7 +86,7 @@ Item {
         radius: 11
         color: active ? Theme.accentVeil
             : modePointer.containsMouse ? Theme.elevated : Theme.mantle
-        border.width: 1
+        border.width: 0
         border.color: active ? Theme.accentLine : Theme.barHairlineHover
         opacity: enabledControl ? 1 : 0.34
         Row {
@@ -94,7 +94,7 @@ Item {
             anchors.centerIn: parent
             spacing: 6
             Text { text: parent.parent.glyph; color: parent.parent.active ? Theme.accent : Theme.muted; font.family: Theme.fontIcon; font.pixelSize: 13; anchors.verticalCenter: parent.verticalCenter }
-            Text { text: parent.parent.label; color: parent.parent.active ? Theme.moon : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; anchors.verticalCenter: parent.verticalCenter }
+            Text { text: parent.parent.label; color: parent.parent.active ? Theme.moon : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; anchors.verticalCenter: parent.verticalCenter }
         }
         MouseArea { id: modePointer; anchors.fill: parent; enabled: parent.enabledControl; hoverEnabled: true; cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor; onClicked: parent.activated() }
     }
@@ -105,11 +105,13 @@ Item {
         RowLayout {
             Layout.fillWidth: true
             spacing: 14
-            ColumnLayout {
+            Text {
                 Layout.fillWidth: true
-                spacing: 1
-                Text { text: "RESONANCE CONSOLE"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 21; font.weight: Font.Black; font.letterSpacing: 0.5 }
-                Text { text: "MPRIS TRANSMISSION // PIPEWIRE SPECTRUM // SYNCHRONIZED LYRICS"; color: Theme.accent; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold; font.letterSpacing: 1 }
+                text: "RESONANCE"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 23
+                font.weight: Font.Black
             }
             RowLayout {
                 id: tabRow
@@ -132,9 +134,13 @@ Item {
                             ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.06)
                             : "transparent"
                         border.width: 0
-                        Row { anchors.centerIn: parent; spacing: 7
-                            Text { text: tabButton.modelData.code; color: tabButton.active ? Theme.accent : Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
-                            Text { text: tabButton.modelData.label; color: tabButton.active ? Theme.moon : Theme.muted; font.family: Theme.fontText; font.pixelSize: 9; font.weight: Font.Bold }
+                        Text {
+                            anchors.centerIn: parent
+                            text: tabButton.modelData.label
+                            color: tabButton.active ? Theme.moon : Theme.muted
+                            font.family: Theme.fontText
+                            font.pixelSize: 12
+                            font.weight: Font.Bold
                         }
                         Rectangle {
                             anchors.left: parent.left
@@ -174,7 +180,7 @@ Item {
                     height: width
                     radius: width / 2
                     color: "transparent"
-                    border.width: 1
+                    border.width: 0
                     border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.3)
                     rotation: -8
                 }
@@ -206,7 +212,7 @@ Item {
                     height: 258
                     radius: width / 2
                     color: Theme.mantle
-                    border.width: 3
+                    border.width: 0
                     border.color: Media.playing ? Theme.accentLine : Theme.line
                     clip: true
                     Image {
@@ -252,7 +258,7 @@ Item {
                     height: 36
                     radius: 18
                     color: Theme.mantle
-                    border.width: 2
+                    border.width: 0
                     border.color: Media.playing ? Theme.success : Theme.warning
                     Text {
                         id: statusLabel
@@ -272,7 +278,7 @@ Item {
                     text: Spectrum.available ? "LIVE RESONANCE" : "AMBIENT FIELD"
                     color: Spectrum.available ? Theme.cyan : Theme.muted
                     font.family: Theme.fontMono
-                    font.pixelSize: 9
+                    font.pixelSize: 11
                     font.weight: Font.Bold
                     font.letterSpacing: 1
                 }
@@ -287,20 +293,20 @@ Item {
                     Layout.fillWidth: true; spacing: 8
                     Rectangle {
                         Layout.preferredHeight: 34; Layout.preferredWidth: Math.min(280, deviceRow.implicitWidth + 20)
-                        radius: Theme.radiusSmall; color: Theme.elevated; border.width: 1; border.color: Theme.line
+                        radius: Theme.radiusSmall; color: Theme.elevated; border.width: 0; border.color: Theme.line
                         RowLayout { id: deviceRow; anchors.centerIn: parent; spacing: 7
                             Text { text: "󰓃"; color: Theme.accent; font.family: Theme.fontIcon; font.pixelSize: 15 }
-                            Text { text: Audio.defaultOutputName; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold; elide: Text.ElideRight }
+                            Text { text: Audio.defaultOutputName; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold; elide: Text.ElideRight }
                         }
                     }
-                    Text { Layout.fillWidth: true; text: "VIA " + Media.identity.toUpperCase(); color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold; elide: Text.ElideRight }
+                    Text { Layout.fillWidth: true; text: "VIA " + Media.identity.toUpperCase(); color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold; elide: Text.ElideRight }
                 }
 
                 RowLayout {
                     visible: Media.playerCount > 1
                     Layout.fillWidth: true
                     spacing: 5
-                    Text { text: "PLAYER"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 0.8 }
+                    Text { text: "PLAYER"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 0.8 }
                     Repeater {
                         model: Media.players.slice(0, 3)
                         Rectangle {
@@ -310,9 +316,9 @@ Item {
                             radius: 9
                             readonly property bool active: Media.player && Media.player.uniqueId === modelData.uniqueId
                             color: active ? Theme.accentVeil : playerPointer.containsMouse ? Theme.elevated : Theme.barNeutral
-                            border.width: 1
+                            border.width: 0
                             border.color: active ? Theme.accentLine : Theme.barHairlineHover
-                            Text { id: playerName; anchors.centerIn: parent; width: parent.width - 12; text: parent.modelData.identity.toUpperCase(); color: parent.active ? Theme.accent : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.weight: Font.Bold; elide: Text.ElideRight; horizontalAlignment: Text.AlignHCenter }
+                            Text { id: playerName; anchors.centerIn: parent; width: parent.width - 12; text: parent.modelData.identity.toUpperCase(); color: parent.active ? Theme.accent : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; elide: Text.ElideRight; horizontalAlignment: Text.AlignHCenter }
                             MouseArea { id: playerPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Media.selectPlayer(parent.modelData.uniqueId) }
                         }
                     }
@@ -323,7 +329,7 @@ Item {
                     visible: Media.playerVolumeSupported
                     Layout.fillWidth: true
                     spacing: 8
-                    Text { text: "PLAYER VOL"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 0.8 }
+                    Text { text: "PLAYER VOL"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 0.8 }
                     Shared.AudioSlider {
                         Layout.fillWidth: true
                         maximumValue: 100
@@ -351,7 +357,7 @@ Item {
                         x: Math.max(0, Math.min(parent.width - width, parent.width * root.shownProgress - width / 2))
                         anchors.verticalCenter: parent.verticalCenter
                         width: root.seeking ? 20 : 16; height: width; radius: width / 2
-                        color: Theme.moon; border.width: 2; border.color: Theme.accent
+                        color: Theme.moon; border.width: 0; border.color: Theme.accent
                         Behavior on width { NumberAnimation { duration: Theme.motionFast; easing.type: Easing.OutBack } }
                     }
                     MouseArea {
@@ -421,7 +427,7 @@ Item {
                 Layout.fillHeight: true
                 radius: Theme.radiusLarge
                 color: Theme.mantle
-                border.width: 1
+                border.width: 0
                 border.color: Lyrics.available ? Theme.accentLine : Theme.barHairlineHover
                 clip: true
 
@@ -470,7 +476,7 @@ Item {
                         text: Media.artist + " // " + Media.album
                         color: Theme.muted
                         font.family: Theme.fontMono
-                        font.pixelSize: 9
+                        font.pixelSize: 11
                         font.weight: Font.Bold
                         wrapMode: Text.Wrap
                         maximumLineCount: 2
@@ -481,7 +487,7 @@ Item {
                         Layout.preferredHeight: 30
                         radius: 10
                         color: Theme.barNeutral
-                        border.width: 1
+                        border.width: 0
                         border.color: Theme.barHairlineHover
                         Text {
                             id: lyricSource
@@ -490,7 +496,7 @@ Item {
                                 : Lyrics.source.length > 0 ? Lyrics.source : "NO LYRIC LINK"
                             color: Lyrics.busy ? Theme.warning : Lyrics.available ? Theme.success : Theme.muted
                             font.family: Theme.fontMono
-                            font.pixelSize: 8
+                            font.pixelSize: 10
                             font.weight: Font.Bold
                             font.letterSpacing: 0.7
                         }
@@ -503,7 +509,7 @@ Item {
                 Layout.fillHeight: true
                 radius: Theme.radiusLarge
                 color: Theme.mantle
-                border.width: 1
+                border.width: 0
                 border.color: Theme.barHairlineHover
                 clip: true
 
@@ -515,7 +521,7 @@ Item {
                         Layout.fillWidth: true
                         ColumnLayout { Layout.fillWidth: true; spacing: 1
                             Text { text: "LYRIC TRANSMISSION"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 17; font.weight: Font.Black }
-                            Text { text: Lyrics.hasTiming ? "TIMECODE SYNCHRONIZED TO MPRIS" : "PLAIN TEXT READING ARRAY"; color: Lyrics.hasTiming ? Theme.cyan : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 0.8 }
+                            Text { text: Lyrics.hasTiming ? "TIMECODE SYNCHRONIZED TO MPRIS" : "PLAIN TEXT READING ARRAY"; color: Lyrics.hasTiming ? Theme.cyan : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 0.8 }
                         }
                         ModeButton {
                             glyph: "↻"
@@ -546,7 +552,7 @@ Item {
                             radius: 11
                             readonly property bool active: Lyrics.hasTiming && index === Lyrics.currentIndex
                             color: active ? Theme.accentVeil : linePointer.containsMouse ? Theme.barNeutral : "transparent"
-                            border.width: active ? 1 : 0
+                            border.width: 0
                             border.color: Theme.accentLine
                             RowLayout {
                                 anchors.fill: parent
@@ -558,7 +564,7 @@ Item {
                                     text: Media.formatTime(parent.parent.modelData.time)
                                     color: parent.parent.active ? Theme.cyan : Theme.lineBright
                                     font.family: Theme.fontMono
-                                    font.pixelSize: 8
+                                    font.pixelSize: 10
                                     font.weight: Font.Bold
                                     Layout.alignment: Qt.AlignTop
                                     Layout.topMargin: 3
@@ -614,7 +620,7 @@ Item {
                             text: Lyrics.error.length > 0 ? Lyrics.error : "EMBEDDED MPRIS → CACHE → LRCLIB"
                             color: Theme.muted
                             font.family: Theme.fontMono
-                            font.pixelSize: 8
+                            font.pixelSize: 10
                         }
                     }
                 }
@@ -630,15 +636,15 @@ Item {
                 Layout.fillWidth: true
                 ColumnLayout { Layout.fillWidth: true; spacing: 2
                     Text { text: "TEN-BAND ORBITAL EQUALIZER"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 17; font.weight: Font.Black }
-                    Text { text: "EASY EFFECTS OUTPUT CURVE // PRESETS APPLY IMMEDIATELY"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9; font.letterSpacing: 0.9 }
+                    Text { text: "EASY EFFECTS OUTPUT CURVE // PRESETS APPLY IMMEDIATELY"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 11; font.letterSpacing: 0.9 }
                 }
                 Rectangle {
                     Layout.preferredWidth: 146; Layout.preferredHeight: 36; radius: Theme.radiusSmall
                     color: Equalizer.available ? Theme.accentVeil : Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12)
-                    border.width: 1; border.color: Equalizer.available ? Theme.accentLine : Theme.warning
+                    border.width: 0; border.color: Equalizer.available ? Theme.accentLine : Theme.warning
                     Row { anchors.centerIn: parent; spacing: 7
                         Rectangle { width: 7; height: 7; radius: 4; color: Equalizer.available ? Theme.success : Theme.warning; anchors.verticalCenter: parent.verticalCenter }
-                        Text { text: Equalizer.available ? "EASY EFFECTS READY" : "BACKEND MISSING"; color: Equalizer.available ? Theme.moon : Theme.warning; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+                        Text { text: Equalizer.available ? "EASY EFFECTS READY" : "BACKEND MISSING"; color: Equalizer.available ? Theme.moon : Theme.warning; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                     }
                 }
             }
@@ -652,15 +658,15 @@ Item {
                         readonly property bool active: Equalizer.preset === modelData
                         Layout.fillWidth: true; Layout.preferredHeight: 36; radius: Theme.radiusSmall
                         color: active ? Theme.accent : presetPointer.containsMouse ? Theme.elevated : Theme.mantle
-                        border.width: 1; border.color: active ? Theme.accent : Theme.line
-                        Text { anchors.centerIn: parent; text: presetButton.modelData.toUpperCase(); color: presetButton.active ? Theme.void_ : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+                        border.width: 0; border.color: active ? Theme.accent : Theme.line
+                        Text { anchors.centerIn: parent; text: presetButton.modelData.toUpperCase(); color: presetButton.active ? Theme.void_ : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                         MouseArea { id: presetPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Equalizer.available ? Qt.PointingHandCursor : Qt.ArrowCursor; enabled: Equalizer.available; onClicked: Equalizer.applyPreset(presetButton.modelData) }
                     }
                 }
             }
             Rectangle {
                 Layout.fillWidth: true; Layout.fillHeight: true
-                radius: Theme.radiusLarge; color: Theme.mantle; border.width: 1; border.color: Theme.line
+                radius: Theme.radiusLarge; color: Theme.mantle; border.width: 0; border.color: Theme.line
                 Row {
                     id: bandRow
                     anchors.fill: parent; anchors.leftMargin: 18; anchors.rightMargin: 18; anchors.topMargin: 14; anchors.bottomMargin: 12
@@ -678,17 +684,17 @@ Item {
                             }
                             ColumnLayout {
                                 anchors.fill: parent; spacing: 5
-                                Text { Layout.alignment: Qt.AlignHCenter; text: (bandControl.liveValue > 0 ? "+" : "") + Math.round(bandControl.liveValue) + "dB"; color: bandControl.adjusting ? Theme.accent : Theme.moon; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
+                                Text { Layout.alignment: Qt.AlignHCenter; text: (bandControl.liveValue > 0 ? "+" : "") + Math.round(bandControl.liveValue) + "dB"; color: bandControl.adjusting ? Theme.accent : Theme.moon; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
                                 Item {
                                     id: verticalTrack
                                     Layout.fillHeight: true; Layout.preferredWidth: 32; Layout.alignment: Qt.AlignHCenter
-                                    Rectangle { anchors.horizontalCenter: parent.horizontalCenter; anchors.top: parent.top; anchors.bottom: parent.bottom; width: 8; radius: 4; color: Theme.elevated; border.width: 1; border.color: Theme.line }
+                                    Rectangle { anchors.horizontalCenter: parent.horizontalCenter; anchors.top: parent.top; anchors.bottom: parent.bottom; width: 8; radius: 4; color: Theme.elevated; border.width: 0; border.color: Theme.line }
                                     Rectangle { anchors.horizontalCenter: parent.horizontalCenter; y: parent.height / 2; width: 22; height: 1; color: Theme.lineBright }
                                     Rectangle {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         y: Math.max(0, Math.min(parent.height - height, (1 - (bandControl.liveValue + 12) / 24) * parent.height - height / 2))
                                         width: bandControl.adjusting ? 22 : 18; height: width; radius: width / 2
-                                        color: Theme.accent; border.width: 2; border.color: Theme.moon
+                                        color: Theme.accent; border.width: 0; border.color: Theme.moon
                                         Behavior on y { enabled: !bandControl.adjusting; NumberAnimation { duration: 260; easing.type: Easing.OutBack } }
                                     }
                                     MouseArea {
@@ -699,17 +705,17 @@ Item {
                                         onReleased: function(mouse) { setValue(mouse.y); bandControl.adjusting = false; Equalizer.setBand(bandControl.index, bandControl.liveValue); }
                                     }
                                 }
-                                Text { Layout.alignment: Qt.AlignHCenter; text: root.frequencyLabels[bandControl.index]; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
+                                Text { Layout.alignment: Qt.AlignHCenter; text: root.frequencyLabels[bandControl.index]; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
                             }
                         }
                     }
                 }
             }
             RowLayout { Layout.fillWidth: true
-                Text { text: "ACTIVE CURVE"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9; font.letterSpacing: 1 }
+                Text { text: "ACTIVE CURVE"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 11; font.letterSpacing: 1 }
                 Text { text: Equalizer.preset.toUpperCase(); color: Theme.accent; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                 Item { Layout.fillWidth: true }
-                Text { text: Equalizer.busy ? "SYNCHRONIZING…" : Audio.defaultOutputName; color: Equalizer.busy ? Theme.warning : Theme.success; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold; elide: Text.ElideRight }
+                Text { text: Equalizer.busy ? "SYNCHRONIZING…" : Audio.defaultOutputName; color: Equalizer.busy ? Theme.warning : Theme.success; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold; elide: Text.ElideRight }
             }
         }
     }

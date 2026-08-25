@@ -42,17 +42,7 @@ PanelWindow {
         radius: window.docked ? 0 : 14
         color: Qt.rgba(Theme.void_.r, Theme.void_.g, Theme.void_.b,
             Math.min(0.86, Settings.barOpacity * 0.82))
-        border.width: window.docked ? 0 : 1
-        border.color: Theme.barHairline
-
-        Rectangle {
-            visible: window.docked
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            height: 1
-            color: Theme.barHairline
-        }
+        border.width: 0
     }
 
     RowLayout {

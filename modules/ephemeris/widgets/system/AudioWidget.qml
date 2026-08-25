@@ -27,21 +27,18 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            ColumnLayout {
-                Layout.fillWidth: true; spacing: 2
-                Text { text: "ACOUSTIC ARRAY"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 20; font.weight: Font.DemiBold }
-                Text {
-                    text: Audio.mixerAvailable
-                        ? Audio.outputs.length + " OUTPUTS // " + Audio.inputs.length + " INPUTS // " + Audio.apps.length + " STREAMS"
-                        : "PIPEWIRE COMPATIBILITY LINK OFFLINE"
-                    color: Audio.mixerAvailable ? Theme.muted : Theme.warning
-                    font.family: Theme.fontMono; font.pixelSize: 8; font.letterSpacing: 0.9
-                }
+            Text {
+                Layout.fillWidth: true
+                text: "AUDIO"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 23
+                font.weight: Font.DemiBold
             }
             Rectangle {
                 implicitWidth: 34; implicitHeight: 34; radius: 11
                 color: refreshPointer.containsMouse ? Theme.accentVeil : Theme.mantle
-                border.width: 1; border.color: refreshPointer.containsMouse ? Theme.accentLine : Theme.line
+                border.width: 0; border.color: refreshPointer.containsMouse ? Theme.accentLine : Theme.line
                 Text { anchors.centerIn: parent; text: "↻"; color: Theme.accent; font.family: Theme.fontDisplay; font.pixelSize: 16 }
                 MouseArea { id: refreshPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Audio.refresh() }
             }
@@ -52,7 +49,7 @@ Item {
             Layout.preferredHeight: 166
             radius: Theme.radiusLarge
             color: Theme.mantle
-            border.width: 1
+            border.width: 0
             border.color: root.masterMuted ? Theme.warning : Theme.barHairlineHover
             clip: true
 
@@ -107,7 +104,7 @@ Item {
                             text: root.masterDetail
                             color: Theme.muted
                             font.family: Theme.fontMono
-                            font.pixelSize: 8
+                            font.pixelSize: 10
                             elide: Text.ElideRight
                         }
                     }
@@ -119,7 +116,7 @@ Item {
                             text: root.masterIsInput ? "INPUT GAIN" : "OUTPUT VOLUME"
                             color: root.activeColor
                             font.family: Theme.fontMono
-                            font.pixelSize: 8
+                            font.pixelSize: 10
                             font.weight: Font.Bold
                             font.letterSpacing: 0.8
                         }
@@ -127,7 +124,7 @@ Item {
                             text: root.masterMuted ? "MUTED" : root.masterValue + "%"
                             color: root.masterMuted ? Theme.warning : Theme.moon
                             font.family: Theme.fontMono
-                            font.pixelSize: 7
+                            font.pixelSize: 10
                             font.weight: Font.Bold
                         }
                     }
@@ -157,7 +154,7 @@ Item {
                             text: root.masterMuted ? "RESTORE SIGNAL" : "MUTE SIGNAL"
                             color: root.masterMuted ? Theme.success : Theme.muted
                             font.family: Theme.fontMono
-                            font.pixelSize: 9
+                            font.pixelSize: 11
                             font.weight: Font.Bold
                         }
                         MouseArea {
@@ -189,11 +186,11 @@ Item {
                     Layout.fillWidth: true; Layout.preferredHeight: 36; radius: 11
                     readonly property bool selected: root.activeTab === modelData.id
                     color: selected ? Theme.accentVeil : tabPointer.containsMouse ? Theme.elevated : Theme.mantle
-                    border.width: 1; border.color: selected ? Theme.accentLine : Theme.line
+                    border.width: 0; border.color: selected ? Theme.accentLine : Theme.line
                     RowLayout {
                         anchors.centerIn: parent; spacing: 7
-                        Text { text: modelData.label; color: parent.parent.selected ? Theme.accent : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 0.7 }
-                        Rectangle { implicitWidth: 20; implicitHeight: 18; radius: 7; color: Theme.elevated; Text { anchors.centerIn: parent; text: modelData.count; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 7 } }
+                        Text { text: modelData.label; color: parent.parent.selected ? Theme.accent : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 0.7 }
+                        Rectangle { implicitWidth: 20; implicitHeight: 18; radius: 7; color: Theme.elevated; Text { anchors.centerIn: parent; text: modelData.count; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10 } }
                     }
                     MouseArea { id: tabPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.activeTab = modelData.id }
                 }
@@ -225,9 +222,10 @@ Item {
                 id: nodeCard
                 required property var modelData
                 width: nodeList.width; height: 116; radius: Theme.radiusMedium
-                color: nodePointer.containsMouse ? Theme.elevated : Theme.mantle
-                border.width: modelData.isDefault ? 2 : 1
-                border.color: modelData.isDefault ? root.activeColor : Theme.line
+                color: modelData.isDefault
+                    ? Qt.rgba(root.activeColor.r, root.activeColor.g, root.activeColor.b, 0.20)
+                    : nodePointer.containsMouse ? Theme.controlHover : Theme.controlRest
+                border.width: 0
 
                 RowLayout {
                     anchors.fill: parent; anchors.margins: 12; spacing: 11
@@ -243,9 +241,9 @@ Item {
                             ColumnLayout {
                                 Layout.fillWidth: true; spacing: 0
                                 Text { Layout.fillWidth: true; text: nodeCard.modelData.name; color: Theme.moon; font.family: Theme.fontText; font.pixelSize: 11; font.weight: Font.DemiBold; elide: Text.ElideRight }
-                                Text { Layout.fillWidth: true; text: nodeCard.modelData.description; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; elide: Text.ElideRight }
+                                Text { Layout.fillWidth: true; text: nodeCard.modelData.description; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; elide: Text.ElideRight }
                             }
-                            Text { text: nodeCard.modelData.mute ? "MUTED" : nodeCard.modelData.volume + "%"; color: nodeCard.modelData.mute ? Theme.warning : Theme.moon; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
+                            Text { text: nodeCard.modelData.mute ? "MUTED" : nodeCard.modelData.volume + "%"; color: nodeCard.modelData.mute ? Theme.warning : Theme.moon; font.family: Theme.fontMono; font.pixelSize: 11; font.weight: Font.Bold }
                         }
                         Shared.AudioSlider {
                             Layout.fillWidth: true
@@ -264,15 +262,15 @@ Item {
                             visible: root.activeTab !== "apps"
                             Layout.preferredWidth: 72; Layout.preferredHeight: 28; radius: 9
                             color: nodeCard.modelData.isDefault ? Theme.accentVeil : defaultPointer.containsMouse ? Theme.elevated : Theme.mantle
-                            border.width: 1; border.color: nodeCard.modelData.isDefault ? Theme.accentLine : Theme.line
-                            Text { anchors.centerIn: parent; text: nodeCard.modelData.isDefault ? "DEFAULT" : "MAKE DEFAULT"; color: nodeCard.modelData.isDefault ? Theme.accent : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 6; font.weight: Font.Bold }
+                            border.width: 0; border.color: nodeCard.modelData.isDefault ? Theme.accentLine : Theme.line
+                            Text { anchors.centerIn: parent; text: nodeCard.modelData.isDefault ? "DEFAULT" : "MAKE DEFAULT"; color: nodeCard.modelData.isDefault ? Theme.accent : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                             MouseArea { id: defaultPointer; anchors.fill: parent; enabled: !nodeCard.modelData.isDefault; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Audio.setDefaultNode(root.activeTab, nodeCard.modelData.nodeName) }
                         }
                         Rectangle {
                             Layout.preferredWidth: 72; Layout.preferredHeight: 28; radius: 9
                             color: mutePointer.containsMouse ? Theme.elevated : Theme.mantle
-                            border.width: 1; border.color: nodeCard.modelData.mute ? Theme.warning : Theme.line
-                            Text { anchors.centerIn: parent; text: nodeCard.modelData.mute ? "UNMUTE" : "MUTE"; color: nodeCard.modelData.mute ? Theme.warning : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.weight: Font.Bold }
+                            border.width: 0; border.color: nodeCard.modelData.mute ? Theme.warning : Theme.line
+                            Text { anchors.centerIn: parent; text: nodeCard.modelData.mute ? "UNMUTE" : "MUTE"; color: nodeCard.modelData.mute ? Theme.warning : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                             MouseArea { id: mutePointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Audio.toggleNodeMute(root.activeTab, nodeCard.modelData.id, nodeCard.modelData.mute) }
                         }
                     }

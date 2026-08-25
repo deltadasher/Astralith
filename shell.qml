@@ -9,6 +9,7 @@ import "modules/osd"
 import "modules/quickactions"
 import "modules/transit"
 import "modules/umbra"
+import "modules/umbra/reveal"
 import "services"
 
 ShellRoot {
@@ -70,6 +71,10 @@ ShellRoot {
         function closePreview(): void {
             Umbra.closePreview();
         }
+
+        function reveal(): void {
+            ShellState.startUmbraReveal();
+        }
     }
 
     Variants {
@@ -95,6 +100,11 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         UmbraPreview {}
+    }
+
+    Variants {
+        model: Quickshell.screens
+        UmbraReveal {}
     }
 
     NotificationPopups {}

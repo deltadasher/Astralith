@@ -20,26 +20,13 @@ Item {
             Layout.fillWidth: true
             spacing: 12
 
-            ColumnLayout {
+            Text {
                 Layout.fillWidth: true
-                spacing: 2
-                Text {
-                    text: "REACTOR TELEMETRY"
-                    color: Theme.moon
-                    font.family: Theme.fontDisplay
-                    font.pixelSize: 21
-                    font.weight: Font.Black
-                }
-                Text {
-                    text: DeviceState.batteryAvailable
-                        ? DeviceState.batteryModel.toUpperCase() + " // "
-                            + (DeviceState.batteryCharging ? "CHARGING" : "DISCHARGING")
-                        : "DESKTOP POWER CORE // NO MOBILE CELL"
-                    color: Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 8
-                    font.letterSpacing: 0.9
-                }
+                text: "POWER"
+                color: Theme.moon
+                font.family: Theme.fontDisplay
+                font.pixelSize: 23
+                font.weight: Font.Black
             }
 
             Rectangle {
@@ -64,7 +51,7 @@ Item {
                             ? DeviceState.powerProfile.toUpperCase() : "PROFILE LINK OFFLINE"
                         color: DeviceState.powerProfileAvailable ? Theme.moon : Theme.warning
                         font.family: Theme.fontMono
-                        font.pixelSize: 8
+                        font.pixelSize: 10
                         font.weight: Font.Bold
                     }
                 }
@@ -81,7 +68,7 @@ Item {
                 Layout.fillHeight: true
                 radius: Theme.radiusLarge
                 color: Theme.mantle
-                border.width: 1
+                border.width: 0
                 border.color: Theme.barHairlineHover
                 clip: true
 
@@ -170,7 +157,7 @@ Item {
                             height: 78
                             radius: 39
                             color: "transparent"
-                            border.width: 1
+                            border.width: 0
                             border.color: Qt.rgba(root.reactorColor.r,
                                 root.reactorColor.g, root.reactorColor.b, 0.28)
                             rotation: -18
@@ -199,7 +186,7 @@ Item {
                         height: 138
                         radius: width / 2
                         color: Theme.void_
-                        border.width: 1
+                        border.width: 0
                         border.color: Qt.rgba(root.reactorColor.r,
                             root.reactorColor.g, root.reactorColor.b, 0.58)
 
@@ -223,7 +210,7 @@ Item {
                                     : "DESKTOP CORE"
                                 color: Theme.muted
                                 font.family: Theme.fontMono
-                                font.pixelSize: 7
+                                font.pixelSize: 10
                                 font.weight: Font.Bold
                                 font.letterSpacing: 1
                             }
@@ -239,7 +226,7 @@ Item {
                         ? DeviceState.batteryTimeLabel + " ESTIMATED" : "EXTERNAL POWER NOMINAL"
                     color: Theme.muted
                     font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    font.pixelSize: 10
                     font.letterSpacing: 0.8
                 }
             }
@@ -269,17 +256,17 @@ Item {
                             Layout.preferredHeight: 104
                             radius: Theme.radiusMedium
                             color: Theme.mantle
-                            border.width: 1
+                            border.width: 0
                             border.color: Theme.barHairline
 
                             ColumnLayout {
                                 anchors.fill: parent
                                 anchors.margins: 13
                                 spacing: 4
-                                Text { text: modelData.code; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; font.weight: Font.Bold; font.letterSpacing: 1 }
+                                Text { text: modelData.code; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold; font.letterSpacing: 1 }
                                 Text { text: modelData.value; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 16; font.weight: Font.Black }
                                 Item { Layout.fillHeight: true }
-                                Text { text: modelData.detail; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 7; font.letterSpacing: 0.6 }
+                                Text { text: modelData.detail; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 10; font.letterSpacing: 0.6 }
                             }
                         }
                     }
@@ -291,7 +278,7 @@ Item {
                     text: "POWER FLIGHT MODE"
                     color: Theme.muted
                     font.family: Theme.fontMono
-                    font.pixelSize: 8
+                    font.pixelSize: 10
                     font.weight: Font.Bold
                     font.letterSpacing: 1
                 }
@@ -302,7 +289,7 @@ Item {
                     Layout.preferredHeight: 56
                     radius: 14
                     color: Theme.mantle
-                    border.width: 1
+                    border.width: 0
                     border.color: Theme.barHairlineHover
                     opacity: DeviceState.powerProfileAvailable ? 1 : 0.55
 
@@ -339,7 +326,7 @@ Item {
                                     anchors.centerIn: parent
                                     spacing: 6
                                     Text { text: profileChoice.modelData.glyph; color: profileChoice.selected ? Theme.void_ : Theme.muted; font.family: Theme.fontIcon; font.pixelSize: 16 }
-                                    Text { text: profileChoice.modelData.label; color: profileChoice.selected ? Theme.void_ : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Black }
+                                    Text { text: profileChoice.modelData.label; color: profileChoice.selected ? Theme.void_ : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Black }
                                 }
                                 MouseArea {
                                     anchors.fill: parent
@@ -359,7 +346,7 @@ Item {
                         : "POWER PROFILE SERVICE UNAVAILABLE // REACTOR TELEMETRY REMAINS READ-ONLY"
                     color: DeviceState.powerProfileAvailable ? Theme.success : Theme.warning
                     font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    font.pixelSize: 10
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.WordWrap
                 }

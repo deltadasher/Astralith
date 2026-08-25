@@ -8,6 +8,7 @@ QtObject {
     property string settingsSection: "appearance"
     property bool quickActionsVisible: false
     property string quickActionTab: "timer"
+    property int umbraRevealSerial: 0
 
     function normalizeWidget(widget) {
         if (!widget || widget.length === 0)
@@ -55,5 +56,9 @@ QtObject {
 
     function hideQuickActions() {
         quickActionsVisible = false;
+    }
+
+    function startUmbraReveal() {
+        umbraRevealSerial++;
     }
 }

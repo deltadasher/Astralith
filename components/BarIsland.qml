@@ -21,7 +21,7 @@ Rectangle {
             : Qt.rgba(Theme.void_.r, Theme.void_.g, Theme.void_.b,
                 Math.min(0.82, Settings.barOpacity * 0.78))
         : "transparent"
-    border.width: separate && surfaceHover.hovered && reactive ? 1 : 0
+    border.width: 0
     border.color: Theme.barHairlineHover
     opacity: reveal
     scale: (0.96 + reveal * 0.04) * (surfaceHover.hovered && reactive ? 1.01 : 1)

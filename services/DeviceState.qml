@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell.Bluetooth
 import Quickshell.Io
 import Quickshell.Services.UPower
+import ".."
 
 QtObject {
     id: root
@@ -52,6 +53,9 @@ QtObject {
 
     property int brightnessPercent: 0
     property bool brightnessAvailable: false
+    readonly property bool brightnessActive: Settings.showBrightness && brightnessAvailable
+    readonly property bool profileActive: ShellState.ephemerisVisible
+        && ShellState.ephemerisTab === "battery"
 
     function toggleBluetooth() {
         if (bluetoothAvailable)
@@ -138,12 +142,17 @@ QtObject {
     }
 
     property Timer pollTimer: Timer {
-        interval: 4000
-        running: true
+        interval: 8000
+        running: root.brightnessActive || root.profileActive
         repeat: true
         onTriggered: {
-            root.refreshBrightness();
-            root.refreshPowerProfile();
+            if (root.brightnessActive)
+                root.refreshBrightness();
+            if (root.profileActive)
+                root.refreshPowerProfile();
         }
     }
+
+    onBrightnessActiveChanged: if (brightnessActive) refreshBrightness()
+    onProfileActiveChanged: if (profileActive) refreshPowerProfile()
 }

@@ -15,18 +15,22 @@ QtObject {
     property bool hasSatty: false
     property bool hasRecorder: false
     property bool recording: false
+    property bool recordRefreshPending: false
     property bool hasSwaybg: false
     property bool hasSwww: false
     property bool hasAwww: false
     property bool hasMpvpaper: false
     property bool hasMatugen: false
     property bool wallpaperBusy: false
+    property bool wallpaperRestored: false
     property bool onlineBusy: false
     property string onlineError: ""
     property string onlineQuery: ""
     property var localWallpapers: []
     property var onlineWallpapers: []
     readonly property var wallpapers: localWallpapers.concat(onlineWallpapers)
+    readonly property bool captureActive: ShellState.ephemerisVisible
+        && ShellState.ephemerisTab === "capture"
     readonly property string activeWallpaper: Settings.wallpaperPath
     readonly property var outputNames: {
         const names = [];
@@ -125,6 +129,14 @@ QtObject {
         recordRefresh.restart();
     }
 
+    function refreshRecordingState() {
+        if (recordStatusProcess.running) {
+            recordRefreshPending = true;
+            return;
+        }
+        recordStatusProcess.running = true;
+    }
+
     function openCaptureFolder() {
         Quickshell.execDetached([snippingTool, "--open-captures"]);
     }
@@ -174,10 +186,11 @@ QtObject {
     }
 
     function restoreWallpaper() {
-        if (!canSetWallpaper)
+        if (!canSetWallpaper || wallpaperRestored)
             return;
         const selected = Settings.wallpaperPath.length > 0
             ? Settings.wallpaperPath : bundledWallpapers[0];
+        wallpaperRestored = true;
         applyWallpaper(selected, Settings.wallpaperKind || kindFor(selected));
     }
 
@@ -293,30 +306,32 @@ QtObject {
     }
 
     property Timer recordPoll: Timer {
-        interval: 1000
-        running: true
+        interval: root.recording ? 1000 : 2500
+        running: root.recording || root.captureActive
         repeat: true
-        triggeredOnStart: true
-        onTriggered: {
-            if (!root.recordStatusProcess.running)
-                root.recordStatusProcess.running = true;
-        }
+        onTriggered: root.refreshRecordingState()
     }
 
     property Timer recordRefresh: Timer {
         interval: 450
-        onTriggered: {
-            if (!root.recordStatusProcess.running)
-                root.recordStatusProcess.running = true;
-        }
+        onTriggered: root.refreshRecordingState()
     }
 
     property Process recordStatusProcess: Process {
         command: [root.snippingTool, "--record-status"]
+        running: true
         stdout: StdioCollector {
             onStreamFinished: root.recording = text.trim() === "recording"
         }
+        onRunningChanged: {
+            if (!running && root.recordRefreshPending) {
+                root.recordRefreshPending = false;
+                root.recordRefresh.restart();
+            }
+        }
     }
+
+    onCaptureActiveChanged: if (captureActive) recordRefresh.restart()
 
     property Process probeProcess: Process {
         command: ["sh", "-c",

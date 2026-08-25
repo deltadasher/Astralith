@@ -32,6 +32,7 @@ Development:
   check                   Run the local validation suite
   build-native-blobs      Build the optional Caelestia.Blobs renderer
   doctor                  Check required and optional machine integrations
+  profile                 Show Astralith process, CPU, and resident-memory usage
   update                  Pull, validate, and restart a clean Git checkout
   version                 Print the Astralith development version
   path                    Print the active Astralith source path
@@ -119,6 +120,9 @@ case "$command_name" in
         ;;
     doctor)
         exec "$script_dir/doctor"
+        ;;
+    profile)
+        exec "$script_dir/profile"
         ;;
     update)
         exec "$script_dir/update-user"

@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 
+import argparse
 import json
 import os
 import subprocess
-import sys
 
 
 def main() -> None:
-    cache_dir = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser(
-        "~/.cache/astralith/clipboard"
+    parser = argparse.ArgumentParser(description="Index cliphist entries for Astralith")
+    parser.add_argument(
+        "cache_dir",
+        nargs="?",
+        default=os.path.expanduser("~/.cache/astralith/clipboard"),
     )
+    cache_dir = parser.parse_args().cache_dir
     os.makedirs(cache_dir, exist_ok=True)
 
     result = subprocess.run(

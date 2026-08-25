@@ -83,7 +83,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: root.popup ? -2 : 0
         anchors.leftMargin: 12
-        anchors.rightMargin: 10
+        anchors.rightMargin: 54
         spacing: 11
 
         Rectangle {
@@ -195,25 +195,34 @@ Rectangle {
             }
         }
 
-        Rectangle {
-            Layout.preferredWidth: 24
-            Layout.preferredHeight: 24
-            radius: 8
-            color: closePointer.containsMouse ? Theme.elevated : "transparent"
-            Text {
-                anchors.centerIn: parent
-                text: "×"
-                color: closePointer.containsMouse ? Theme.danger : Theme.muted
-                font.family: Theme.fontMono
-                font.pixelSize: 13
-            }
-            MouseArea {
-                id: closePointer
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: root.dismissed()
-            }
+    }
+
+    Rectangle {
+        id: closeRail
+        z: 2
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        width: 46
+        color: closePointer.containsMouse
+            ? Qt.rgba(Theme.danger.r, Theme.danger.g, Theme.danger.b, 0.11)
+            : "transparent"
+
+        Text {
+            anchors.centerIn: parent
+            text: "×"
+            color: closePointer.containsMouse ? Theme.danger : Theme.muted
+            font.family: Theme.fontMono
+            font.pixelSize: 21
+            font.weight: Font.Medium
+        }
+
+        MouseArea {
+            id: closePointer
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: root.dismissed()
         }
     }
 

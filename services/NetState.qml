@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Networking
+import ".."
 
 QtObject {
     id: root
@@ -39,6 +40,9 @@ QtObject {
     property var ethernetDevices: []
     property string statusMessage: "LINK ARRAY READY"
     property string pendingAction: ""
+    property bool refreshPending: false
+    readonly property bool detailedActive: ShellState.ephemerisVisible
+        && ShellState.ephemerisTab === "network"
 
     function toggleWifi() {
         Networking.wifiEnabled = !Networking.wifiEnabled;
@@ -54,8 +58,10 @@ QtObject {
     }
 
     function refresh() {
-        if (stateProcess.running)
+        if (stateProcess.running) {
+            refreshPending = true;
             return;
+        }
         loading = true;
         stateProcess.running = true;
     }
@@ -107,7 +113,9 @@ QtObject {
     }
 
     property Process stateProcess: Process {
-        command: ["python3", root.helperPath]
+        command: root.detailedActive
+            ? ["python3", root.helperPath]
+            : ["python3", root.helperPath, "--summary"]
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
@@ -115,8 +123,10 @@ QtObject {
                     const data = JSON.parse(text);
                     root.managerAvailable = data.available === true;
                     root.wifiNetworks = data.wifi || [];
-                    root.bluetoothDevices = data.bluetooth || [];
-                    root.ethernetDevices = data.ethernet || [];
+                    if (data.summary !== true) {
+                        root.bluetoothDevices = data.bluetooth || [];
+                        root.ethernetDevices = data.ethernet || [];
+                    }
                     root.statusMessage = "LINK ARRAY SYNCHRONIZED";
                 } catch (error) {
                     root.managerAvailable = false;
@@ -124,6 +134,12 @@ QtObject {
                     console.warn("[Astralith/Network] State decode failed:", error);
                 }
                 root.loading = false;
+            }
+        }
+        onRunningChanged: {
+            if (!running && root.refreshPending) {
+                root.refreshPending = false;
+                root.refreshDelay.restart();
             }
         }
     }
@@ -153,9 +169,11 @@ QtObject {
     }
 
     property Timer pollTimer: Timer {
-        interval: 10000
+        interval: root.detailedActive ? 10000 : 60000
         running: true
         repeat: true
         onTriggered: root.refresh()
     }
+
+    onDetailedActiveChanged: refreshDelay.restart()
 }

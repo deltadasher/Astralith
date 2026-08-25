@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import ".."
 
 QtObject {
     id: root
@@ -10,6 +11,8 @@ QtObject {
     property bool available: false
     property bool loading: false
     property var entries: []
+    readonly property bool historyActive: ShellState.ephemerisVisible
+        && ShellState.ephemerisTab === "clipboard"
     readonly property string helperPath: {
         const value = Qt.resolvedUrl("../scripts/clipboard-index.py").toString();
         return value.indexOf("file://") === 0 ? decodeURIComponent(value.substring(7)) : value;
@@ -47,7 +50,7 @@ QtObject {
         stdout: StdioCollector {
             onStreamFinished: {
                 root.available = text === "READY";
-                if (root.available)
+                if (root.available && root.historyActive)
                     root.refresh();
             }
         }
@@ -94,8 +97,10 @@ QtObject {
 
     property Timer refreshTimer: Timer {
         interval: 2200
-        running: root.available
+        running: root.available && root.historyActive
         repeat: true
         onTriggered: root.refresh()
     }
+
+    onHistoryActiveChanged: if (historyActive) refresh()
 }

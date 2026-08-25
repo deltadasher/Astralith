@@ -86,6 +86,7 @@ astralithctl stop                  Stop the shell
 astralithctl restart               Reload the shell cleanly
 astralithctl status                Show the matching Quickshell instance
 astralithctl doctor                Check this machine's integrations
+astralithctl profile               Show shell/helper CPU and resident memory
 astralithctl update                Pull, validate, and restart safely
 astralithctl build-native-blobs    Build the fluid Ephemeris renderer
 
@@ -111,7 +112,7 @@ Run `astralithctl help` for the complete command surface.
 | `Mod+Shift+W` | Parallax wallpaper archive |
 | `Mod+Shift+C` | Clipboard Orbit |
 | `Mod+Shift+A` | Transit notification history |
-| `Mod+Shift+S` | Select a region and copy the PNG |
+| `Mod+Shift+S` | Open Niri's crop UI; copy the selected PNG |
 | `Super+Alt+L` | Lock with Umbra |
 
 The default terminal is Terminology. Applications, formats, bar channels,

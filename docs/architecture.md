@@ -43,7 +43,8 @@ Rules:
 1. Missing optional commands must produce an unavailable state, not prevent the
    shell from loading.
 2. A service should poll once for all consumers; widgets must not create a
-   second poller for the same information.
+   second poller for the same information. Expensive detail polling must follow
+   the visibility of its owning surface and settle when that surface closes.
 3. Runtime files belong in XDG config/cache/state directories, never the source
    checkout.
 4. Machine-specific paths must come from environment variables or resolved

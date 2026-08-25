@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
+import sys
 
 
 def run(args: list[str], timeout: int = 6) -> str:
@@ -81,6 +83,34 @@ def wifi_networks() -> list[dict[str, object]]:
     )
 
 
+def active_wifi() -> list[dict[str, object]]:
+    """Return only the connected Wi-Fi row for the always-visible bar."""
+
+    output = run([
+        "nmcli", "-t", "--escape", "yes", "-f",
+        "IN-USE,SSID,SECURITY,SIGNAL,FREQ", "device", "wifi", "list", "--rescan", "no",
+    ])
+    for line in output.splitlines():
+        fields = split_escaped(line)
+        if len(fields) < 5 or fields[0].strip() != "*":
+            continue
+        _, ssid, security, signal, frequency = fields[:5]
+        try:
+            strength = int(signal)
+        except ValueError:
+            strength = 0
+        return [{
+            "ssid": ssid,
+            "security": security if security and security != "--" else "OPEN",
+            "secure": bool(security and security != "--"),
+            "signal": strength,
+            "frequency": frequency,
+            "connected": True,
+            "saved": True,
+        }]
+    return []
+
+
 def parse_bluetooth_devices(output: str) -> dict[str, str]:
     devices: dict[str, str] = {}
     for line in output.splitlines():
@@ -129,10 +159,18 @@ def ethernet_devices() -> list[dict[str, object]]:
 
 
 def main() -> None:
+    manager_available = shutil.which("nmcli") is not None
+    if "--summary" in sys.argv:
+        print(json.dumps({
+            "available": manager_available,
+            "summary": True,
+            "wifi": active_wifi() if manager_available else [],
+        }, separators=(",", ":")))
+        return
     bluetooth_powered, bluetooth = bluetooth_devices()
     payload = {
-        "available": bool(run(["nmcli", "--version"]).strip()),
-        "wifi": wifi_networks(),
+        "available": manager_available,
+        "wifi": wifi_networks() if manager_available else [],
         "bluetoothPowered": bluetooth_powered,
         "bluetooth": bluetooth,
         "ethernet": ethernet_devices(),

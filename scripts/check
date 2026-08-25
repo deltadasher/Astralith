@@ -31,6 +31,7 @@ PYTHONPYCACHEPREFIX="$python_cache" python3 -m unittest discover -s tests -q
 bash tests/test_cli.sh
 bash -n scripts/astralithctl scripts/check scripts/dev scripts/doctor scripts/install-user \
     scripts/build-native-blobs \
+    scripts/profile \
     scripts/snipping-tool scripts/sync-compositor-configs scripts/uninstall-user \
     scripts/update-user scripts/wallpaper-apply tests/test_cli.sh
 sh -n scripts/astralith-notify

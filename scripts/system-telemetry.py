@@ -9,6 +9,7 @@ import json
 import os
 import shutil
 import subprocess
+import time
 from pathlib import Path
 
 
@@ -82,30 +83,54 @@ def process_count() -> int:
     return sum(1 for entry in os.scandir("/proc") if entry.name.isdigit())
 
 
-def snapshot() -> dict[str, object]:
+def slow_snapshot() -> dict[str, object]:
+    """Collect values that do not need bar-rate refreshes."""
+
+    disk = shutil.disk_usage(str(Path.home()))
+    cpu_temp, gpu_temp = temperatures()
+    return {
+        "disk_total": disk.total,
+        "disk_used": disk.used,
+        "cpu_temp": cpu_temp,
+        "gpu_temp": gpu_temp,
+        "processes": process_count(),
+        "hostname": os.uname().nodename,
+        "kernel": os.uname().release,
+    }
+
+
+def snapshot(slow: dict[str, object] | None = None) -> dict[str, object]:
     cpu_total, cpu_idle = cpu_sample()
     memory_total, memory_used = memory()
     rx_total, tx_total = network_totals()
-    disk = shutil.disk_usage(str(Path.home()))
-    cpu_temp, gpu_temp = temperatures()
     uptime = float(read_text("/proc/uptime", "0").split()[0])
-    return {
+    payload = {
         "cpu_total": cpu_total,
         "cpu_idle": cpu_idle,
         "memory_total": memory_total,
         "memory_used": memory_used,
         "rx_total": rx_total,
         "tx_total": tx_total,
-        "disk_total": disk.total,
-        "disk_used": disk.used,
-        "cpu_temp": cpu_temp,
-        "gpu_temp": gpu_temp,
         "uptime": round(uptime),
         "load": [round(value, 2) for value in os.getloadavg()],
-        "processes": process_count(),
-        "hostname": os.uname().nodename,
-        "kernel": os.uname().release,
     }
+    payload.update(slow if slow is not None else slow_snapshot())
+    return payload
+
+
+def watch_snapshots(interval: float) -> None:
+    """Stream telemetry without paying Python startup cost every sample."""
+
+    delay = max(0.5, interval)
+    slow = slow_snapshot()
+    slow_refresh = max(1, round(10 / delay))
+    iteration = 0
+    while True:
+        if iteration > 0 and iteration % slow_refresh == 0:
+            slow = slow_snapshot()
+        print(json.dumps(snapshot(slow), separators=(",", ":")), flush=True)
+        iteration += 1
+        time.sleep(delay)
 
 
 def folder_sizes() -> dict[str, object]:
@@ -135,7 +160,11 @@ def folder_sizes() -> dict[str, object]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--folders", action="store_true")
+    parser.add_argument("--watch", type=float, metavar="SECONDS")
     args = parser.parse_args()
+    if args.watch is not None:
+        watch_snapshots(args.watch)
+        return
     print(json.dumps(folder_sizes() if args.folders else snapshot(), separators=(",", ":")))
 
 

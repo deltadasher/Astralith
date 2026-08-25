@@ -51,8 +51,12 @@ After the bar and widgets load cleanly, install the Niri configuration or add
 this line to the machine's existing config:
 
 ```kdl
-spawn-at-startup "astralithctl" "start"
+spawn-at-startup "~/.local/bin/astralithctl" "start"
 ```
+
+Use the explicit installed path in Niri bindings too. Display-manager sessions
+do not consistently inherit `~/.local/bin` in `PATH`; Niri expands a leading
+`~` in the executable name without invoking a shell.
 
 ## Monitor configuration
 

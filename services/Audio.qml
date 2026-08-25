@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import ".."
 
 QtObject {
     id: root
@@ -15,6 +16,9 @@ QtObject {
     property var outputs: []
     property var inputs: []
     property var apps: []
+    property bool mixerRefreshPending: false
+    readonly property bool mixerActive: ShellState.ephemerisVisible
+        && (ShellState.ephemerisTab === "audio" || ShellState.ephemerisTab === "media")
     readonly property var defaultOutput: {
         const selected = outputs.find(function(node) { return node.isDefault; });
         return selected || (outputs.length > 0 ? outputs[0] : null);
@@ -31,22 +35,31 @@ QtObject {
             ? decodeURIComponent(value.substring(7)) : value;
     }
 
-    function refresh() {
+    function refreshLevels() {
         if (!readProcess.running)
             readProcess.running = true;
         if (!sourceReadProcess.running)
             sourceReadProcess.running = true;
-        refreshMixer();
+    }
+
+    function refresh() {
+        refreshLevels();
+        if (mixerActive)
+            refreshMixer();
     }
 
     function refreshMixer() {
-        if (!mixerProcess.running)
-            mixerProcess.running = true;
+        if (mixerProcess.running) {
+            mixerRefreshPending = true;
+            return;
+        }
+        mixerProcess.running = true;
     }
 
     function scheduleRefresh() {
         actionRefreshTimer.restart();
-        mixerRefreshTimer.restart();
+        if (mixerActive)
+            mixerRefreshTimer.restart();
     }
 
     function change(delta) {
@@ -152,7 +165,6 @@ QtObject {
 
     property Process mixerProcess: Process {
         command: ["python3", root.helperPath]
-        running: true
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
@@ -165,6 +177,12 @@ QtObject {
                     root.mixerAvailable = false;
                     console.warn("[Astralith/Audio] Mixer decode failed:", error);
                 }
+            }
+        }
+        onRunningChanged: {
+            if (!running && root.mixerRefreshPending) {
+                root.mixerRefreshPending = false;
+                root.mixerRefreshTimer.restart();
             }
         }
     }
@@ -190,6 +208,15 @@ QtObject {
         interval: 2000
         running: true
         repeat: true
-        onTriggered: root.refresh()
+        onTriggered: root.refreshLevels()
     }
+
+    property Timer mixerPollTimer: Timer {
+        interval: 5000
+        running: root.mixerActive
+        repeat: true
+        onTriggered: root.refreshMixer()
+    }
+
+    onMixerActiveChanged: if (mixerActive) refreshMixer()
 }

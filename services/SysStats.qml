@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import ".."
 
 QtObject {
     id: root
@@ -29,6 +30,8 @@ QtObject {
     property real loadAverage: 0
     property int processCount: 0
     property var folders: []
+    readonly property bool folderDetailActive: ShellState.ephemerisVisible
+        && ShellState.ephemerisTab === "system"
 
     property real previousCpuTotal: 0
     property real previousCpuIdle: 0
@@ -116,23 +119,29 @@ QtObject {
             snapshotProcess.running = true;
     }
 
+    function refreshFolders() {
+        if (!folderProcess.running)
+            folderProcess.running = true;
+    }
+
     property Process snapshotProcess: Process {
-        command: ["python3", root.helperPath]
+        command: ["python3", "-u", root.helperPath, "--watch", "2"]
         running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
+        stdout: SplitParser {
+            splitMarker: "\n"
+            onRead: function(data) {
                 try {
-                    root.applySnapshot(JSON.parse(text));
+                    root.applySnapshot(JSON.parse(String(data)));
                 } catch (error) {
                     console.warn("[Astralith/System] Telemetry decode failed:", error);
                 }
             }
         }
+        onRunningChanged: if (!running) root.snapshotRestart.restart()
     }
 
     property Process folderProcess: Process {
         command: ["python3", root.helperPath, "--folders"]
-        running: true
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
@@ -144,20 +153,16 @@ QtObject {
         }
     }
 
-    property Timer refreshTimer: Timer {
+    property Timer snapshotRestart: Timer {
         interval: 2000
-        running: true
-        repeat: true
         onTriggered: root.refresh()
     }
 
     property Timer folderTimer: Timer {
-        interval: 60000
-        running: true
+        interval: 300000
+        running: root.folderDetailActive
         repeat: true
-        onTriggered: {
-            if (!root.folderProcess.running)
-                root.folderProcess.running = true;
-        }
+        triggeredOnStart: true
+        onTriggered: root.refreshFolders()
     }
 }

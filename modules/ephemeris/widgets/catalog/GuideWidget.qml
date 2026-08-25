@@ -40,10 +40,12 @@ Item {
 
     readonly property var controls: [
         { "keys": "META + ENTER", "name": "Terminology", "detail": "Open the nEri terminal" },
+        { "keys": "META + UP / DOWN", "name": "Workspace travel", "detail": "Move one desktop up or down" },
+        { "keys": "META + K / J", "name": "Vertical window focus", "detail": "Focus the window above or below" },
         { "keys": "META + D", "name": "Application catalog", "detail": "Search installed desktop entries" },
         { "keys": "META + SHIFT + N", "name": "Observatory settings", "detail": "Open Astralith configuration" },
         { "keys": "META + SHIFT + Q", "name": "Essential deck", "detail": "Toggle timer and performance quick actions" },
-        { "keys": "META + SHIFT + S", "name": "Clipboard snip", "detail": "Slurp region, Grim capture, wl-copy result" },
+        { "keys": "META + SHIFT + S", "name": "Clipboard snip", "detail": "Niri crop selection, clipboard copy, and screenshot archive" },
         { "keys": "META + SHIFT + ESC", "name": "System monitor", "detail": "Open btop in a terminal" },
         { "keys": "ALT + F4", "name": "Close window", "detail": "Ask Niri to close the focused window" }
     ]

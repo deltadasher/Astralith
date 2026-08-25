@@ -2,6 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell.Io
+import ".."
 
 QtObject {
     id: root
@@ -9,6 +10,8 @@ QtObject {
     property var values: Array(28).fill(0)
     property bool available: false
     property string error: ""
+    readonly property bool requested: ShellState.ephemerisVisible
+        && (ShellState.ephemerisTab === "media" || ShellState.ephemerisTab === "audio")
     readonly property string configPath: {
         const value = Qt.resolvedUrl("../config/cava-raw.conf").toString();
         return value.indexOf("file://") === 0
@@ -31,7 +34,7 @@ QtObject {
 
     property Process cavaProcess: Process {
         command: ["cava", "-p", root.configPath]
-        running: Media.available
+        running: root.requested && Media.available
         stdout: SplitParser {
             splitMarker: "\n"
             onRead: function(data) { root.consume(data); }
@@ -45,7 +48,7 @@ QtObject {
             }
         }
         onRunningChanged: {
-            if (!running && !Media.available) {
+            if (!running && (!root.requested || !Media.available)) {
                 root.available = false;
                 root.values = Array(28).fill(0);
             }

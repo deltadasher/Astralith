@@ -138,9 +138,10 @@ environment {
 }
 
 // ── Autostart ─────────────────────────────────────────────────────────
-// Astralith is the nEri shell. scripts/install-user exposes astralithctl.
+// Astralith is the nEri shell. Use the installed path explicitly because
+// display-manager sessions do not always include ~/.local/bin in PATH.
 spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
-spawn-at-startup "astralithctl" "start"
+spawn-at-startup "~/.local/bin/astralithctl" "start"
 // Clipboard capture will be enabled when Transit owns clipboard history.
 // spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
@@ -185,17 +186,19 @@ binds {
     // Astralith desktop keys. Hyprland remains reference-only.
     Alt+F4            { close-window; }
     Mod+Return        { spawn "terminology"; }
-    Mod+D             { spawn "astralithctl" "toggle" "apps"; }
+    Mod+D             { spawn "~/.local/bin/astralithctl" "toggle" "apps"; }
     Mod+E             { spawn "nautilus"; }
     Mod+B             { spawn "firefox"; }
     Mod+Shift+Escape  { spawn "terminology" "-e" "btop"; }
-    Mod+Shift+N       { spawn "astralithctl" "toggle" "settings"; }
-    Mod+Shift+Q       { spawn "astralithctl" "quick" "timer"; }
-    Mod+Shift+S repeat=false { spawn "astralithctl" "capture" "region-copy"; }
-    Super+Alt+L       { spawn "astralithctl" "lock"; }
-    Mod+Shift+W       { spawn "astralithctl" "toggle" "walls"; }
-    Mod+Shift+C       { spawn "astralithctl" "toggle" "clipboard"; }
-    Mod+Shift+A       { spawn "astralithctl" "toggle" "notifications"; }
+    Mod+Shift+N       { spawn "~/.local/bin/astralithctl" "toggle" "settings"; }
+    Mod+Shift+Q       { spawn "~/.local/bin/astralithctl" "quick" "timer"; }
+    // Native Niri crop UI: select a region, then copy it to the clipboard.
+    // Optics Bay keeps the separate Slurp/Grim capture workflows.
+    Mod+Shift+S repeat=false { screenshot; }
+    Super+Alt+L       { spawn "~/.local/bin/astralithctl" "lock"; }
+    Mod+Shift+W       { spawn "~/.local/bin/astralithctl" "toggle" "walls"; }
+    Mod+Shift+C       { spawn "~/.local/bin/astralithctl" "toggle" "clipboard"; }
+    Mod+Shift+A       { spawn "~/.local/bin/astralithctl" "toggle" "notifications"; }
 
     // Alt-tab: jump straight back to the last window you were on (MRU), no mouse
     Mod+Tab           repeat=false { focus-window-previous; }
@@ -211,11 +214,9 @@ binds {
     Mod+R             { switch-preset-column-width; }
     Mod+Shift+R       { switch-preset-window-height; }
 
-    // Focus — arrows or hjkl
+    // Focus — horizontal arrows; hjkl retains full directional focus
     Mod+Left  { focus-column-left; }
     Mod+Right { focus-column-right; }
-    Mod+Up    { focus-window-up; }
-    Mod+Down  { focus-window-down; }
     Mod+H     { focus-column-left; }
     Mod+L     { focus-column-right; }
     Mod+K     { focus-window-up; }
@@ -251,10 +252,10 @@ binds {
 
     // Workspaces & overview
     Mod+O         { toggle-overview; }
+    Mod+Down      { focus-workspace-down; }
+    Mod+Up        { focus-workspace-up; }
     Mod+Page_Down { focus-workspace-down; }
     Mod+Page_Up   { focus-workspace-up; }
-    Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
-    Mod+WheelScrollUp   cooldown-ms=150 { focus-workspace-up; }
     Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
     Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
 

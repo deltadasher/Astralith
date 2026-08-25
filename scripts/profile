@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_path="$(readlink -f -- "${BASH_SOURCE[0]}")"
+script_dir="$(cd -- "$(dirname -- "$script_path")" && pwd)"
+project_root="$(cd -- "$script_dir/.." && pwd)"
+
+instance_output="$(qs -p "$project_root" list 2>/dev/null || true)"
+mapfile -t roots < <(awk '/Process ID:/ { print $3 }' <<<"$instance_output")
+
+if (( ${#roots[@]} == 0 )); then
+    printf 'Astralith is not running.\n' >&2
+    exit 1
+fi
+
+declare -A seen=()
+pids=()
+
+collect_tree() {
+    local pid="$1"
+    local children_file="/proc/$pid/task/$pid/children"
+    [[ "$pid" =~ ^[0-9]+$ && -r "/proc/$pid/status" ]] || return 0
+    [[ -z "${seen[$pid]:-}" ]] || return 0
+    seen[$pid]=1
+    pids+=("$pid")
+    if [[ -r "$children_file" ]]; then
+        local child
+        for child in $(<"$children_file"); do
+            collect_tree "$child"
+        done
+    fi
+    return 0
+}
+
+for root_pid in "${roots[@]}"; do
+    collect_tree "$root_pid"
+done
+
+if (( ${#pids[@]} == 0 )); then
+    printf 'Astralith is running, but its process namespace is not visible here. Run this command from the Niri session.\n' >&2
+    exit 1
+fi
+
+pid_csv="$(IFS=,; printf '%s' "${pids[*]}")"
+printf 'Astralith runtime profile\n'
+printf 'Source: %s\n' "$project_root"
+printf 'Processes: %s\n\n' "${#pids[@]}"
+ps -o pid=,ppid=,rss=,%cpu=,etime=,comm=,args= -p "$pid_csv" | sort -k3,3nr
+
+total_rss_kib="$(ps -o rss= -p "$pid_csv" | awk '{ total += $1 } END { print total + 0 }')"
+printf '\nResident set total: %.1f MiB\n' "$(awk -v kib="$total_rss_kib" 'BEGIN { print kib / 1024 }')"
+printf 'This total covers Astralith and direct helper descendants, not shared Qt pages or external wallpaper daemons.\n'

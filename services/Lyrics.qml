@@ -2,6 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell.Io
+import ".."
 
 QtObject {
     id: root
@@ -15,6 +16,8 @@ QtObject {
     property bool busy: false
     property string error: ""
     property string requestedKey: ""
+    readonly property bool requested: ShellState.ephemerisVisible
+        && ShellState.ephemerisTab === "media"
     readonly property bool available: lines.length > 0
     readonly property bool hasTiming: lines.length > 0 && lines[0].time >= 0
     readonly property string trackKey: Media.available
@@ -109,7 +112,8 @@ QtObject {
         fetchProcess.running = true;
     }
 
-    onTrackKeyChanged: requestTimer.restart()
+    onTrackKeyChanged: if (requested) requestTimer.restart()
+    onRequestedChanged: if (requested) requestTimer.restart()
 
     property Timer requestTimer: Timer {
         interval: 520

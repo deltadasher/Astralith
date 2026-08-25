@@ -22,3 +22,8 @@ Services expose stable QML state to every Astralith module:
 
 Keep presentation out of services. Missing optional backends must leave a clear
 availability value and must not make the QML singleton unavailable.
+
+Detailed mixer, network, clipboard, spectrum, lyrics, recording, power-profile,
+and folder telemetry follows the visibility of its owning Ephemeris surface.
+Only small values consumed by Aperture or an active task may poll while every
+expanded instrument is closed.

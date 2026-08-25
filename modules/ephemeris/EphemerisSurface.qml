@@ -88,7 +88,7 @@ PanelWindow {
                 root.beginClose();
         }
         function onEphemerisTabChanged() {
-            if (!root.surfaceVisible || root.opening)
+            if (!ShellState.ephemerisVisible || !root.surfaceVisible || root.opening)
                 return;
             root.widgetDeploymentPending = true;
             root.widgetPresentation = 0;
@@ -195,12 +195,37 @@ PanelWindow {
             // to the popup and is clipped at this boundary.
             clip: true
 
-            Behavior on x { NumberAnimation { duration: Settings.motion ? 270 : 0; easing.type: Easing.OutCubic } }
-            Behavior on y { NumberAnimation { duration: Settings.motion ? 270 : 0; easing.type: Easing.OutCubic } }
-            Behavior on width { NumberAnimation { duration: Settings.motion ? 300 : 0; easing.type: Easing.OutCubic } }
-            Behavior on height { NumberAnimation { duration: Settings.motion ? 300 : 0; easing.type: Easing.OutCubic } }
+            // Hidden surfaces snap to their next layout. Geometry only morphs
+            // while an already-open Ephemeris changes modules; otherwise the
+            // previous widget's boundary can flash for a frame during launch.
+            Behavior on x {
+                enabled: ShellState.ephemerisVisible && root.surfaceVisible
+                    && !root.opening && root.presentation > 0.99
+                NumberAnimation { duration: Settings.motion ? 270 : 0; easing.type: Easing.OutCubic }
+            }
+            Behavior on y {
+                enabled: ShellState.ephemerisVisible && root.surfaceVisible
+                    && !root.opening && root.presentation > 0.99
+                NumberAnimation { duration: Settings.motion ? 270 : 0; easing.type: Easing.OutCubic }
+            }
+            Behavior on width {
+                enabled: ShellState.ephemerisVisible && root.surfaceVisible
+                    && !root.opening && root.presentation > 0.99
+                NumberAnimation { duration: Settings.motion ? 300 : 0; easing.type: Easing.OutCubic }
+            }
+            Behavior on height {
+                enabled: ShellState.ephemerisVisible && root.surfaceVisible
+                    && !root.opening && root.presentation > 0.99
+                NumberAnimation { duration: Settings.motion ? 300 : 0; easing.type: Easing.OutCubic }
+            }
 
-            MouseArea { anchors.fill: parent }
+            MouseArea {
+                anchors.fill: parent
+                // Parallax deliberately has no enclosing card, so its empty
+                // field is the natural dismissal target. Interactive bodies
+                // and controls sit above this catcher and retain their clicks.
+                onClicked: if (root.immersiveWidget) root.close()
+            }
 
             EccentricPlate {
                 anchors.fill: parent
@@ -249,34 +274,6 @@ PanelWindow {
                         }
                     }
                 }
-            }
-
-            Rectangle {
-                z: 20
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.rightMargin: 12
-                anchors.topMargin: 12
-                width: 38
-                height: 38
-                radius: width / 2
-                color: closePointer.containsMouse ? Theme.danger : Theme.controlRest
-                Text {
-                    anchors.centerIn: parent
-                    text: "×"
-                    color: closePointer.containsMouse ? Theme.void_ : Theme.muted
-                    font.family: Theme.fontDisplay
-                    font.pixelSize: 19
-                    font.weight: Font.Bold
-                }
-                MouseArea {
-                    id: closePointer
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.close()
-                }
-                Behavior on color { ColorAnimation { duration: Theme.motionFast } }
             }
 
             Item {

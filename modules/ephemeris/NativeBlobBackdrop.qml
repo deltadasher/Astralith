@@ -63,20 +63,4 @@ Item {
         opacity: root.tab === "walls" ? 0 : 1
     }
 
-    // A low-energy spectral seam supplies depth without returning to the old
-    // outline-heavy card.  It is clipped to the popup body's final geometry.
-    Rectangle {
-        x: root.layout.x + 12
-        y: root.layout.y
-        width: Math.max(0, root.layout.width - 24)
-        height: 1
-        opacity: root.tab === "walls" ? 0 : root.reveal * 0.68
-        gradient: Gradient {
-            orientation: Gradient.Horizontal
-            GradientStop { position: 0; color: "transparent" }
-            GradientStop { position: 0.32; color: root.tone }
-            GradientStop { position: 0.74; color: Theme.cyan }
-            GradientStop { position: 1; color: "transparent" }
-        }
-    }
 }

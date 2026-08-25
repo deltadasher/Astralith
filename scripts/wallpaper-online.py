@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Search and download high-resolution wallpapers through DuckDuckGo Images.
+"""Search Wikimedia Commons for large images and download selected results.
 
-The token flow is adapted from the local Serpantinum wallpaper searcher, with
-bounded result counts, download sizes, and an Astralith-owned cache.
+Commons exposes a documented JSON API and license metadata, so Astralith does
+not need to scrape a private web token or inherit another shell's search flow.
+Downloaded files remain user data and are never added to the repository.
 """
 
 from __future__ import annotations
@@ -14,16 +15,17 @@ import json
 import mimetypes
 import os
 from pathlib import Path
-import re
 import sys
 import urllib.error
 import urllib.parse
 import urllib.request
 
 
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36"
+USER_AGENT = "Astralith/0.1 wallpaper-browser (https://github.com/deltadasher/Astralith)"
 MAX_RESULTS = 24
+QUERY_LIMIT = 32
 MAX_DOWNLOAD = 64 * 1024 * 1024
+COMMONS_API = "https://commons.wikimedia.org/w/api.php"
 
 
 def valid_image_bytes(data: bytes) -> bool:
@@ -47,33 +49,91 @@ def opener() -> urllib.request.OpenerDirector:
     return urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookies))
 
 
-def request_json(client: urllib.request.OpenerDirector, url: str, referer: str) -> dict:
+def request_json(client: urllib.request.OpenerDirector, url: str) -> dict:
     request = urllib.request.Request(url, headers={
         "User-Agent": USER_AGENT,
-        "Accept": "application/json, text/javascript, */*; q=0.01",
-        "Referer": referer,
+        "Accept": "application/json",
     })
     with client.open(request, timeout=12) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
-def token_for(client: urllib.request.OpenerDirector, query: str) -> tuple[str, str]:
-    search_url = "https://duckduckgo.com/?" + urllib.parse.urlencode({
-        "q": query,
-        "iar": "images",
-        "iax": "images",
-        "ia": "images",
-        "kp": "-1",
-    })
-    request = urllib.request.Request(search_url, headers={"User-Agent": USER_AGENT})
-    with client.open(request, timeout=12) as response:
-        html = response.read().decode("utf-8", "replace")
-    match = re.search(r"vqd=([0-9a-zA-Z_-]+)", html) or re.search(
-        r"vqd['\"]?\s*:\s*['\"]?([0-9a-zA-Z_-]+)", html
-    )
-    if not match:
-        raise RuntimeError("DuckDuckGo did not return an image-search token")
-    return match.group(1), search_url
+def metadata_value(info: dict[str, object], key: str) -> str:
+    metadata = info.get("extmetadata", {})
+    if not isinstance(metadata, dict):
+        return ""
+    value = metadata.get(key, {})
+    return str(value.get("value", "")) if isinstance(value, dict) else ""
+
+
+def commons_search_url(query: str) -> str:
+    params = {
+        "action": "query",
+        "format": "json",
+        "formatversion": "2",
+        "generator": "search",
+        "gsrnamespace": "6",
+        "gsrsearch": query,
+        "gsrlimit": str(QUERY_LIMIT),
+        "gsrsort": "relevance",
+        "prop": "imageinfo",
+        "iiprop": "url|size|mime|extmetadata",
+        "iiextmetadatafilter": "LicenseShortName|Artist",
+        "iiurlwidth": "960",
+        "origin": "*",
+    }
+    return COMMONS_API + "?" + urllib.parse.urlencode(params)
+
+
+def parse_commons_results(data: dict[str, object]) -> list[dict[str, object]]:
+    query = data.get("query", {})
+    pages = query.get("pages", []) if isinstance(query, dict) else []
+    if not isinstance(pages, list):
+        return []
+
+    entries: list[dict[str, object]] = []
+    for page in pages:
+        if not isinstance(page, dict):
+            continue
+        image_info = page.get("imageinfo", [])
+        if not isinstance(image_info, list) or not image_info:
+            continue
+        info = image_info[0]
+        if not isinstance(info, dict):
+            continue
+        try:
+            width = int(info.get("width", 0))
+            height = int(info.get("height", 0))
+        except (TypeError, ValueError):
+            continue
+        mime = str(info.get("mime", ""))
+        image_url = str(info.get("url", ""))
+        preview_url = str(info.get("thumburl", image_url))
+        if width < 1920 or height < 1080 or not mime.startswith("image/"):
+            continue
+        if not image_url or not preview_url:
+            continue
+        title = str(page.get("title", "Commons image"))
+        if title.lower().startswith("file:"):
+            title = title[5:]
+        entries.append({
+            "path": "",
+            "preview": "",
+            "previewUrl": preview_url,
+            "name": title[:90],
+            "kind": "image",
+            "source": "Online",
+            "provider": "Wikimedia Commons",
+            "color": "",
+            "bucket": "Unsorted",
+            "remoteUrl": image_url,
+            "sourcePage": str(info.get("descriptionurl", "")),
+            "license": metadata_value(info, "LicenseShortName"),
+            "artist": metadata_value(info, "Artist"),
+            "width": width,
+            "height": height,
+        })
+    return entries
 
 
 def download_thumbnail(client: urllib.request.OpenerDirector, url: str, key: str) -> str:
@@ -98,43 +158,19 @@ def search(raw_query: str) -> list[dict[str, object]]:
     query = raw_query.strip()
     if not query:
         return []
-    full_query = query if "wallpaper" in query.lower() else query + " wallpaper"
     client = opener()
-    token, referer = token_for(client, full_query)
-    params = urllib.parse.urlencode({
-        "l": "us-en", "o": "json", "q": full_query, "vqd": token,
-        "f": ",,,", "p": "-1", "ex": "-1",
-    })
-    data = request_json(client, "https://duckduckgo.com/i.js?" + params, referer)
+    data = request_json(client, commons_search_url(query))
     entries: list[dict[str, object]] = []
-    for result in data.get("results", []):
+    for result in parse_commons_results(data):
         if len(entries) >= MAX_RESULTS:
             break
-        try:
-            width, height = int(result.get("width", 0)), int(result.get("height", 0))
-        except (TypeError, ValueError):
-            continue
-        image_url = str(result.get("image", ""))
-        thumb_url = str(result.get("thumbnail", ""))
-        if width < 1920 or height < 1080 or not image_url or not thumb_url:
-            continue
+        image_url = str(result["remoteUrl"])
         key = hashlib.sha1(image_url.encode()).hexdigest()[:20]
-        preview = download_thumbnail(client, thumb_url, key)
+        preview = download_thumbnail(client, str(result.pop("previewUrl")), key)
         if not preview:
             continue
-        title = str(result.get("title") or urllib.parse.urlparse(image_url).netloc or "Online wallpaper")
-        entries.append({
-            "path": "",
-            "preview": preview,
-            "name": title[:90],
-            "kind": "image",
-            "source": "Online",
-            "color": "",
-            "bucket": "Unsorted",
-            "remoteUrl": image_url,
-            "width": width,
-            "height": height,
-        })
+        result["preview"] = preview
+        entries.append(result)
     return entries
 
 

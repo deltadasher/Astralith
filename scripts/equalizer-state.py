@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-"""Manage Astralith's live EasyEffects equalizer preset.
-
-The ten-band curve and preset values are adapted from the local Serpantinum
-music/equalizer implementation. Astralith owns its state and preset names.
-"""
+"""Manage Astralith's original EasyEffects listening profiles."""
 
 from __future__ import annotations
 
 import json
+import math
 import os
 from pathlib import Path
 import shutil
@@ -16,21 +13,21 @@ import sys
 
 
 PRESETS: dict[str, list[int]] = {
-    "Flat": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    "Bass": [5, 7, 5, 2, 1, 0, 0, 0, 1, 2],
-    "Treble": [-2, -1, 0, 1, 2, 3, 4, 5, 6, 6],
-    "Vocal": [-2, -1, 1, 3, 5, 5, 4, 2, 1, 0],
-    "Pop": [2, 4, 2, 0, 1, 2, 4, 2, 1, 2],
-    "Rock": [5, 4, 2, -1, -2, -1, 2, 4, 5, 6],
-    "Jazz": [3, 3, 1, 1, 1, 1, 2, 1, 2, 3],
-    "Classic": [0, 1, 2, 2, 2, 2, 1, 2, 3, 4],
+    "Neutral": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "Gravity": [6, 5, 3, 1, 0, -1, -1, 0, 1, 1],
+    "Air": [-2, -2, -1, 0, 1, 2, 3, 4, 5, 5],
+    "Dialogue": [-4, -3, -1, 2, 4, 5, 3, 1, -1, -2],
+    "Pulse": [3, 2, 0, -1, 0, 2, 3, 2, 1, 0],
+    "Impact": [4, 3, 2, 0, -1, 0, 2, 3, 4, 3],
+    "Lounge": [2, 2, 1, 0, 1, 1, 2, 2, 1, 1],
+    "Orchestra": [-1, 0, 1, 2, 2, 1, 1, 2, 3, 2],
 }
-FREQUENCIES = [
+CONTROL_FREQUENCIES = [31.25, 62.5, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
+EASY_EFFECTS_FREQUENCIES = [
     32, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630,
     800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000,
     10000, 12500, 16000, 20000, 22000, 24000, 24000,
 ]
-ANCHORS = {0: 0, 3: 1, 6: 2, 9: 3, 12: 4, 15: 5, 18: 6, 21: 7, 24: 8, 27: 9}
 PRESET_NAME = "astralith-live-eq"
 
 
@@ -43,7 +40,11 @@ def state_path() -> Path:
 
 
 def default_state() -> dict[str, object]:
-    return {"preset": "Flat", "bands": PRESETS["Flat"], "available": bool(shutil.which("easyeffects"))}
+    return {
+        "preset": "Neutral",
+        "bands": PRESETS["Neutral"],
+        "available": bool(shutil.which("easyeffects")),
+    }
 
 
 def read_state() -> dict[str, object]:
@@ -51,11 +52,12 @@ def read_state() -> dict[str, object]:
         data = json.loads(state_path().read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError, TypeError):
         data = default_state()
-    bands = data.get("bands", PRESETS["Flat"])
+    bands = data.get("bands", PRESETS["Neutral"])
     if not isinstance(bands, list) or len(bands) != 10:
-        bands = PRESETS["Flat"]
+        bands = PRESETS["Neutral"]
     data["bands"] = [max(-12, min(12, int(float(value)))) for value in bands]
-    data["preset"] = str(data.get("preset", "Custom"))
+    saved_preset = str(data.get("preset", "Custom"))
+    data["preset"] = saved_preset if saved_preset in PRESETS else "Custom"
     data["available"] = bool(shutil.which("easyeffects"))
     return data
 
@@ -66,10 +68,28 @@ def write_state(data: dict[str, object]) -> None:
     path.write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
 
 
+def interpolated_gain(frequency: float, bands: list[int]) -> float:
+    """Interpolate control points on a logarithmic frequency axis."""
+    if frequency <= CONTROL_FREQUENCIES[0]:
+        return float(bands[0])
+    if frequency >= CONTROL_FREQUENCIES[-1]:
+        return float(bands[-1])
+    target = math.log2(frequency)
+    for index in range(1, len(CONTROL_FREQUENCIES)):
+        upper = CONTROL_FREQUENCIES[index]
+        if frequency > upper:
+            continue
+        lower = CONTROL_FREQUENCIES[index - 1]
+        span = math.log2(upper) - math.log2(lower)
+        blend = (target - math.log2(lower)) / span
+        return round(float(bands[index - 1]) * (1 - blend) + float(bands[index]) * blend, 2)
+    return float(bands[-1])
+
+
 def easy_effects_preset(bands: list[int]) -> dict[str, object]:
     nodes: dict[str, object] = {}
-    for index, frequency in enumerate(FREQUENCIES):
-        gain = float(bands[ANCHORS[index]]) if index in ANCHORS else 0.0
+    for index, frequency in enumerate(EASY_EFFECTS_FREQUENCIES):
+        gain = interpolated_gain(frequency, bands)
         nodes[f"band{index}"] = {
             "frequency": frequency,
             "gain": gain,
@@ -132,4 +152,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

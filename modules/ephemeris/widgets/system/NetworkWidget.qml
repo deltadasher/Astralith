@@ -164,11 +164,6 @@ Item {
                     Text { anchors.centerIn: parent; text: "CONNECT"; color: Theme.void_; font.family: Theme.fontText; font.pixelSize: 10; font.weight: Font.Bold }
                     MouseArea { id: connectPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.submitPassword() }
                 }
-                Rectangle {
-                    Layout.preferredWidth: 32; Layout.preferredHeight: 32; radius: 10; color: cancelPointer.containsMouse ? Theme.elevated : "transparent"
-                    Text { anchors.centerIn: parent; text: "×"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 12 }
-                    MouseArea { id: cancelPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: { root.pendingSsid = ""; root.wifiPassword = ""; } }
-                }
             }
         }
 

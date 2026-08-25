@@ -33,12 +33,12 @@ all four roles in Settings.
 | Serpantinum surface | Astralith surface | Status | Notes |
 | --- | --- | --- | --- |
 | App launcher | Application catalog | native | DesktopEntries-powered fuzzy search |
-| Calendar and weather | Celestial calendar | ported | Orbit composition adapted to responsive Niri geometry |
-| Music popup | Resonance console | ported | Cached embedded/LRCLIB lyrics, synchronized seeking, player selection, shuffle, loop, rate, volume, CAVA, and EasyEffects landed |
+| Calendar and weather | Celestial calendar | native | Independent evenly spaced forecast orbit and responsive Niri geometry |
+| Music popup | Resonance console | native | Cached embedded/LRCLIB lyrics, synchronized seeking, player selection, shuffle, loop, rate, volume, CAVA, and original EasyEffects profiles landed |
 | Volume popup | Acoustic array | ported | Liquid master orb, 150% overdrive ring, live/ambient spectrum field, and full PipeWire node mixer landed |
 | Network popup | Link array | native | Wi-Fi, Bluetooth, Ethernet, password entry |
 | Battery popup | Reactor telemetry | native | Segmented reactor core, health, energy flow, charge rate, and power profiles landed; laptop history is optional hardware-specific expansion |
-| Wallpaper picker | Parallax archive | ported | Online search, video walls, source/color filters, AWWW transitions, and Niri output targeting landed |
+| Wallpaper picker | Parallax archive | native | Commons API search, video walls, source/color filters, AWWW transitions, and Niri output targeting landed |
 | Clipboard manager | Clipboard orbit | native | Search and image/text restore |
 | Notifications | Transit signals | native | History, DND, actions, animated local toasts |
 | FocusTime | Focus orbit | native | Persistent Pomodoro phases, automatic short/long drifts, daily and seven-day totals, streaks, and restore-after-reload landed |

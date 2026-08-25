@@ -24,3 +24,12 @@
   event horizon, gravitational streamlines, constellation password trajectory,
   fractured clock, and orbital network, battery, and media telemetry replace
   the conventional centered authentication card.
+- Replaced the remaining unlicensed adaptation points with Astralith's binary
+  forecast array, original interpolated equalizer profiles, and a documented
+  Wikimedia Commons wallpaper provider.
+- Added explicit provenance, hash-audit results, and CC BY-SA attribution for
+  the bundled GNOME AdwaitaLegacy controls.
+- Removed redundant Ephemeris close glyphs and prevented hidden module geometry
+  and the native spectral seam from flashing ahead of the fluid surface.
+- Made Parallax's uncovered field dismiss the surface and added an original
+  static accretion-disk illustration to the Flight Manual.

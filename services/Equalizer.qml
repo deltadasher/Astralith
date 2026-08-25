@@ -6,7 +6,7 @@ import Quickshell.Io
 QtObject {
     id: root
 
-    property string preset: "Flat"
+    property string preset: "Neutral"
     property var bands: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     property bool available: false
     property bool busy: false
@@ -20,7 +20,7 @@ QtObject {
     function consume(text) {
         try {
             const data = JSON.parse(String(text).trim());
-            preset = data.preset || "Flat";
+            preset = data.preset || "Neutral";
             bands = data.bands || bands;
             available = data.available === true;
             error = "";
@@ -35,15 +35,17 @@ QtObject {
     }
 
     function applyPreset(name) {
+        // Astralith's ten control points are original listening profiles.
+        // The helper interpolates them over EasyEffects' 32-band graph.
         const recipes = {
-            "Flat": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "Bass": [5, 7, 5, 2, 1, 0, 0, 0, 1, 2],
-            "Treble": [-2, -1, 0, 1, 2, 3, 4, 5, 6, 6],
-            "Vocal": [-2, -1, 1, 3, 5, 5, 4, 2, 1, 0],
-            "Pop": [2, 4, 2, 0, 1, 2, 4, 2, 1, 2],
-            "Rock": [5, 4, 2, -1, -2, -1, 2, 4, 5, 6],
-            "Jazz": [3, 3, 1, 1, 1, 1, 2, 1, 2, 3],
-            "Classic": [0, 1, 2, 2, 2, 2, 1, 2, 3, 4]
+            "Neutral": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "Gravity": [6, 5, 3, 1, 0, -1, -1, 0, 1, 1],
+            "Air": [-2, -2, -1, 0, 1, 2, 3, 4, 5, 5],
+            "Dialogue": [-4, -3, -1, 2, 4, 5, 3, 1, -1, -2],
+            "Pulse": [3, 2, 0, -1, 0, 2, 3, 2, 1, 0],
+            "Impact": [4, 3, 2, 0, -1, 0, 2, 3, 4, 3],
+            "Lounge": [2, 2, 1, 0, 1, 1, 2, 2, 1, 1],
+            "Orchestra": [-1, 0, 1, 2, 2, 1, 1, 2, 3, 2]
         };
         if (!recipes[name] || actionProcess.running)
             return;

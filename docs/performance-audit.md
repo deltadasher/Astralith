@@ -79,9 +79,9 @@ remaining active merely because their singleton was instantiated once.
   remaining presentation files. Splitting them is useful before public API
   stabilization, but doing so during a performance pass would create broad
   import and animation risk without reducing runtime work.
-- Caelestia Blobs remains an optional GPL-3.0 native renderer, and the direct
-  Serpantinum adaptation points in `provenance-audit.md` remain public-release
-  blockers. Optimization does not change either provenance boundary.
+- Caelestia Blobs remains an optional GPL-3.0 native renderer. The former
+  unlicensed Serpantinum adaptation points were independently reimplemented in
+  the subsequent provenance pass; optimization did not itself resolve them.
 
 ## Verification gate
 

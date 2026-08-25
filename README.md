@@ -12,10 +12,10 @@ screenshots, quick actions, and the Umbra session lock.
 
 > [!IMPORTANT]
 > This is currently a private development repository. It does not have a
-> redistribution license yet because a few early implementations were adapted
-> while studying an unlicensed upstream project. See
-> [the provenance audit](docs/provenance-audit.md) before making the repository
-> public or redistributing its source.
+> redistribution license yet. The known unlicensed adaptation points have been
+> independently reimplemented; see [the provenance audit](docs/provenance-audit.md)
+> and [third-party notices](THIRD_PARTY.md). Choose Astralith's own license
+> before inviting reuse or contributions.
 
 ## The suite
 
@@ -166,6 +166,7 @@ Astralith/
 ├── Settings.qml                  Persistent behavior and application defaults
 ├── Theme.qml                     Shared visual and motion tokens
 ├── components/                   Reusable QML primitives
+├── design/                       Dormant identity and interaction studies
 ├── services/                     System and compositor state adapters
 ├── modules/
 │   ├── aperture/                 Bar and compact instrumentation
@@ -181,7 +182,7 @@ Astralith/
 │   ├── quickactions/             Chronos and compact telemetry
 │   ├── transit/                  Notification and clipboard presentation
 │   └── umbra/                    Preview and secure lock surfaces
-├── assets/                       Original icons and wallpaper flight packs
+├── assets/                       Attributed controls and original visual assets
 ├── config/                       Runtime backend configuration
 ├── niri/                         Portable compositor configuration
 ├── scripts/                      CLI, installers, adapters, and validation
@@ -224,10 +225,9 @@ Astralith is usable on the author's Niri desktop and is being prepared for the
 rest of the author's computers. The immediate priorities are:
 
 1. prove clean installation on a second machine;
-2. finish independently replacing the remaining unlicensed adaptation points;
-3. select a license only after that provenance work is complete;
-4. build a safe animation laboratory before changing Ephemeris geometry again;
-5. package optional dependencies after the supported distributions are known.
+2. select Astralith's own license and contribution terms;
+3. build a safe animation laboratory before changing Ephemeris geometry again;
+4. package optional dependencies after the supported distributions are known.
 
 This project is intentionally ambitious. Stability wins over visual rewrites:
 prototype risky layer-shell behavior outside the live shell, then port it only

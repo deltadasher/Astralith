@@ -350,13 +350,6 @@ Item {
                 MouseArea { id: palettePointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Settings.adaptivePalette = !Settings.adaptivePalette }
                 ToolTipBubble { text: Settings.adaptivePalette ? "MATUGEN ONLINE" : "MATUGEN OFFLINE"; shown: palettePointer.containsMouse; anchors.left: undefined; anchors.right: parent.left; anchors.rightMargin: 8 }
             }
-            Rectangle {
-                width: 52; height: 52; radius: 26
-                color: closePointer.containsMouse ? Theme.danger : Theme.mantle
-                border.width: 0
-                Text { anchors.centerIn: parent; text: "×"; color: closePointer.containsMouse ? Theme.void_ : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 20 }
-                MouseArea { id: closePointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: ShellState.closeEphemeris() }
-            }
         }
 
         Rectangle {

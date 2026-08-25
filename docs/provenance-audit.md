@@ -2,59 +2,69 @@
 
 Status checked on 2026-08-25.
 
-## Current blocker
+## Result
 
-Astralith was developed privately while referring to and, in a few places,
-directly adapting code and behavior from `ilyamiro/imperative-dots`. The local
-upstream checkout at commit `eefff2fadceb28b52198175914576fbb55f57695`
-contains no `LICENSE` or `COPYING` file. The current public repository view also
-does not expose a license file.
+The known unlicensed Serpantinum/`imperative-dots` adaptation points have been
+reimplemented. A normalized five-line source comparison against the local
+upstream checkout at `eefff2fadceb28b52198175914576fbb55f57695` now reports no
+matching implementation blocks in Astralith's QML, JavaScript, Python, or shell
+sources.
 
-Without an explicit license or direct permission, the adapted expression must
-not be published as though Astralith has the right to relicense it.
+The upstream repository did not expose a `LICENSE` or `COPYING` file at audit
+time. Astralith therefore carries no upstream source, preset table, image, or
+derived search implementation from that project. Serpantinum remains a
+historical product and behavior reference only.
 
-## Known adaptation points
+This is a best-effort engineering provenance review, not a legal opinion.
 
-- The original Celestial Calendar orbit began from Serpantinum's calendar
-  composition before Astralith's responsive/Niri rewrite.
-- Equalizer curve values were adapted from Serpantinum presets.
-- Online wallpaper token flow was adapted from Serpantinum's search helper.
-- Serpantinum supplied visual and behavioral reference material throughout the
-  parity phase.
+## Reimplemented boundaries
 
-This list is intentionally conservative and should be expanded if later review
-finds another directly copied implementation.
+- `modules/ephemeris/widgets/shared/OrbitalForecast.qml` now uses Astralith's
+  independently designed single-orbit composition and radial choreography.
+- `scripts/equalizer-state.py` and `services/Equalizer.qml` now use original
+  Astralith listening profiles and logarithmic band interpolation. None of the
+  former upstream preset constants remain.
+- `scripts/wallpaper-online.py` now uses Wikimedia Commons' documented MediaWiki
+  API and preserves source-page, artist, and license metadata. It no longer
+  implements Serpantinum's DuckDuckGo token-scraping flow.
 
-## Resolution paths
+The Flight Manual and parity documentation may still name Serpantinum when
+describing historical inspiration or feature comparison. Names, ideas, and
+behavioral compatibility are not bundled upstream expression.
 
-Before creating a public GitHub release, do one of the following:
+## Asset review
 
-1. Obtain written permission or an explicit compatible license from the upstream
-   author, preserve required attribution, and document the licensed files.
-2. Independently reimplement every directly adapted section from behavioral
-   requirements, without copying upstream expression, assets, or constants.
-
-Astralith's original generated wallpapers and project-local visual primitives
-can remain, subject to the license selected for Astralith itself.
+- No Astralith wallpaper or icon hashes match files in the local Serpantinum
+  checkout or running configuration.
+- The six bundled space wallpapers are project-generated artwork documented in
+  `wallpaper-flight-pack-01.md`.
+- The static Flight Manual black-hole illustration is project-generated artwork
+  documented under `assets/illustrations/README.md`.
+- The compact controls under `assets/icons/` are unmodified GNOME
+  AdwaitaLegacy icons. Their source, per-file mapping, attribution, and selected
+  CC BY-SA 3.0 license are recorded in `THIRD_PARTY.md`.
+- Online wallpaper downloads are user data and are never committed by the
+  helper. Individual Commons results retain their own licenses.
 
 ## Licensed optional integration
 
 The optional native Ephemeris silhouette renderer builds the unmodified
 `Caelestia.Blobs` C++ and shader sources from Caelestia Shell at pinned commit
 `1d0e5a588c61f1d905eba5fe8446ec222d37f50c`. Caelestia Shell is GPL-3.0.
-Astralith keeps this renderer outside the core runtime, downloads the complete
+Astralith keeps that renderer outside the core runtime, downloads the complete
 upstream checkout into the user's cache, retains its license and attribution,
 and enables it only after a successful local build.
 
-This explicit license does not resolve the unrelated unlicensed Serpantinum
-adaptation points above. Any distribution containing or depending on the
-Caelestia-derived renderer must also satisfy GPL-3.0.
+No Caelestia implementation source is tracked by Astralith. A distributor that
+bundles or enables the native renderer must still satisfy GPL-3.0; the pure-QML
+fallback has no Caelestia runtime dependency.
 
-## Decisions still required
+## Remaining release decisions
 
-- Choose Astralith's own license only after the upstream issue is resolved.
+- Select Astralith's own license before inviting reuse or contributions. Making
+  source visible without a license does not grant downstream reuse rights.
 - Decide whether the repository ships Niri configuration or treats it as an
   optional example.
-- Choose supported distributions and package names for dependency documentation.
-- Decide whether generated wallpapers ship in the main repository or a separate
-  artwork package as the library grows.
+- Choose supported distributions and verify exact dependency package names.
+- Decide whether generated wallpapers remain in the main repository or move to
+  a separate artwork package as the library grows.

@@ -48,6 +48,49 @@ class WallpaperValidationTests(unittest.TestCase):
         self.assertEqual(self.library.color_bucket("#7040B0"), "Purple")
         self.assertEqual(self.library.color_bucket("#2088C0"), "Blue")
 
+    def test_commons_results_preserve_license_metadata(self) -> None:
+        payload = {
+            "query": {
+                "pages": [{
+                    "title": "File:Deep field.jpg",
+                    "imageinfo": [{
+                        "width": 4096,
+                        "height": 2160,
+                        "mime": "image/jpeg",
+                        "url": "https://upload.wikimedia.org/deep-field.jpg",
+                        "thumburl": "https://upload.wikimedia.org/deep-field-thumb.jpg",
+                        "descriptionurl": "https://commons.wikimedia.org/wiki/File:Deep_field.jpg",
+                        "extmetadata": {
+                            "LicenseShortName": {"value": "CC BY-SA 4.0"},
+                            "Artist": {"value": "Example observatory"},
+                        },
+                    }],
+                }]
+            }
+        }
+        entries = self.online.parse_commons_results(payload)
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0]["source"], "Online")
+        self.assertEqual(entries[0]["provider"], "Wikimedia Commons")
+        self.assertEqual(entries[0]["license"], "CC BY-SA 4.0")
+        self.assertEqual(entries[0]["name"], "Deep field.jpg")
+
+    def test_commons_results_reject_small_images(self) -> None:
+        payload = {
+            "query": {
+                "pages": [{
+                    "title": "File:Small.png",
+                    "imageinfo": [{
+                        "width": 800,
+                        "height": 600,
+                        "mime": "image/png",
+                        "url": "https://upload.wikimedia.org/small.png",
+                    }],
+                }]
+            }
+        }
+        self.assertEqual(self.online.parse_commons_results(payload), [])
+
 
 if __name__ == "__main__":
     unittest.main()

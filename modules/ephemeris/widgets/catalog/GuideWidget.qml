@@ -52,12 +52,12 @@ Item {
 
     readonly property var parity: [
         { "name": "Top bar and workspaces", "state": "NATIVE", "tone": Theme.success, "detail": "Niri-aware capsules, media, tray, and telemetry" },
-        { "name": "Calendar and weather", "state": "PORTED", "tone": Theme.success, "detail": "Serpantinum orbit adapted to responsive Niri geometry" },
+        { "name": "Calendar and weather", "state": "NATIVE", "tone": Theme.success, "detail": "Astralith forecast orbit with responsive Niri geometry" },
         { "name": "Typography system", "state": "PORTED", "tone": Theme.success, "detail": "JetBrains Mono plus Iosevka roles with live settings" },
         { "name": "Audio and network", "state": "NATIVE", "tone": Theme.success, "detail": "PipeWire and NetworkManager without Hyprland hooks" },
-        { "name": "Music, lyrics, and EQ", "state": "PORTED", "tone": Theme.success, "detail": "Cached synchronized lyrics, expanded MPRIS controls, CAVA, and EasyEffects" },
+        { "name": "Music, lyrics, and EQ", "state": "NATIVE", "tone": Theme.success, "detail": "MPRIS, CAVA, synchronized lyrics, and original EasyEffects profiles" },
         { "name": "Focus cycles and statistics", "state": "NATIVE", "tone": Theme.success, "detail": "Persistent focus/drift phases, seven-day totals, and streaks" },
-        { "name": "Online and video walls", "state": "PORTED", "tone": Theme.success, "detail": "Search, filters, monitor targets, and animated media" },
+        { "name": "Online and video walls", "state": "NATIVE", "tone": Theme.success, "detail": "Commons search, filters, monitor targets, and animated media" },
         { "name": "Floating quick actions", "state": "PORTED", "tone": Theme.success, "detail": "On-demand timer and compact performance telemetry" },
         { "name": "Capture and recording", "state": "PORTED", "tone": Theme.success, "detail": "Region and output capture, Satty editing, and portal recording" },
         { "name": "Umbra lock surface", "state": "ONLINE", "tone": Theme.success, "detail": "Fluid multi-output veil with PAM authentication and safe preview" },
@@ -191,6 +191,16 @@ Item {
                     anchors.margins: 20
                     spacing: 14
                     Text { text: "ASTRALITH"; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 29; font.weight: Font.Black; font.letterSpacing: 2; Layout.alignment: Qt.AlignHCenter }
+                    Image {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 156
+                        source: Qt.resolvedUrl("../../../../assets/illustrations/umbra-black-hole.png")
+                        fillMode: Image.PreserveAspectFit
+                        sourceSize.width: 512
+                        sourceSize.height: 342
+                        smooth: true
+                        mipmap: true
+                    }
                     Text {
                         Layout.fillWidth: true
                         text: "A composable observatory for Niri."

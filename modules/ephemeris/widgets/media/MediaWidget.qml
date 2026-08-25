@@ -651,7 +651,7 @@ Item {
             GridLayout {
                 Layout.fillWidth: true; columns: 8; columnSpacing: 6; rowSpacing: 6
                 Repeater {
-                    model: ["Flat", "Bass", "Treble", "Vocal", "Pop", "Rock", "Jazz", "Classic"]
+                    model: ["Neutral", "Gravity", "Air", "Dialogue", "Pulse", "Impact", "Lounge", "Orchestra"]
                     Rectangle {
                         id: presetButton
                         required property string modelData

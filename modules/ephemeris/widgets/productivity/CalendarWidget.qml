@@ -46,14 +46,6 @@ Item {
         return value === undefined ? "--" : Math.round(Number(value)) + Weather.unitSymbol;
     }
 
-    Shared.OrbitalForecast {
-        anchors.fill: parent
-        z: 0
-        hours: Weather.hourly
-        current: Weather.current
-        unitSymbol: Weather.unitSymbol
-    }
-
     RowLayout {
         anchors.fill: parent
         z: 10
@@ -186,9 +178,13 @@ Item {
             }
         }
 
-        Item {
+        Shared.OrbitalForecast {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.minimumWidth: 360
+            hours: Weather.hourly
+            current: Weather.current
+            unitSymbol: Weather.unitSymbol
         }
 
         ColumnLayout {

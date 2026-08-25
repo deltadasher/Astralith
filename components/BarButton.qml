@@ -4,9 +4,9 @@ import ".."
 Rectangle {
     id: root
 
-    implicitWidth: Settings.compact ? 28 : 32
-    implicitHeight: Settings.compact ? 28 : 32
-    radius: 9
+    implicitWidth: Settings.compact ? 36 : 40
+    implicitHeight: Settings.compact ? 36 : 40
+    radius: 11
     color: pointer.containsMouse ? Theme.barAccentVeil : "transparent"
     border.width: 0
     scale: pointer.containsMouse ? 1.06 : 1
@@ -20,7 +20,7 @@ Rectangle {
         text: root.glyph
         color: pointer.containsMouse ? Theme.accent : Theme.moon
         font.family: Theme.fontIcon
-        font.pixelSize: 15
+        font.pixelSize: Settings.compact ? 19 : 21
         font.weight: Font.DemiBold
     }
 

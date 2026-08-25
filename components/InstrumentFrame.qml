@@ -11,45 +11,6 @@ Item {
 
     opacity: presentation
 
-    component Corner: Item {
-        required property bool rightSide
-        required property bool bottomSide
-        property color tone: root.tone
-        width: 34
-        height: 34
-
-        Rectangle {
-            width: 25
-            height: 1
-            x: parent.rightSide ? 9 : 0
-            y: parent.bottomSide ? 33 : 0
-            color: parent.tone
-            opacity: 0.45
-        }
-        Rectangle {
-            width: 1
-            height: 25
-            x: parent.rightSide ? 33 : 0
-            y: parent.bottomSide ? 9 : 0
-            color: parent.tone
-            opacity: 0.45
-        }
-        Rectangle {
-            width: 4
-            height: 4
-            radius: 2
-            x: parent.rightSide ? 30 : 0
-            y: parent.bottomSide ? 30 : 0
-            color: parent.tone
-            opacity: 0.8
-        }
-    }
-
-    Corner { anchors.left: parent.left; anchors.top: parent.top; rightSide: false; bottomSide: false }
-    Corner { anchors.right: parent.right; anchors.top: parent.top; rightSide: true; bottomSide: false }
-    Corner { anchors.left: parent.left; anchors.bottom: parent.bottom; rightSide: false; bottomSide: true }
-    Corner { anchors.right: parent.right; anchors.bottom: parent.bottom; rightSide: true; bottomSide: true }
-
     Row {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top

@@ -7,8 +7,8 @@ Rectangle {
     id: root
 
     property bool embedded: false
-    implicitWidth: Media.available ? (Settings.compact ? 262 : 330) : 0
-    implicitHeight: Settings.compact ? 30 : 36
+    implicitWidth: Media.available ? (Settings.compact ? 320 : 400) : 0
+    implicitHeight: Settings.compact ? 36 : 42
     radius: embedded ? 9 : height / 2
     color: embedded ? "transparent"
         : mediaHover.hovered ? Theme.elevated : Theme.mantle
@@ -49,7 +49,7 @@ Rectangle {
         spacing: 8
 
         Rectangle {
-            Layout.preferredWidth: Settings.compact ? 25 : 32
+            Layout.preferredWidth: Settings.compact ? 30 : 36
             Layout.preferredHeight: Layout.preferredWidth
             radius: Settings.compact ? 8 : 9
             color: Theme.elevated
@@ -74,7 +74,7 @@ Rectangle {
                 text: Media.mediaKind === "VIDEO" ? "▻" : "♪"
                 color: Theme.accent
                 font.family: Theme.fontMono
-                font.pixelSize: 10
+                font.pixelSize: Settings.compact ? 13 : 15
             }
             Rectangle {
                 anchors.right: parent.right
@@ -103,36 +103,29 @@ Rectangle {
                 text: Media.title
                 color: Theme.moon
                 font.family: Theme.fontText
-                font.pixelSize: 10
+                font.pixelSize: Settings.compact ? 12 : 13
                 font.weight: Font.DemiBold
                 elide: Text.ElideRight
             }
 
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 5
-                Text {
-                    text: Media.mediaKind
-                    color: Media.playing ? Theme.accent : Theme.muted
-                    font.family: Theme.fontMono
-                    font.pixelSize: 6
-                    font.weight: Font.Bold
-                    font.letterSpacing: 0.8
-                }
+                spacing: 0
                 Text {
                     Layout.fillWidth: true
                     text: Settings.showMediaTime && Media.length > 0
                         ? Media.timeText : Media.artist
                     color: Theme.muted
                     font.family: Theme.fontMono
-                    font.pixelSize: 7
+                    font.pixelSize: Settings.compact ? 10 : 11
+                    font.weight: Font.Bold
                     elide: Text.ElideRight
                 }
             }
 
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 3
+                Layout.preferredHeight: 4
                 visible: Settings.showMediaProgress && Media.length > 0
                 radius: 2
                 color: Theme.barNeutralHover
@@ -167,9 +160,9 @@ Rectangle {
                 Rectangle {
                     id: control
                     required property var modelData
-                    Layout.preferredWidth: 22
-                    Layout.preferredHeight: 28
-                    radius: 8
+                    Layout.preferredWidth: control.modelData.action === "toggle" ? 36 : 30
+                    Layout.preferredHeight: 36
+                    radius: 10
                     color: controlPointer.containsMouse ? Theme.accentVeil : "transparent"
                     scale: controlPointer.containsMouse ? 1.10 : 1
 
@@ -180,7 +173,8 @@ Rectangle {
                             ? (control.modelData.action === "toggle" ? Theme.success : Theme.accent)
                             : Theme.muted
                         font.family: Theme.fontMono
-                        font.pixelSize: control.modelData.action === "toggle" ? 10 : 14
+                        font.pixelSize: control.modelData.action === "toggle" ? 19 : 20
+                        font.weight: control.modelData.action === "toggle" ? Font.Bold : Font.Medium
                     }
                     MouseArea {
                         id: controlPointer

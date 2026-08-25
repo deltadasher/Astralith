@@ -1,7 +1,6 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Widgets
 import "../.."
 import "../../services"
 import "../../components"
@@ -20,14 +19,18 @@ PanelWindow {
         : Quickshell.screens.length > 0 && modelData === Quickshell.screens[0]
     readonly property int topClearance: (Settings.compact ? 38 : Theme.barHeight)
         + (Settings.barMode === "docked" ? 10 : Settings.barMargin * 2 + 8)
+    readonly property bool nativeRenderer: Quickshell.env("ASTRALITH_NATIVE_BLOBS") === "1"
     readonly property var widgetLayout: Registry.getLayout(
         ShellState.ephemerisTab, width, height, topClearance)
     readonly property color moduleTone: Theme.moduleAccent(ShellState.ephemerisTab)
+    readonly property bool immersiveWidget: ShellState.ephemerisTab === "walls"
 
     property bool surfaceVisible: false
     property real presentation: 0
     property real deckScale: 0.94
     property real widgetPresentation: 1
+    property bool opening: false
+    property bool widgetDeploymentPending: false
 
     visible: surfaceVisible && targetScreen
     color: "transparent"
@@ -49,8 +52,19 @@ PanelWindow {
             keyCatcher.forceActiveFocus();
     }
 
+    function deployWidget() {
+        if (!widgetDeploymentPending || !widgetLoader.item)
+            return;
+        if (widgetLoader.item.beginDeployment)
+            widgetLoader.item.beginDeployment();
+        widgetDeploymentPending = false;
+    }
+
     function beginOpen() {
         closeAnimation.stop();
+        widgetSwitch.stop();
+        opening = true;
+        widgetDeploymentPending = true;
         surfaceVisible = true;
         presentation = 0;
         deckScale = 0.92;
@@ -59,6 +73,7 @@ PanelWindow {
     }
 
     function beginClose() {
+        opening = false;
         openDelay.stop();
         openAnimation.stop();
         closeAnimation.restart();
@@ -73,8 +88,9 @@ PanelWindow {
                 root.beginClose();
         }
         function onEphemerisTabChanged() {
-            if (!root.surfaceVisible)
+            if (!root.surfaceVisible || root.opening)
                 return;
+            root.widgetDeploymentPending = true;
             root.widgetPresentation = 0;
             widgetSwitch.restart();
         }
@@ -90,7 +106,11 @@ PanelWindow {
     Timer {
         id: openDelay
         interval: 24
-        onTriggered: openAnimation.restart()
+        onTriggered: {
+            // The popup and its widget choreography share one launch pulse.
+            root.deployWidget();
+            openAnimation.restart();
+        }
     }
 
     ParallelAnimation {
@@ -100,7 +120,13 @@ PanelWindow {
         SequentialAnimation {
             PauseAnimation { duration: Settings.motion ? 90 : 0 }
             NumberAnimation { target: root; property: "widgetPresentation"; to: 1; duration: Settings.motion ? 250 : 0; easing.type: Easing.OutCubic }
-            ScriptAction { script: root.focusWidget() }
+            ScriptAction {
+                script: {
+                    root.opening = false;
+                    root.deployWidget();
+                    root.focusWidget();
+                }
+            }
         }
     }
 
@@ -118,18 +144,39 @@ PanelWindow {
         id: widgetSwitch
         PauseAnimation { duration: Settings.motion ? 55 : 0 }
         NumberAnimation { target: root; property: "widgetPresentation"; to: 1; duration: Settings.motion ? 220 : 0; easing.type: Easing.OutCubic }
-        ScriptAction { script: root.focusWidget() }
+        ScriptAction {
+            script: {
+                root.deployWidget();
+                root.focusWidget();
+            }
+        }
     }
 
     Rectangle {
         id: veil
         anchors.fill: parent
-        color: Theme.veil
+        color: root.nativeRenderer
+            ? Qt.rgba(Theme.void_.r, Theme.void_.g, Theme.void_.b,
+                root.immersiveWidget ? 0.24 : 0.16)
+            : Theme.veil
         opacity: root.presentation
 
         MouseArea {
             anchors.fill: parent
             onClicked: root.close()
+        }
+
+        Loader {
+            id: nativeBackdrop
+            anchors.fill: parent
+            active: root.nativeRenderer
+            source: active ? "NativeBlobBackdrop.qml" : ""
+
+            property var layout: root.widgetLayout
+            property real reveal: root.presentation
+            property color tone: root.moduleTone
+            property string tab: ShellState.ephemerisTab
+            property int clearance: root.topClearance
         }
 
         Rectangle {
@@ -142,7 +189,7 @@ PanelWindow {
             color: "transparent"
             border.width: 0
             opacity: root.presentation
-            scale: root.deckScale
+            scale: root.nativeRenderer ? 1 : root.deckScale
             transformOrigin: Item.Center
             // The veil is deliberately inert. Every decorative signal belongs
             // to the popup and is clipped at this boundary.
@@ -157,6 +204,7 @@ PanelWindow {
 
             EccentricPlate {
                 anchors.fill: parent
+                visible: !root.nativeRenderer && !root.immersiveWidget
                 fillColor: Theme.glass
                 lineColor: Theme.barHairlineHover
                 tone: root.moduleTone
@@ -166,15 +214,8 @@ PanelWindow {
 
             EphemerisAtmosphere {
                 anchors.fill: parent
-                anchors.topMargin: 54
-                module: ShellState.ephemerisTab
-                presentation: root.widgetPresentation
-            }
-
-            InstrumentFrame {
-                anchors.fill: parent
-                anchors.topMargin: 54
-                anchors.margins: 7
+                anchors.topMargin: root.immersiveWidget ? 0 : 46
+                visible: !root.immersiveWidget
                 module: ShellState.ephemerisTab
                 presentation: root.widgetPresentation
             }
@@ -183,7 +224,7 @@ PanelWindow {
             // toggling it made no visible difference. This local constellation
             // is deliberately rendered inside the glass surface.
             Repeater {
-                model: Settings.animateStars ? 38 : 0
+                model: Settings.animateStars && !root.immersiveWidget ? 38 : 0
                 Rectangle {
                     required property int index
                     x: (index * 179 + 31) % Math.max(1, deck.width)
@@ -211,108 +252,32 @@ PanelWindow {
             }
 
             Rectangle {
+                visible: !root.immersiveWidget
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.leftMargin: 6
-                anchors.rightMargin: 6
-                height: 54
-                color: Qt.rgba(Theme.mantle.r, Theme.mantle.g, Theme.mantle.b, 0.54)
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
+                height: 46
+                color: Qt.rgba(Theme.mantle.r, Theme.mantle.g, Theme.mantle.b, 0.38)
 
                 Rectangle {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
                     height: 1
-                    color: Theme.barHairlineHover
+                    color: Theme.line
                 }
 
-                Row {
+                Text {
                     anchors.left: parent.left
-                    anchors.leftMargin: 14
+                    anchors.leftMargin: 10
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 11
-
-                    Rectangle {
-                        width: 36
-                        height: 36
-                        radius: 12
-                        color: Qt.rgba(root.moduleTone.r, root.moduleTone.g, root.moduleTone.b, 0.11)
-                        border.width: 1
-                        border.color: Qt.rgba(root.moduleTone.r, root.moduleTone.g, root.moduleTone.b, 0.36)
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: 31
-                            height: 14
-                            radius: 8
-                            rotation: -24
-                            color: "transparent"
-                            border.width: 1
-                            border.color: Qt.rgba(root.moduleTone.r, root.moduleTone.g, root.moduleTone.b, 0.48)
-                            NumberAnimation on rotation {
-                                from: -24; to: 336; duration: 18000; loops: Animation.Infinite
-                                running: Settings.motion && root.visible
-                            }
-                        }
-                        IconImage {
-                            anchors.centerIn: parent
-                            implicitSize: 17
-                            source: Qt.resolvedUrl("../../assets/icons/" + root.widgetLayout.icon)
-                        }
-                    }
-                    Column {
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: -1
-                        Text {
-                            text: "ASTRALITH  //  " + root.widgetLayout.code
-                            color: root.moduleTone
-                            font.family: Theme.fontMono
-                            font.pixelSize: 8
-                            font.weight: Font.Bold
-                            font.letterSpacing: 1.1
-                        }
-                        Text {
-                            text: root.widgetLayout.title
-                            color: Theme.moon
-                            font.family: Theme.fontDisplay
-                            font.pixelSize: 13
-                            font.weight: Font.DemiBold
-                        }
-                    }
-                }
-
-                Row {
-                    visible: deck.width >= 690
-                    anchors.right: parent.right
-                    anchors.rightMargin: 52
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: 10
-
-                    Rectangle {
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 1; height: 24
-                        color: Theme.barHairlineHover
-                    }
-                    Column {
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 0
-                        Text {
-                            text: "NIRI LINK  //  NOMINAL"
-                            color: Theme.success
-                            font.family: Theme.fontMono
-                            font.pixelSize: 8
-                            font.weight: Font.Bold
-                            font.letterSpacing: 0.7
-                        }
-                        Text {
-                            text: root.outputName.toUpperCase()
-                            color: Theme.muted
-                            font.family: Theme.fontMono
-                            font.pixelSize: 8
-                            font.letterSpacing: 0.8
-                        }
-                    }
+                    text: root.widgetLayout.title
+                    color: Theme.moon
+                    font.family: Theme.fontDisplay
+                    font.pixelSize: 14
+                    font.weight: Font.DemiBold
                 }
 
                 Rectangle {
@@ -321,7 +286,7 @@ PanelWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     width: 32
                     height: 32
-                    radius: 10
+                    radius: 8
                     color: closePointer.containsMouse ? Qt.rgba(Theme.danger.r, Theme.danger.g, Theme.danger.b, 0.14) : "transparent"
                     border.width: 1
                     border.color: closePointer.containsMouse ? Theme.danger : "transparent"
@@ -333,7 +298,7 @@ PanelWindow {
             Item {
                 id: keyCatcher
                 anchors.fill: parent
-                anchors.topMargin: 54
+                anchors.topMargin: root.immersiveWidget ? 0 : 46
                 focus: true
                 Keys.onPressed: function(event) {
                     if (event.key === Qt.Key_Escape) {
@@ -345,7 +310,7 @@ PanelWindow {
                 Loader {
                     id: widgetLoader
                     anchors.fill: parent
-                    anchors.margins: 18
+                    anchors.margins: root.immersiveWidget ? 8 : 18
                     opacity: root.widgetPresentation
                     transform: Translate { y: (1 - root.widgetPresentation) * 14 }
                     sourceComponent: ShellState.ephemerisTab === "tools" ? toolsComponent
@@ -366,24 +331,13 @@ PanelWindow {
                         : ShellState.ephemerisTab === "timer" ? timerComponent
                         : ShellState.ephemerisTab === "quickstats" ? quickStatsComponent
                         : launcherComponent
-                    onLoaded: Qt.callLater(root.focusWidget)
+                    onLoaded: {
+                        Qt.callLater(root.deployWidget);
+                        Qt.callLater(root.focusWidget);
+                    }
                 }
             }
 
-            Rectangle {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.leftMargin: Settings.atmosphereStyle === "cinematic" ? 34 : 26
-                anchors.rightMargin: Settings.atmosphereStyle === "cinematic" ? 24 : 18
-                height: 2
-                gradient: Gradient {
-                    orientation: Gradient.Horizontal
-                    GradientStop { position: 0; color: "transparent" }
-                    GradientStop { position: 0.5; color: root.moduleTone }
-                    GradientStop { position: 1; color: "transparent" }
-                }
-            }
         }
     }
 

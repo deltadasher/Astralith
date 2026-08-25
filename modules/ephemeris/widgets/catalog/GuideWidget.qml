@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import "../shared" as Shared
 import "../../../.."
 import "../../../../services"
 
@@ -117,7 +118,7 @@ Item {
                     text: "ASTRALITH FLIGHT MANUAL"
                     color: Theme.moon
                     font.family: Theme.fontDisplay
-                    font.pixelSize: 20
+                    font.pixelSize: 22
                     font.weight: Font.Black
                     font.letterSpacing: 0.5
                 }
@@ -125,7 +126,7 @@ Item {
                     text: "NIRI-NATIVE SUITE INDEX // SERPANTINUM PARITY TRACKER"
                     color: Theme.accent
                     font.family: Theme.fontMono
-                    font.pixelSize: 9
+                    font.pixelSize: 10
                     font.weight: Font.Bold
                     font.letterSpacing: 1.15
                 }
@@ -142,7 +143,7 @@ Item {
                     anchors.centerIn: parent
                     spacing: 7
                     Rectangle { width: 6; height: 6; radius: 3; color: Theme.success; anchors.verticalCenter: parent.verticalCenter }
-                    Text { text: "ASTRA ONLINE"; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold }
+                    Text { text: "ASTRA ONLINE"; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                 }
             }
         }
@@ -170,8 +171,8 @@ Item {
                     Row {
                         anchors.centerIn: parent
                         spacing: 8
-                        Text { text: tabButton.modelData.code; color: tabButton.active ? Theme.accent : Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; font.letterSpacing: 0.8 }
-                        Text { text: tabButton.modelData.label; color: tabButton.active ? Theme.moon : Theme.muted; font.family: Theme.fontText; font.pixelSize: 11; font.weight: tabButton.active ? Font.Bold : Font.Normal }
+                        Text { text: tabButton.modelData.code; color: tabButton.active ? Theme.accent : Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold; font.letterSpacing: 0.8 }
+                        Text { text: tabButton.modelData.label; color: tabButton.active ? Theme.moon : Theme.muted; font.family: Theme.fontText; font.pixelSize: 12; font.weight: tabButton.active ? Font.Bold : Font.Normal }
                     }
                     MouseArea { id: tabPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.currentTab = tabButton.index }
                     Behavior on color { ColorAnimation { duration: Theme.motionFast } }
@@ -238,34 +239,22 @@ Item {
                 GridLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    columns: 2
-                    columnSpacing: 10
-                    rowSpacing: 10
+                    columns: 1
+                    columnSpacing: 0
+                    rowSpacing: 5
                     Repeater {
                         model: [root.modules[0], root.modules[1], root.modules[2], root.modules[3], root.modules[5], root.modules[9]]
-                        Rectangle {
+                        Shared.SpectralAction {
                             id: quickCard
                             required property var modelData
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            radius: Theme.radiusMedium
-                            color: quickPointer.containsMouse ? Theme.elevated : Theme.mantle
-                            border.width: 1
-                            border.color: quickPointer.containsMouse ? Theme.accentLine : Theme.line
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.margins: 14
-                                spacing: 12
-                                Text { text: quickCard.modelData.glyph; color: Theme.accent; font.family: Theme.fontIcon; font.pixelSize: 22 }
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    spacing: 2
-                                    Text { Layout.fillWidth: true; text: quickCard.modelData.name; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 12; font.weight: Font.Bold; elide: Text.ElideRight }
-                                    Text { Layout.fillWidth: true; text: quickCard.modelData.detail; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9; elide: Text.ElideRight }
-                                }
-                                Text { text: "›"; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 18 }
-                            }
-                            MouseArea { id: quickPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.openWidget(quickCard.modelData.widget) }
+                            title: modelData.name
+                            detail: modelData.detail
+                            glyph: modelData.glyph
+                            code: modelData.code
+                            tone: Theme.moduleAccent(modelData.widget)
+                            onActivated: root.openWidget(modelData.widget)
                         }
                     }
                 }
@@ -286,33 +275,17 @@ Item {
                 rowSpacing: 9
                 Repeater {
                     model: root.modules
-                    Rectangle {
+                    Shared.SpectralAction {
                         id: moduleCard
                         required property var modelData
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        radius: Theme.radiusMedium
-                        color: modulePointer.containsMouse ? Theme.elevated : Theme.mantle
-                        border.width: 1
-                        border.color: modulePointer.containsMouse ? Theme.accentLine : Theme.line
-                        RowLayout {
-                            anchors.fill: parent
-                            anchors.margins: 12
-                            spacing: 11
-                            Rectangle {
-                                Layout.preferredWidth: 38; Layout.preferredHeight: 38; radius: 12
-                                color: Theme.accentVeil; border.width: 1; border.color: Theme.accentLine
-                                Text { anchors.centerIn: parent; text: moduleCard.modelData.glyph; color: Theme.accent; font.family: Theme.fontIcon; font.pixelSize: 18 }
-                            }
-                            ColumnLayout {
-                                Layout.fillWidth: true
-                                spacing: 2
-                                Text { Layout.fillWidth: true; text: moduleCard.modelData.name; color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 11; font.weight: Font.Bold; elide: Text.ElideRight }
-                                Text { Layout.fillWidth: true; text: moduleCard.modelData.detail; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9; elide: Text.ElideRight }
-                            }
-                            Text { text: moduleCard.modelData.code; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
-                        }
-                        MouseArea { id: modulePointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.openWidget(moduleCard.modelData.widget) }
+                        title: modelData.name
+                        detail: modelData.detail
+                        glyph: modelData.glyph
+                        code: modelData.code
+                        tone: Theme.moduleAccent(modelData.widget)
+                        onActivated: root.openWidget(modelData.widget)
                     }
                 }
             }

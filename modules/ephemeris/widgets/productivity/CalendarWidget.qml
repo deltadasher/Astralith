@@ -135,14 +135,6 @@ Item {
                         font.weight: Font.Bold
                         font.letterSpacing: 1
                     }
-                    Text {
-                        text: Weather.status
-                        color: Weather.available ? Theme.success : Theme.warning
-                        font.family: Theme.fontMono
-                        font.pixelSize: 7
-                        font.letterSpacing: 1.1
-                        elide: Text.ElideRight
-                    }
                 }
             }
 
@@ -274,7 +266,7 @@ Item {
                                 text: root.temperature(Weather.current.temp)
                                 color: Theme.moon
                                 font.family: Theme.fontDisplay
-                                font.pixelSize: 30
+                            font.pixelSize: 32
                                 font.weight: Font.DemiBold
                             }
                             Text {
@@ -282,16 +274,16 @@ Item {
                                 text: (Weather.current.condition || "ACQUIRING SKY").toUpperCase()
                                 color: Theme.accent
                                 font.family: Theme.fontMono
-                                font.pixelSize: 8
+                                font.pixelSize: 10
                                 font.letterSpacing: 0.8
                                 elide: Text.ElideRight
                             }
                         }
                         ColumnLayout {
                             spacing: 1
-                            Text { text: "FEELS " + root.temperature(Weather.current.feels); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7 }
-                            Text { text: "HUM " + (Weather.current.humidity || 0) + "%"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7 }
-                            Text { text: "WIND " + (Weather.current.wind || 0) + " " + Weather.windUnit; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7 }
+                            Text { text: "FEELS " + root.temperature(Weather.current.feels); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9 }
+                            Text { text: "HUM " + (Weather.current.humidity || 0) + "%"; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9 }
+                            Text { text: "WIND " + (Weather.current.wind || 0) + " " + Weather.windUnit; color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9 }
                         }
                     }
 
@@ -310,8 +302,8 @@ Item {
                     RowLayout {
                         Layout.fillWidth: true
                         visible: Weather.available
-                        Text { Layout.fillWidth: true; text: (Weather.location + (Weather.country ? " · " + Weather.country : "")).toUpperCase(); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 7; font.weight: Font.Bold; elide: Text.ElideRight }
-                        Text { text: "SYNC " + (Weather.updated || "--:--"); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7 }
+                        Text { Layout.fillWidth: true; text: (Weather.location + (Weather.country ? " · " + Weather.country : "")).toUpperCase(); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold; elide: Text.ElideRight }
+                        Text { text: "SYNC " + (Weather.updated || "--:--"); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8 }
                     }
                 }
             }
@@ -321,7 +313,7 @@ Item {
                 text: "FIVE DAY ORBIT"
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 7
+                font.pixelSize: 9
                 font.letterSpacing: 0.9
             }
 
@@ -335,7 +327,7 @@ Item {
                         id: dailyCell
                         required property var modelData
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 39
+                        Layout.preferredHeight: 43
                         radius: 10
                         color: Theme.mantle
                         border.width: 1
@@ -345,22 +337,17 @@ Item {
                             anchors.leftMargin: 10
                             anchors.rightMargin: 10
                             spacing: 8
-                            Text { Layout.preferredWidth: 34; text: dailyCell.modelData.day; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+                            Text { Layout.preferredWidth: 38; text: dailyCell.modelData.day; color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                             Text { text: dailyCell.modelData.icon; color: Theme.accent; font.family: Theme.fontDisplay; font.pixelSize: 16 }
-                            Text { Layout.fillWidth: true; text: dailyCell.modelData.condition.toUpperCase(); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 7; elide: Text.ElideRight }
-                            Text { text: dailyCell.modelData.precipitation + "%"; color: Theme.cyan; font.family: Theme.fontMono; font.pixelSize: 7 }
-                            Text { text: root.temperature(dailyCell.modelData.max) + " / " + root.temperature(dailyCell.modelData.min); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+                            Text { Layout.fillWidth: true; text: dailyCell.modelData.condition.toUpperCase(); color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 9; elide: Text.ElideRight }
+                            Text { text: dailyCell.modelData.precipitation + "%"; color: Theme.cyan; font.family: Theme.fontMono; font.pixelSize: 9 }
+                            Text { text: root.temperature(dailyCell.modelData.max) + " / " + root.temperature(dailyCell.modelData.min); color: Theme.moon; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
                         }
                     }
                 }
             }
 
             Item { Layout.fillHeight: true }
-            RowLayout {
-                Layout.fillWidth: true
-                Text { Layout.fillWidth: true; text: Weather.status; color: Weather.available ? Theme.success : Theme.warning; font.family: Theme.fontMono; font.pixelSize: 6; elide: Text.ElideRight }
-                Text { text: "OPEN-METEO"; color: Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 6; font.letterSpacing: 0.6 }
-            }
         }
     }
 

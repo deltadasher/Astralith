@@ -8,6 +8,11 @@ python_cache="${TMPDIR:-/tmp}/astralith-check-pycache"
 failures=0
 silent_qmllint=0
 silent_qml_files=()
+qml_import_args=(-I .)
+
+if [[ -f "$project_root/.runtime/qml/Caelestia/Blobs/qmldir" ]]; then
+    qml_import_args+=(-I "$project_root/.runtime/qml")
+fi
 
 cd -- "$project_root"
 
@@ -25,6 +30,7 @@ PYTHONPYCACHEPREFIX="$python_cache" python3 -m compileall -q scripts
 PYTHONPYCACHEPREFIX="$python_cache" python3 -m unittest discover -s tests -q
 bash tests/test_cli.sh
 bash -n scripts/astralithctl scripts/check scripts/dev scripts/doctor scripts/install-user \
+    scripts/build-native-blobs \
     scripts/snipping-tool scripts/sync-compositor-configs scripts/uninstall-user \
     scripts/update-user scripts/wallpaper-apply tests/test_cli.sh
 sh -n scripts/astralith-notify
@@ -36,9 +42,13 @@ else
 fi
 
 while IFS= read -r -d '' qml_file; do
+    if [[ "$qml_file" == "./modules/ephemeris/NativeBlobBackdrop.qml" ]] \
+            && [[ ! -f .runtime/qml/Caelestia/Blobs/qmldir ]]; then
+        continue
+    fi
     lint_output=""
     lint_status=0
-    lint_output="$(qmllint -I . "$qml_file" 2>&1)" || lint_status=$?
+    lint_output="$(qmllint "${qml_import_args[@]}" "$qml_file" 2>&1)" || lint_status=$?
     if (( lint_status == 0 )); then
         continue
     fi

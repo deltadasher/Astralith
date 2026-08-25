@@ -1,6 +1,6 @@
 # Provenance and public-release audit
 
-Status checked on 2026-08-24.
+Status checked on 2026-08-25.
 
 ## Current blocker
 
@@ -36,6 +36,19 @@ Before creating a public GitHub release, do one of the following:
 
 Astralith's original generated wallpapers and project-local visual primitives
 can remain, subject to the license selected for Astralith itself.
+
+## Licensed optional integration
+
+The optional native Ephemeris silhouette renderer builds the unmodified
+`Caelestia.Blobs` C++ and shader sources from Caelestia Shell at pinned commit
+`1d0e5a588c61f1d905eba5fe8446ec222d37f50c`. Caelestia Shell is GPL-3.0.
+Astralith keeps this renderer outside the core runtime, downloads the complete
+upstream checkout into the user's cache, retains its license and attribution,
+and enables it only after a successful local build.
+
+This explicit license does not resolve the unrelated unlicensed Serpantinum
+adaptation points above. Any distribution containing or depending on the
+Caelestia-derived renderer must also satisfy GPL-3.0.
 
 ## Decisions still required
 

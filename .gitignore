@@ -14,6 +14,8 @@ __pycache__/
 # Runtime state, caches, and captures
 .cache/
 .state/
+.runtime/
+build/
 captures/
 recordings/
 settings.json

@@ -16,15 +16,18 @@ function getLayout(name, screenWidth, screenHeight, topClearance) {
     let icon = "search.png";
 
     if (name === "apps") {
-        width = 790; height = 660; title = "Application catalog"; code = "EPH/APP";
+        width = Math.min(520, screenWidth - margin * 2);
+        height = usableHeight; placement = "left";
+        title = "Application catalog"; code = "EPH/APP";
         icon = "search.png";
     } else if (name === "tools") {
         width = 900; height = Math.min(860, usableHeight); title = "Field tools"; code = "EPH/FLD";
         icon = "tools.png";
     } else if (name === "walls") {
-        width = Math.min(1480, screenWidth - margin * 2);
-        height = Math.min(720, usableHeight);
-        title = "Parallax archive"; code = "EPH/WAL"; icon = "wallpaper.png";
+        width = screenWidth;
+        height = screenHeight;
+        placement = "horizon";
+        title = "Parallax orbit"; code = "EPH/WAL"; icon = "wallpaper.png";
     } else if (name === "clipboard") {
         width = 820; height = 670; title = "Clipboard orbit"; code = "EPH/CLP";
         icon = "clipboard.png";
@@ -64,7 +67,8 @@ function getLayout(name, screenWidth, screenHeight, topClearance) {
         width = Math.min(1060, screenWidth - margin * 2); height = Math.min(660, usableHeight);
         title = "Observatory telemetry"; code = "EPH/SYS"; icon = "tools.png";
     } else if (name === "guide") {
-        width = Math.min(1220, screenWidth - margin * 2); height = Math.min(720, usableHeight);
+        width = Math.min(720, screenWidth - margin * 2);
+        height = usableHeight; placement = "left";
         title = "Astralith flight manual"; code = "EPH/GDE"; icon = "tools.png";
     } else if (name === "timer") {
         width = 680; height = Math.min(610, usableHeight);
@@ -84,6 +88,9 @@ function getLayout(name, screenWidth, screenHeight, topClearance) {
         y = usableTop;
     } else if (placement === "right") {
         x = screenWidth - width - margin;
+        y = usableTop;
+    } else if (placement === "horizon") {
+        x = margin;
         y = usableTop;
     }
 

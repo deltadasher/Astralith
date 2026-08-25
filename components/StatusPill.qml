@@ -14,8 +14,8 @@ Rectangle {
     signal activated()
     signal scrolled(real delta)
 
-    implicitWidth: row.implicitWidth + 14
-    implicitHeight: Settings.compact ? 28 : 32
+    implicitWidth: row.implicitWidth + 16
+    implicitHeight: Settings.compact ? 34 : 38
     radius: 9
     color: root.warning
         ? Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12)
@@ -29,18 +29,21 @@ Rectangle {
         spacing: 5
 
         Text {
+            Layout.alignment: Qt.AlignVCenter
             text: root.code
             color: root.warning ? Theme.warning : root.active ? root.accentColor : Theme.muted
-            font.family: Theme.fontMono
-            font.pixelSize: 7
+            font.family: Theme.fontText
+            font.pixelSize: 11
             font.weight: Font.DemiBold
-            font.letterSpacing: 0.7
+            font.letterSpacing: 0.45
         }
         Text {
+            Layout.alignment: Qt.AlignVCenter
             text: root.value
             color: root.active ? Theme.moon : Theme.muted
-            font.family: Theme.fontMono
-            font.pixelSize: 9
+            font.family: Theme.fontText
+            font.pixelSize: 12
+            font.weight: Font.DemiBold
         }
     }
 

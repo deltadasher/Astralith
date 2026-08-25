@@ -87,6 +87,7 @@ astralithctl restart               Reload the shell cleanly
 astralithctl status                Show the matching Quickshell instance
 astralithctl doctor                Check this machine's integrations
 astralithctl update                Pull, validate, and restart safely
+astralithctl build-native-blobs    Build the fluid Ephemeris renderer
 
 astralithctl open apps             Open an Ephemeris instrument
 astralithctl toggle settings       Toggle an instrument
@@ -139,6 +140,22 @@ Astralith degrades gracefully when optional integrations are missing. Run
 recording, wallpapers, Matugen palettes, media spectrum, equalization,
 brightness, and power profiles are documented in
 [docs/dependencies.md](docs/dependencies.md).
+
+### Fluid Ephemeris surfaces
+
+The shader-backed morph from Aperture into Ephemeris is an optional native
+runtime built from Caelestia Shell's GPL-3.0 `Caelestia.Blobs` module. On Arch
+Linux:
+
+```bash
+sudo pacman -S qt6-shadertools
+astralithctl build-native-blobs
+astralithctl restart
+```
+
+Without that module Astralith automatically uses its pure-QML Ephemeris
+surface. The pinned upstream revision, build boundary, and licensing notes live
+in [vendor/caelestia-blobs/README.md](vendor/caelestia-blobs/README.md).
 
 ## Repository map
 

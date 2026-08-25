@@ -136,8 +136,8 @@ PanelWindow {
                 text: Qt.formatDateTime(clock.date, Settings.clockFormat)
                 color: Theme.moon
                 font.family: Theme.fontDisplay
-                font.pixelSize: Settings.compact ? 12 : 14
-                font.weight: Font.DemiBold
+                font.pixelSize: Settings.compact ? 16 : 20
+                font.weight: Font.Bold
                 font.letterSpacing: 0.8
             }
             Text {
@@ -145,12 +145,12 @@ PanelWindow {
                 text: Qt.formatDateTime(clock.date, Settings.dateFormat)
                 color: Theme.muted
                 font.family: Theme.fontMono
-                font.pixelSize: 8
+                font.pixelSize: 10
                 font.letterSpacing: 1.1
             }
             Rectangle {
                 visible: !Settings.compact
-                Layout.preferredWidth: 76
+                Layout.preferredWidth: 92
                 Layout.preferredHeight: 1
                 color: Theme.barHairlineHover
                 Rectangle {
@@ -160,16 +160,6 @@ PanelWindow {
                     Behavior on width { NumberAnimation { duration: 240; easing.type: Easing.OutCubic } }
                 }
             }
-        }
-
-        Text {
-            visible: !Settings.compact
-            text: "ASTRA"
-            color: Theme.muted
-            font.family: Theme.fontMono
-            font.pixelSize: 7
-            font.weight: Font.Bold
-            font.letterSpacing: 1.4
         }
 
         Rectangle {
@@ -187,13 +177,13 @@ PanelWindow {
                 text: Weather.current.icon || "☾"
                 color: Theme.muted
                 font.family: Theme.fontIcon
-                font.pixelSize: 13
+                font.pixelSize: 16
             }
             Text {
                 text: Math.round(Number(Weather.current.temp || 0)) + Weather.unitSymbol
                 color: Theme.moon
                 font.family: Theme.fontMono
-                font.pixelSize: 9
+                font.pixelSize: 11
                 font.weight: Font.DemiBold
             }
         }

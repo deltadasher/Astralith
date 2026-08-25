@@ -8,9 +8,9 @@ Rectangle {
     signal activated()
     readonly property bool unread: Notifications.unreadCount > 0
 
-    implicitWidth: Settings.compact ? 28 : 32
-    implicitHeight: Settings.compact ? 28 : 32
-    radius: 9
+    implicitWidth: Settings.compact ? 36 : 40
+    implicitHeight: Settings.compact ? 36 : 40
+    radius: 11
     color: unread ? Theme.barAccentVeil
         : pointer.containsMouse ? Theme.barNeutralHover : "transparent"
     border.width: 0
@@ -22,7 +22,7 @@ Rectangle {
         text: root.unread ? "◉" : "◌"
         color: root.unread ? Theme.accent : Theme.moon
         font.family: Theme.fontMono
-        font.pixelSize: 15
+        font.pixelSize: Settings.compact ? 19 : 21
     }
 
     Rectangle {
@@ -30,9 +30,9 @@ Rectangle {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.margins: 3
-        width: 13
-        height: 13
-        radius: 7
+        width: 17
+        height: 17
+        radius: 9
         color: Theme.accent
 
         Text {
@@ -40,7 +40,7 @@ Rectangle {
             text: Math.min(9, Notifications.unreadCount)
             color: Theme.void_
             font.family: Theme.fontMono
-            font.pixelSize: 7
+            font.pixelSize: 10
             font.weight: Font.Black
         }
     }

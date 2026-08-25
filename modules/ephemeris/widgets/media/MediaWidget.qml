@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 import "../shared" as Shared
 import "../../../.."
 import "../../../../components"
@@ -126,12 +127,24 @@ Item {
                         required property int index
                         readonly property bool active: root.currentTab === index
                         Layout.preferredWidth: tabButton.index === 0 ? 116 : 98; Layout.preferredHeight: 38
-                        radius: Theme.radiusSmall
-                        color: active ? Theme.accentVeil : tabPointer.containsMouse ? Theme.elevated : Theme.mantle
-                        border.width: 1; border.color: active ? Theme.accentLine : Theme.line
+                        radius: 0
+                        color: tabPointer.containsMouse
+                            ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.06)
+                            : "transparent"
+                        border.width: 0
                         Row { anchors.centerIn: parent; spacing: 7
                             Text { text: tabButton.modelData.code; color: tabButton.active ? Theme.accent : Theme.lineBright; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
                             Text { text: tabButton.modelData.label; color: tabButton.active ? Theme.moon : Theme.muted; font.family: Theme.fontText; font.pixelSize: 9; font.weight: Font.Bold }
+                        }
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+                            width: tabButton.active || tabPointer.containsMouse ? parent.width : 0
+                            height: 2
+                            color: Theme.accent
+                            opacity: tabButton.active || tabPointer.containsMouse ? 1 : 0
+                            Behavior on width { NumberAnimation { duration: Settings.motion ? 140 : 0; easing.type: Easing.OutCubic } }
+                            Behavior on opacity { NumberAnimation { duration: Settings.motion ? 90 : 0 } }
                         }
                         MouseArea { id: tabPointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.currentTab = tabButton.index }
                     }
@@ -150,45 +163,118 @@ Item {
         id: nowPlayingPage
         RowLayout {
             spacing: 16
-            Rectangle {
-                Layout.preferredWidth: 330; Layout.fillHeight: true
-                radius: Theme.radiusLarge; color: Theme.mantle
-                border.width: 1; border.color: Media.playing ? Theme.accentLine : Theme.line
-                clip: true
-                Image { anchors.fill: parent; source: Media.artUrl; fillMode: Image.PreserveAspectCrop; asynchronous: true }
+            Item {
+                id: resonancePlanet
+                Layout.preferredWidth: 350
+                Layout.fillHeight: true
+
                 Rectangle {
-                    anchors.fill: parent
-                    gradient: Gradient {
-                        GradientStop { position: 0; color: Qt.rgba(Theme.void_.r, Theme.void_.g, Theme.void_.b, 0.05) }
-                        GradientStop { position: 0.55; color: Qt.rgba(Theme.void_.r, Theme.void_.g, Theme.void_.b, 0.34) }
-                        GradientStop { position: 1; color: Qt.rgba(Theme.void_.r, Theme.void_.g, Theme.void_.b, 0.96) }
+                    anchors.centerIn: albumWorld
+                    width: albumWorld.width + 62
+                    height: width
+                    radius: width / 2
+                    color: "transparent"
+                    border.width: 1
+                    border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.3)
+                    rotation: -8
+                }
+
+                Repeater {
+                    model: 36
+                    Rectangle {
+                        required property int index
+                        readonly property real angle: index * Math.PI * 2 / 36
+                        readonly property real signal: Spectrum.available && Spectrum.values.length > 0
+                            ? Spectrum.values[index % Spectrum.values.length]
+                            : 0.12 + (Math.sin(root.visualPhase + index * 0.54) + 1) * 0.07
+                        x: resonancePlanet.width / 2 + Math.cos(angle) * 154 - width / 2
+                        y: resonancePlanet.height / 2 + Math.sin(angle) * 154 - height / 2
+                        width: 4
+                        height: 8 + signal * 28
+                        radius: 2
+                        rotation: angle * 180 / Math.PI + 90
+                        color: index % 3 === 0 ? Theme.cyan : index % 3 === 1 ? Theme.accent : Theme.rose
+                        opacity: Media.playing ? 0.9 : 0.28
+                        Behavior on height { NumberAnimation { duration: 80; easing.type: Easing.OutQuad } }
                     }
                 }
-                Text { anchors.centerIn: parent; visible: Media.artUrl.length === 0; text: Media.mediaKind === "VIDEO" ? "󰕧" : "󰎆"; color: Theme.accent; font.family: Theme.fontIcon; font.pixelSize: 76 }
-                Row {
-                    anchors.left: parent.left; anchors.right: parent.right; anchors.bottom: parent.bottom
-                    anchors.leftMargin: 14; anchors.rightMargin: 14; anchors.bottomMargin: 42
-                    height: 84; spacing: 3
-                    Repeater {
-                        model: 28
-                        Rectangle {
-                            required property int index
-                            width: (parent.width - 27 * 3) / 28
-                            height: Math.max(3, parent.height * (Spectrum.available ? Spectrum.values[index]
-                                : 0.08 + ((Math.sin(root.visualPhase + index * 0.62) + 1) * 0.06)))
-                            anchors.bottom: parent.bottom
-                            radius: Math.min(width / 2, 3)
-                            color: index % 3 === 0 ? Theme.cyan : index % 3 === 1 ? Theme.accent : Theme.rose
-                            opacity: Media.playing ? 0.92 : 0.38
-                            Behavior on height { NumberAnimation { duration: 80; easing.type: Easing.OutQuad } }
+
+                Rectangle {
+                    id: albumWorld
+                    anchors.centerIn: parent
+                    width: 258
+                    height: 258
+                    radius: width / 2
+                    color: Theme.mantle
+                    border.width: 3
+                    border.color: Media.playing ? Theme.accentLine : Theme.line
+                    clip: true
+                    Image {
+                        id: planetArt
+                        anchors.fill: parent
+                        source: Media.artUrl
+                        fillMode: Image.PreserveAspectCrop
+                        asynchronous: true
+                        visible: false
+                        layer.enabled: true
+                    }
+                    Rectangle {
+                        id: planetMask
+                        anchors.fill: parent
+                        radius: width / 2
+                        color: "white"
+                        visible: false
+                        layer.enabled: true
+                    }
+                    MultiEffect {
+                        anchors.fill: parent
+                        source: planetArt
+                        maskEnabled: true
+                        maskSource: planetMask
+                    }
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: width / 2
+                        gradient: Gradient {
+                            GradientStop { position: 0; color: "transparent" }
+                            GradientStop { position: 0.62; color: Qt.rgba(Theme.void_.r, Theme.void_.g, Theme.void_.b, 0.08) }
+                            GradientStop { position: 1; color: Qt.rgba(Theme.void_.r, Theme.void_.g, Theme.void_.b, 0.82) }
                         }
                     }
+                    Text { anchors.centerIn: parent; visible: Media.artUrl.length === 0; text: Media.mediaKind === "VIDEO" ? "󰕧" : "󰎆"; color: Theme.accent; font.family: Theme.fontIcon; font.pixelSize: 70 }
                 }
-                RowLayout {
-                    anchors.left: parent.left; anchors.right: parent.right; anchors.bottom: parent.bottom; anchors.margins: 15
-                    Text { text: Media.mediaKind + " // " + Media.statusText; color: Media.playing ? Theme.success : Theme.warning; font.family: Theme.fontMono; font.pixelSize: 9; font.weight: Font.Bold; font.letterSpacing: 1 }
-                    Item { Layout.fillWidth: true }
-                    Text { text: Spectrum.available ? "LIVE SPECTRUM" : "AMBIENT"; color: Spectrum.available ? Theme.cyan : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 8; font.weight: Font.Bold }
+
+                Rectangle {
+                    anchors.horizontalCenter: albumWorld.horizontalCenter
+                    anchors.top: albumWorld.bottom
+                    anchors.topMargin: -18
+                    width: statusLabel.implicitWidth + 28
+                    height: 36
+                    radius: 18
+                    color: Theme.mantle
+                    border.width: 2
+                    border.color: Media.playing ? Theme.success : Theme.warning
+                    Text {
+                        id: statusLabel
+                        anchors.centerIn: parent
+                        text: Media.statusText
+                        color: Media.playing ? Theme.success : Theme.warning
+                        font.family: Theme.fontText
+                        font.pixelSize: 10
+                        font.weight: Font.Bold
+                    }
+                }
+
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 8
+                    text: Spectrum.available ? "LIVE RESONANCE" : "AMBIENT FIELD"
+                    color: Spectrum.available ? Theme.cyan : Theme.muted
+                    font.family: Theme.fontMono
+                    font.pixelSize: 9
+                    font.weight: Font.Bold
+                    font.letterSpacing: 1
                 }
             }
 

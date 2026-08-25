@@ -84,6 +84,15 @@ else
     status_line "OPTION" "Fontconfig" "install fc-match to diagnose fonts"
 fi
 
+printf '\nSurface renderer\n'
+if [[ -f "$project_root/.runtime/qml/Caelestia/Blobs/qmldir" ]]; then
+    status_line "OK" "Caelestia.Blobs" "native Ephemeris morph renderer is built"
+elif [[ -f /usr/lib/cmake/Qt6ShaderTools/Qt6ShaderToolsConfig.cmake ]]; then
+    status_line "OPTION" "Caelestia.Blobs" "run astralithctl build-native-blobs"
+else
+    status_line "OPTION" "qt6-shadertools" "required only to build native Ephemeris morphs"
+fi
+
 printf '\nUser installation\n'
 shell_link="$config_home/quickshell/astralith"
 command_link="$HOME/.local/bin/astralithctl"

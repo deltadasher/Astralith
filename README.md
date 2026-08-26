@@ -32,8 +32,33 @@ screenshots, quick actions, and the Umbra session lock.
 
 ## Install on a new machine
 
-Astralith installs with reversible user-local symlinks. It will not overwrite
-an existing Quickshell configuration or command.
+The Rust deployment interface can inspect an Arch machine, install missing
+profile dependencies, and activate a staged Astralith runtime transaction:
+
+```bash
+./scripts/install dry-run
+./scripts/install dry-run --profile core
+./scripts/install dry-run --profile full --niri replace --format json
+./scripts/install apply --profile recommended
+```
+
+Run `./scripts/install` without arguments to open the keyboard-driven TUI. The
+review screen exits into the same executor as `apply`: it shows the final plan,
+requires typing `INSTALL`, writes an operation journal, stages and verifies the
+runtime, then atomically publishes the user links. If a later user-file or Niri
+operation fails, files owned by that transaction are rolled back automatically.
+
+The executor installs the user-local runtime under
+`${XDG_DATA_HOME:-~/.local/share}/astralith`; the repository checkout is only
+installation media. It never exposes a temporary clone or development workspace as
+the installed destination.
+
+The source bootstrap uses Cargo today. Published release binaries will not
+require a Rust toolchain.
+
+Astralith installs with reversible user-local symlinks. Existing destinations
+are backed up into `${XDG_STATE_HOME:-~/.local/state}/astralith/installer` before
+replacement.
 
 ```bash
 git clone git@github.com:deltadasher/Astralith.git
@@ -51,10 +76,10 @@ If `~/.local/bin` is not already in your `PATH`, add it to your shell profile:
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-The installer creates only these links:
+The transactional installer creates only these links:
 
-- `~/.config/quickshell/astralith` → this checkout
-- `~/.local/bin/astralithctl` → Astralith's control command
+- `~/.config/quickshell/astralith` → `~/.local/share/astralith`
+- `~/.local/bin/astralithctl` → the installed runtime's control command
 
 Runtime settings, caches, downloaded wallpapers, screenshots, and state remain
 outside the repository. Removing the checkout does not remove those files.
@@ -96,6 +121,7 @@ astralithctl close                 Close Ephemeris
 astralithctl quick timer           Open Chronos
 astralithctl preview-lock          Preview Umbra without locking
 astralithctl lock                  Engage the real session lock
+astralithctl greeter preview       Preview the Umbra SDDM greeter safely
 astralithctl capture region-copy   Copy a selected region to the clipboard
 ```
 
@@ -181,7 +207,7 @@ Astralith/
 │   ├── osd/                      Volume, microphone, brightness feedback
 │   ├── quickactions/             Chronos and compact telemetry
 │   ├── transit/                  Notification and clipboard presentation
-│   └── umbra/                    Preview and secure lock surfaces
+│   └── umbra/                    Secure lock, reveal, and SDDM greeter surfaces
 ├── assets/                       Attributed controls and original visual assets
 ├── config/                       Runtime backend configuration
 ├── niri/                         Portable compositor configuration

@@ -60,5 +60,21 @@ crashes. Validate the preview and PAM service before the first real lock. If a
 development build fails while locked, switch to a TTY, repair or stop the broken
 instance, and start a known-good locker before returning to the graphical session.
 
-Display-manager greeter styling is a separate phase: it runs before Astralith's
-user session and must not reuse the in-session PAM state directly.
+## Umbra before the session
+
+Astralith also ships a distinct Qt 6 SDDM theme under
+`modules/umbra/greeter/`. It shares Umbra's event-horizon language, but not its
+runtime or authentication state: SDDM remains responsible for users, sessions,
+login, and power actions.
+
+Preview it safely without changing the active display manager theme:
+
+```sh
+astralithctl greeter preview
+```
+
+After inspecting the theme, install it without selecting it using
+`astralithctl greeter install`, or install and select it with
+`astralithctl greeter activate`. `astralithctl greeter deactivate` removes only
+Astralith's selection override, allowing the previous SDDM theme configuration
+to take precedence again.

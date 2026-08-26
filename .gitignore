@@ -15,6 +15,7 @@ __pycache__/
 .cache/
 .state/
 .runtime/
+target/
 build/
 captures/
 recordings/

@@ -17,6 +17,8 @@ trap cleanup EXIT
 "$project_root/scripts/astralithctl" help | grep -q 'doctor'
 "$project_root/scripts/astralithctl" help | grep -q 'profile'
 "$project_root/scripts/astralithctl" help | grep -q 'update'
+"$project_root/scripts/astralithctl" help | grep -q 'greeter'
+"$project_root/scripts/umbra-greeter" help | grep -q 'preview'
 [[ "$("$project_root/scripts/astralithctl" version)" == "$(<"$project_root/VERSION")" ]]
 
 if "$project_root/scripts/astralithctl" definitely-not-a-command >/dev/null 2>&1; then

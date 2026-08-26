@@ -268,10 +268,10 @@ Item {
                         }
                         Rectangle {
                             Layout.preferredWidth: 72; Layout.preferredHeight: 28; radius: 9
-                            color: mutePointer.containsMouse ? Theme.elevated : Theme.mantle
+                            color: nodeMutePointer.containsMouse ? Theme.elevated : Theme.mantle
                             border.width: 0; border.color: nodeCard.modelData.mute ? Theme.warning : Theme.line
                             Text { anchors.centerIn: parent; text: nodeCard.modelData.mute ? "UNMUTE" : "MUTE"; color: nodeCard.modelData.mute ? Theme.warning : Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold }
-                            MouseArea { id: mutePointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Audio.toggleNodeMute(root.activeTab, nodeCard.modelData.id, nodeCard.modelData.mute) }
+                            MouseArea { id: nodeMutePointer; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Audio.toggleNodeMute(root.activeTab, nodeCard.modelData.id, nodeCard.modelData.mute) }
                         }
                     }
                 }

@@ -75,7 +75,7 @@ ShellRoot {
 
     Timer {
         id: ephemerisUnload
-        interval: Settings.motion ? 220 : 1
+        interval: Settings.motion ? 220 : 130
         onTriggered: root.ephemerisResident = false
     }
 

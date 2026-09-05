@@ -99,12 +99,27 @@ remain behind a feature switch until it is proven.
 1. Choose a category under `src/quickshell/modules/ephemeris/widgets/`.
 2. Add the component to that directory.
 3. Register its path in `src/quickshell/modules/ephemeris/widgets/qmldir`.
-4. Add its dimensions, placement, title, code, and icon to
-   `EphemerisRegistry.js`.
-5. Add the component routing in `EphemerisSurface.qml`.
-6. Add the entry point in Aperture, Field Tools, or another appropriate module.
+4. Add its unique id, relative source path, dimensions, placement, title, and
+   code to `EphemerisRegistry.js`. This is the local widget contract, version 1.
+5. The host loads that source asynchronously and the command palette discovers
+   the same entry. Do not add a second routing table to the host.
+6. Optionally add an entry point in Aperture or Field Tools.
 7. Run `./tools/check` and test both open and close transitions in the live
    shell.
+
+Widget roots are `Item`s, never their own layer-shell window. They may expose
+`focusPrimary()` to receive keyboard focus and `beginDeployment()` to begin an
+internal entrance. Both hooks are optional. Keep data in services; a widget must
+survive being unloaded between visits. This is a local source-level contract,
+not an installer for untrusted third-party extensions.
+
+`SurfaceTransition.qml` owns displayed-tab state separately from the requested
+tab. Content leaves before a source swap, the new component must finish loading
+before entrance, and rapid requests coalesce. Closing cancels outstanding
+entrances. Loader failures show an actionable state without taking down the bar.
+
+`ApertureContents.qml` is shared by the real bar and its read-only settings
+miniature. The preview must not create a second `PanelWindow` or fake telemetry.
 
 ## Safe change sequence
 

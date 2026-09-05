@@ -1,6 +1,7 @@
 pragma Singleton
 
 import QtQuick
+import "modules/ephemeris/EphemerisRegistry.js" as Registry
 
 QtObject {
     property bool ephemerisVisible: false
@@ -9,6 +10,9 @@ QtObject {
     property bool quickActionsVisible: false
     property string quickActionTab: "timer"
     property int umbraRevealSerial: 0
+    // Session-only: leaving focus restores the user's original preferences.
+    property bool deepFocus: false
+    function toggleDeepFocus() { deepFocus = !deepFocus; }
 
     function normalizeWidget(widget) {
         if (!widget || widget.length === 0)
@@ -21,7 +25,7 @@ QtObject {
             return "notifications";
         if (widget === "screenshot" || widget === "screenshots" || widget === "recording")
             return "capture";
-        return widget;
+        return Registry.normalize(widget);
     }
 
     function openEphemeris(tab) {

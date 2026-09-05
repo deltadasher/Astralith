@@ -58,8 +58,11 @@ PanelWindow {
             id: deck
             x: root.widgetLayout.x; y: root.widgetLayout.y
             width: root.widgetLayout.width; height: root.widgetLayout.height
-            radius: 26
-            color: root.immersiveWidget ? "transparent" : Theme.mantle
+            // Keep the host visually transparent. The Resonance instrument
+            // owns its rounded cards; a filled host turns the ambience into a
+            // large square behind them.
+            radius: 0
+            color: "transparent"
             clip: true
             // Layout changes happen only after the old contents have left.
             // The layer-shell host never resizes during these transitions.

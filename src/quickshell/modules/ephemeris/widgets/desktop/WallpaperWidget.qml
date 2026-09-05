@@ -1,7 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls as Controls
-import QtQuick.Dialogs as Dialogs
 import "../../../.."
 import "../../../../services"
 
@@ -15,13 +13,12 @@ Item {
     property int orbitOffset: 0
     property bool searchOpen: false
     property bool optionsOpen: false
-    property bool libraryView: true
     Rectangle {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottomMargin: 16
         width: 310; height: 40; radius: 12; z: 100
-        visible: !root.libraryView && (Environment.libraryLoading || Environment.libraryError.length > 0)
+        visible: Environment.libraryLoading || Environment.libraryError.length > 0
         color: Theme.mantle
         Text {
             anchors.centerIn: parent; color: Theme.moon
@@ -42,7 +39,6 @@ Item {
 
     readonly property var filters: [
         { "label": "EVERYTHING", "value": "All", "glyph": "✦", "tone": Theme.accent },
-        { "label": "FAVORITES", "value": "Favorites", "glyph": "★", "tone": Theme.warning },
         { "label": "TONANTZINTLA", "value": "Tonantzintla", "glyph": "A", "tone": Theme.cyan },
         { "label": "ONLINE", "value": "Online", "glyph": "◎", "tone": Theme.success },
         { "label": "VIDEO", "value": "Video", "glyph": "▶", "tone": Theme.rose }
@@ -51,12 +47,11 @@ Item {
     readonly property bool hasVideoWorlds: Environment.wallpapers.some(function(entry) { return entry.kind === "video"; })
     readonly property var filteredWallpapers: Environment.wallpapers.filter(function(entry) {
         const needle = root.query.trim().toLowerCase();
-        const textMatch = !needle || (entry.name + " " + entry.source + " " + (entry.folder || "")).toLowerCase().indexOf(needle) >= 0;
+        const textMatch = !needle || (entry.name + " " + entry.source).toLowerCase().indexOf(needle) >= 0;
         if (!textMatch && root.currentFilter !== "Online") return false;
         if (root.currentFilter === "All") return textMatch;
-        if (root.currentFilter === "Favorites") return !!entry.favorite && textMatch;
-        if (root.currentFilter === "Video") return entry.kind === "video" && textMatch;
-        if (root.currentFilter === "Online") return entry.source === "Online";
+        if (root.currentFilter === "Video") return !root.hasVideoWorlds ? textMatch : entry.kind === "video" && textMatch;
+        if (root.currentFilter === "Online") return !root.hasOnlineWorlds ? textMatch : entry.source === "Online";
         return entry.source === root.currentFilter && textMatch;
     })
     readonly property var selectedEntry: filteredWallpapers.length > 0
@@ -65,7 +60,7 @@ Item {
 
     function previewUrl(entry) {
         if (!entry || !entry.preview) return "";
-        return entry.preview.indexOf("://") >= 0 ? entry.preview : "file://" + entry.preview.split("/").map(encodeURIComponent).join("/");
+        return entry.preview.indexOf("://") >= 0 ? entry.preview : "file://" + entry.preview;
     }
 
     function orbitEntry(slot) {
@@ -87,10 +82,6 @@ Item {
         searchInput.focus = false;
     }
     function focusPrimary() {
-        if (libraryView) {
-            librarySearch.forceActiveFocus();
-            return;
-        }
         searchOpen = true;
         Qt.callLater(function() {
             searchInput.forceActiveFocus();
@@ -153,13 +144,12 @@ Item {
         to: Math.PI * 2
         duration: 28000
         loops: Animation.Infinite
-        running: root.visible && !root.libraryView && Settings.motion
+        running: root.visible
     }
 
     Item {
         id: stage
         anchors.fill: parent
-        visible: !root.libraryView
         opacity: 1
         scale: 0.88 + root.entrance * 0.12
 
@@ -382,10 +372,10 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: root.libraryView = true
+                    onClicked: Environment.openWallpaperLibrary()
                 }
                 ToolTipBubble {
-                    text: "BROWSE WALLPAPER LIBRARY"
+                    text: "OPEN WALLPAPER LIBRARY"
                     shown: libraryPointer.containsMouse
                 }
             }
@@ -461,344 +451,6 @@ Item {
             }
             Behavior on width { NumberAnimation { duration: Settings.motion ? 230 : 0; easing.type: Easing.OutBack } }
             Behavior on opacity { NumberAnimation { duration: Settings.motion ? 120 : 0 } }
-        }
-    }
-
-    Dialogs.FileDialog {
-        id: importDialog
-        title: "Import wallpapers"
-        fileMode: Dialogs.FileDialog.OpenFiles
-        nameFilters: ["Wallpapers (*.png *.jpg *.jpeg *.webp *.gif *.bmp *.avif *.mp4 *.mkv *.mov *.webm *.avi *.m4v)"]
-        onAccepted: Environment.importWallpapers(selectedFiles)
-    }
-
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 20
-        visible: root.libraryView
-        spacing: 14
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 8
-            Text {
-                text: "PARALLAX"
-                color: Theme.moon
-                font.family: Theme.fontDisplay
-                font.pixelSize: 22
-                font.weight: Font.Bold
-                Layout.fillWidth: true
-            }
-            LibraryButton { text: "IMPORT"; enabled: !Environment.libraryOperationBusy; onClicked: importDialog.open() }
-            LibraryButton { text: "FOLDER"; onClicked: Environment.openWallpaperLibrary() }
-            LibraryButton { text: "REFRESH"; enabled: !Environment.libraryLoading; onClicked: Environment.refreshWallpapers() }
-            LibraryButton { text: "ORBIT"; onClicked: { root.libraryView = false; root.beginDeployment(); } }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 6
-            Repeater {
-                model: root.filters
-                LibraryButton {
-                    required property var modelData
-                    text: modelData.label === "EVERYTHING" ? "ALL" : modelData.label
-                    selected: root.currentFilter === modelData.value
-                    onClicked: root.activateFilter(modelData.value)
-                }
-            }
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.minimumWidth: 110
-                implicitHeight: 36
-                radius: 12
-                color: Theme.mantle
-                TextInput {
-                    id: librarySearch
-                    anchors.fill: parent
-                    anchors.margins: 10
-                    text: root.query
-                    color: Theme.moon
-                    font.family: Theme.fontText
-                    font.pixelSize: 12
-                    clip: true
-                    selectByMouse: true
-                    onTextEdited: root.query = text
-                    Keys.onReturnPressed: if (root.currentFilter === "Online") root.runSearch()
-                }
-                Text {
-                    anchors.left: parent.left; anchors.leftMargin: 10; anchors.verticalCenter: parent.verticalCenter
-                    visible: !librarySearch.text.length
-                    text: root.currentFilter === "Online" ? "Search online · Enter" : "Filter by name or folder…"
-                    color: Theme.muted; font.family: Theme.fontText; font.pixelSize: 11
-                }
-            }
-        }
-
-        Flow {
-            Layout.fillWidth: true
-            spacing: 6
-            Text {
-                text: "APPLY TO"
-                height: 32
-                verticalAlignment: Text.AlignVCenter
-                color: Theme.muted; font.family: Theme.fontMono; font.pixelSize: 10
-            }
-            Repeater {
-                model: ["ALL"].concat(Environment.outputNames)
-                LibraryButton {
-                    required property string modelData
-                    text: modelData
-                    implicitHeight: 32
-                    selected: modelData === "ALL" ? Settings.wallpaperOutputs === "all" : Environment.outputsSelected(modelData)
-                    onClicked: modelData === "ALL" ? Environment.selectAllOutputs() : Environment.toggleOutput(modelData)
-                }
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: 16
-            Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                GridView {
-                    id: libraryGrid
-                    anchors.fill: parent
-                    clip: true
-                    model: root.filteredWallpapers
-                    cellWidth: width / Math.max(1, Math.floor(width / 180))
-                    cellHeight: Math.round(cellWidth * 0.62) + 44
-                    boundsBehavior: Flickable.StopAtBounds
-                    Controls.ScrollBar.vertical: Controls.ScrollBar {}
-                    Keys.onPressed: event => {
-                        const columns = Math.max(1, Math.floor(width / 180));
-                        let next = root.orbitOffset;
-                        if (event.key === Qt.Key_Right) ++next;
-                        else if (event.key === Qt.Key_Left) --next;
-                        else if (event.key === Qt.Key_Down) next += columns;
-                        else if (event.key === Qt.Key_Up) next -= columns;
-                        else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                            Environment.setWallpaper(root.selectedEntry);
-                            event.accepted = true;
-                            return;
-                        } else return;
-                        root.orbitOffset = Math.max(0, Math.min(root.filteredWallpapers.length - 1, next));
-                        positionViewAtIndex(root.orbitOffset, GridView.Contain);
-                        event.accepted = true;
-                    }
-                    delegate: Item {
-                        id: tile
-                        required property var modelData
-                        required property int index
-                        width: libraryGrid.cellWidth
-                        height: libraryGrid.cellHeight
-                        readonly property bool chosen: root.selectedEntry && root.selectedEntry.path === modelData.path
-                        Rectangle {
-                            anchors.fill: parent
-                            anchors.rightMargin: 10; anchors.bottomMargin: 10
-                            radius: 12
-                            clip: true
-                            color: tile.chosen ? Theme.elevated : Theme.mantle
-                            Image {
-                                anchors.left: parent.left; anchors.right: parent.right; anchors.top: parent.top
-                                height: parent.height - 38
-                                source: root.previewUrl(tile.modelData)
-                                sourceSize.width: 480
-                                fillMode: Image.PreserveAspectCrop
-                                asynchronous: true
-                            }
-                            Text {
-                                anchors.left: parent.left; anchors.right: parent.right; anchors.bottom: parent.bottom
-                                anchors.margins: 10
-                                text: (tile.modelData.kind === "video" ? "▶ " : "") + tile.modelData.name
-                                elide: Text.ElideMiddle
-                                color: tile.chosen ? Theme.accent : Theme.moon
-                                font.family: Theme.fontText; font.pixelSize: 11
-                            }
-                            MouseArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: { root.orbitOffset = tile.index; libraryGrid.forceActiveFocus(); }
-                                onDoubleClicked: Environment.setWallpaper(tile.modelData)
-                            }
-                            LibraryButton {
-                                anchors.top: parent.top; anchors.right: parent.right; anchors.margins: 7
-                                text: tile.modelData.favorite ? "★" : "☆"
-                                selected: !!tile.modelData.favorite
-                                implicitWidth: 32; implicitHeight: 30
-                                visible: !tile.modelData.remoteUrl
-                                enabled: !Environment.libraryOperationBusy
-                                accessibleLabel: tile.modelData.favorite ? "Remove favorite" : "Save favorite"
-                                onClicked: Environment.toggleWallpaperFavorite(tile.modelData)
-                            }
-                            Rectangle {
-                                anchors.fill: parent
-                                radius: 12
-                                color: "transparent"
-                                border.width: tile.chosen ? 2 : 0
-                                border.color: Theme.accent
-                            }
-                        }
-                    }
-                }
-                Text {
-                    anchors.centerIn: parent
-                    width: parent.width - 20
-                    horizontalAlignment: Text.AlignHCenter
-                    wrapMode: Text.WordWrap
-                    visible: root.filteredWallpapers.length === 0
-                    text: Environment.libraryLoading ? "Loading wallpapers…"
-                        : root.currentFilter === "Favorites" ? "Save a wallpaper with ☆ to find it here."
-                        : root.currentFilter === "Online" ? "Search for a wallpaper above, then press Enter."
-                        : "No matches. Drop images or videos here to import them."
-                    color: Theme.muted; font.family: Theme.fontText; font.pixelSize: 13
-                }
-            }
-
-            ColumnLayout {
-                Layout.preferredWidth: Math.min(340, root.width * 0.28)
-                Layout.fillHeight: true
-                spacing: 12
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    radius: 18
-                    color: Theme.mantle
-                    clip: true
-                    Image {
-                        anchors.fill: parent
-                        anchors.margins: 6
-                        source: root.previewUrl(root.selectedEntry)
-                        asynchronous: true
-                        fillMode: Image.PreserveAspectFit
-                    }
-                }
-                Text {
-                    Layout.fillWidth: true
-                    text: root.selectedEntry ? root.selectedEntry.name : "Select a wallpaper"
-                    color: Theme.moon; font.family: Theme.fontDisplay; font.pixelSize: 16
-                    elide: Text.ElideMiddle
-                }
-                Text {
-                    Layout.fillWidth: true
-                    text: root.selectedEntry ? (root.selectedEntry.folder || root.selectedEntry.source)
-                        + (root.selectedEntry.kind === "video" ? " · Video preview" : "") : ""
-                    elide: Text.ElideMiddle
-                    color: Theme.muted; font.family: Theme.fontText; font.pixelSize: 10
-                }
-                RowLayout {
-                    Layout.fillWidth: true
-                    LibraryButton {
-                        text: Environment.wallpaperBusy ? "APPLYING…" : "APPLY"
-                        Layout.fillWidth: true
-                        selected: true
-                        enabled: !!root.selectedEntry && !Environment.wallpaperBusy
-                        onClicked: Environment.setWallpaper(root.selectedEntry)
-                    }
-                    LibraryButton {
-                        text: root.selectedEntry && root.selectedEntry.favorite ? "★" : "☆"
-                        visible: !!root.selectedEntry && !root.selectedEntry.remoteUrl
-                        enabled: !Environment.libraryOperationBusy
-                        accessibleLabel: "Toggle favorite"
-                        onClicked: Environment.toggleWallpaperFavorite(root.selectedEntry)
-                    }
-                }
-                RowLayout {
-                    Layout.fillWidth: true
-                    Repeater {
-                        model: ["any", "fade", "grow", "wave"]
-                        LibraryButton {
-                            required property string modelData
-                            text: modelData.toUpperCase()
-                            Layout.fillWidth: true
-                            implicitWidth: 40
-                            selected: Settings.wallpaperTransition === modelData
-                            onClicked: Settings.wallpaperTransition = modelData
-                        }
-                    }
-                }
-            }
-        }
-
-        Text {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 34
-            wrapMode: Text.WordWrap
-            maximumLineCount: 2
-            elide: Text.ElideRight
-            text: Environment.libraryError ? "Library couldn’t load: " + Environment.libraryError + " · Refresh to retry."
-                : Environment.libraryLoading ? "Loading library…"
-                : Environment.wallpaperMessage || (root.filteredWallpapers.length + " wallpapers · Drop images or videos to import. Originals are kept.")
-            color: Environment.libraryError || Environment.wallpaperMessageError ? Theme.warning : Theme.muted
-            font.family: Theme.fontText; font.pixelSize: 11
-        }
-    }
-
-    DropArea {
-        id: importDrop
-        anchors.fill: parent
-        enabled: !Environment.libraryOperationBusy
-        onEntered: drag => { drag.accepted = drag.hasUrls; }
-        onDropped: drop => {
-            if (!drop.hasUrls) return;
-            root.libraryView = true;
-            root.currentFilter = "All";
-            root.query = "";
-            Environment.importWallpapers(drop.urls);
-            drop.acceptProposedAction();
-        }
-    }
-
-    Rectangle {
-        anchors.fill: parent
-        anchors.margins: 12
-        visible: importDrop.containsDrag
-        color: Qt.rgba(Theme.mantle.r, Theme.mantle.g, Theme.mantle.b, 0.96)
-        radius: 24
-        border.width: 2
-        border.color: Theme.accent
-        z: 90
-        Text {
-            anchors.centerIn: parent
-            text: "DROP INTO PARALLAX\nImages and videos · Originals stay where they are"
-            horizontalAlignment: Text.AlignHCenter
-            color: Theme.moon; font.family: Theme.fontText; font.pixelSize: 18
-        }
-    }
-
-    component LibraryButton: Rectangle {
-        id: button
-        property string text: ""
-        property string accessibleLabel: text
-        property bool selected: false
-        signal clicked()
-        implicitWidth: Math.max(40, buttonText.implicitWidth + 20)
-        implicitHeight: 36
-        radius: 12
-        color: selected ? Theme.accent : buttonPointer.containsMouse || activeFocus ? Theme.elevated : Theme.mantle
-        opacity: enabled ? 1 : 0.45
-        activeFocusOnTab: true
-        Accessible.role: Accessible.Button
-        Accessible.name: accessibleLabel
-        Accessible.onPressAction: if (enabled) clicked()
-        Keys.onReturnPressed: if (enabled) clicked()
-        Keys.onSpacePressed: if (enabled) clicked()
-        Text {
-            id: buttonText
-            anchors.centerIn: parent
-            text: button.text
-            color: button.selected ? Theme.void_ : Theme.moon
-            font.family: Theme.fontMono; font.pixelSize: 10; font.weight: Font.Bold
-        }
-        MouseArea {
-            id: buttonPointer
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-            onClicked: { button.forceActiveFocus(); button.clicked(); }
         }
     }
 

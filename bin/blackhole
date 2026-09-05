@@ -38,7 +38,7 @@ Surfaces:
   notify SUMMARY [BODY]   Show an Tonantzintla-local notification
   terminal                Open the configured terminal, or a system default
   browser                 Open the configured browser, or the system default
-  files                   Open the configured file manager, or the home folder
+  files [PATH]            Open the configured file manager at PATH, or home
 
 Machine:
   install                 Install Tonantzintla transactionally
@@ -140,6 +140,16 @@ launch_terminal() {
     done
     printf 'No terminal is configured or discoverable. Set one in Tonantzintla Settings.\n' >&2
     exit 1
+}
+
+launch_files() {
+    local target="${1:-$HOME}"
+    local configured
+    configured="$(setting_value fileManager)"
+    if [[ -n "$configured" ]]; then
+        exec sh -lc "$configured \"\$1\"" -- "$target"
+    fi
+    exec xdg-open "$target"
 }
 
 active_tonantzintla_instance() {
@@ -286,7 +296,7 @@ case "$command_name" in
         run_setting browser || exec xdg-open "about:blank"
         ;;
     files)
-        run_setting fileManager || exec xdg-open "$HOME"
+        launch_files "${2:-$HOME}"
         ;;
     install|update|uninstall|doctor|plan)
         run_installer "$@"

@@ -179,8 +179,8 @@ QtObject {
 
     function openWallpaperLibrary() {
         Quickshell.execDetached(["sh", "-c",
-            "mkdir -p -- \"$1\" && exec xdg-open \"$1\"", "blackhole",
-            wallpaperLibraryPath]);
+            "mkdir -p -- \"$1\" && exec \"$2\" files \"$1\"",
+            "blackhole", wallpaperLibraryPath, controlPath]);
     }
 
     function applyWallpaper(path, kind) {

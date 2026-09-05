@@ -88,6 +88,21 @@ XDG_CONFIG_HOME="$test_root/config" PATH="$fake_bin:$PATH" \
     "$project_root/bin/blackhole" files
 [[ "$(<"$test_root/files-launch")" == "$test_root/home" ]]
 
+mkdir -p "$test_root/config/tonantzintla"
+cat >"$test_root/config/tonantzintla/settings.json" <<'EOF'
+{"fileManager":"configured-file-manager"}
+EOF
+cat >"$fake_bin/configured-file-manager" <<'EOF'
+#!/usr/bin/env bash
+printf '%s\n' "$1" >"$LAUNCH_CAPTURE"
+EOF
+chmod +x "$fake_bin/configured-file-manager"
+
+LAUNCH_CAPTURE="$test_root/configured-files-launch" HOME="$test_root/home" \
+XDG_CONFIG_HOME="$test_root/config" PATH="$fake_bin:$PATH" \
+    "$project_root/bin/blackhole" files "$test_root/wallpapers"
+[[ "$(<"$test_root/configured-files-launch")" == "$test_root/wallpapers" ]]
+
 cat >"$fake_bin/dbus-update-activation-environment" <<'EOF'
 #!/usr/bin/env bash
 printf '%s\n' "$*" >"$DBUS_CAPTURE"
